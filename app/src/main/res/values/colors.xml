@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- base colors -->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- base colors -->
+    <color name="text_primary">@color/md_grey_900</color>
+    <color name="devel_data">#DCEDC8</color>
+
+
+    <color name="background">@color/md_grey_100</color>
 </resources>

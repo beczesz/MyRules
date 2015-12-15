@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.myrules;
+package com.exarlabs.android.myrules.ui;
 
 import org.junit.Test;
 
