@@ -1,12 +1,20 @@
-package com.exarlabs.android.myrules.business.devel;
+package com.exarlabs.android.myrules.business.rule;
 
-import com.exarlabs.android.myrules.ui.BuildConfig;
+import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.model.dao.Rule;
+import com.exarlabs.android.myrules.model.dao.RuleDao;
+import com.exarlabs.android.myrules.util.RandomUtil;
 
 /**
- * Provides utility methods for developers
+ * Manager for rules.
  * Created by becze on 12/15/2015.
  */
-public class DevelManager {
+public class RuleManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -20,26 +28,41 @@ public class DevelManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
+    public static Rule generateRandom() {
+        Rule rule = new Rule();
+        rule.setName(RandomUtil.getRandomStringNumber(10));
+        rule.setDate(new Date());
+        return rule;
+    }
+
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
+
+    private DaoManager mDaoManager;
+    private final RuleDao mRuleDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
+    @Inject
+    public RuleManager(DaoManager daoManager) {
+        mDaoManager = daoManager;
+        mRuleDao = mDaoManager.getRuleDao();
+    }
+
+
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * @return a string which summarizes the build information in a user friendly way
-     */
-    public String getBuildDescription() {
-        String buildString = "Build: debug " + BuildConfig.FLAVOR + " ";
-        buildString += BuildConfig.HAS_BUILD_NUMBER ? "#" + BuildConfig.BUILD_NUMBER : " by " + BuildConfig.USERNAME + "@" + BuildConfig.COMPUTERNAME;
-        buildString += " (" + BuildConfig.BUILD_TIME + ")";
-        return buildString;
+    public List<Rule> loadAllRules() {
+        return mRuleDao.loadAll();
+    }
+
+    public long insert(Rule entity) {
+        return mRuleDao.insert(entity);
     }
 
     // ------------------------------------------------------------------------

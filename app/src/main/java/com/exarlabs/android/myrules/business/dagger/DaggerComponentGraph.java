@@ -1,6 +1,7 @@
 package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
+import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
@@ -22,4 +23,6 @@ public interface DaggerComponentGraph {
     void inject(RulesOverviewFragment rulesOverviewFragment);
 
     void inject(MainActivity baseActivity);
+
+    void inject(DaoManager daoManager);
 }

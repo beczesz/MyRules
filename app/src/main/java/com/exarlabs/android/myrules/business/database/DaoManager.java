@@ -1,12 +1,19 @@
-package com.exarlabs.android.myrules.business.devel;
+package com.exarlabs.android.myrules.business.database;
 
-import com.exarlabs.android.myrules.ui.BuildConfig;
+import javax.inject.Inject;
+
+import android.content.Context;
+
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.model.dao.DaoMaster;
+import com.exarlabs.android.myrules.model.dao.DaoSession;
+import com.exarlabs.android.myrules.model.dao.RuleDao;
 
 /**
- * Provides utility methods for developers
+ * Dao Manager object which initializes and provides the diferent Daos
  * Created by becze on 12/15/2015.
  */
-public class DevelManager {
+public class DaoManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -15,6 +22,7 @@ public class DevelManager {
     // ------------------------------------------------------------------------
     // STATIC FIELDS
     // ------------------------------------------------------------------------
+    public static final String DATABASE_NAME = "rules-db";
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -24,25 +32,35 @@ public class DevelManager {
     // FIELDS
     // ------------------------------------------------------------------------
 
+    @Inject
+    public Context mContext;
+
+    private final DaoMaster mDaoMaster;
+    private final DaoSession mDaoSession;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
+    public DaoManager() {
+        DaggerManager.component().inject(this);
+
+        // Initialize the green dao master
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(mContext, DATABASE_NAME, null);
+        mDaoMaster = new DaoMaster(devOpenHelper.getWritableDatabase());
+        mDaoSession = mDaoMaster.newSession();
+    }
+
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * @return a string which summarizes the build information in a user friendly way
-     */
-    public String getBuildDescription() {
-        String buildString = "Build: debug " + BuildConfig.FLAVOR + " ";
-        buildString += BuildConfig.HAS_BUILD_NUMBER ? "#" + BuildConfig.BUILD_NUMBER : " by " + BuildConfig.USERNAME + "@" + BuildConfig.COMPUTERNAME;
-        buildString += " (" + BuildConfig.BUILD_TIME + ")";
-        return buildString;
-    }
-
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    public RuleDao getRuleDao() {
+        return mDaoSession.getRuleDao();
+    }
 }

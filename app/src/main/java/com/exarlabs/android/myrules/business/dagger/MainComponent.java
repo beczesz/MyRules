@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import android.app.Application;
 
 import com.exarlabs.android.myrules.business.dagger.modules.AppModule;
+import com.exarlabs.android.myrules.business.dagger.modules.DataModelModule;
 import com.exarlabs.android.myrules.business.dagger.modules.DevelModule;
 import com.exarlabs.android.myrules.business.dagger.modules.NavigationModule;
 
@@ -15,7 +16,7 @@ import dagger.Component;
  * Created by becze on 9/17/2015.
  */
 @Singleton
-@Component(modules = { AppModule.class, NavigationModule.class, DevelModule.class })
+@Component(modules = { AppModule.class, NavigationModule.class, DevelModule.class, DataModelModule.class })
 public interface MainComponent extends DaggerComponentGraph {
 
     final class Initializer {
@@ -27,6 +28,7 @@ public interface MainComponent extends DaggerComponentGraph {
                             .appModule(new AppModule(app))
                             .navigationModule(new NavigationModule())
                             .develModule(new DevelModule())
+                            .dataModelModule(new DataModelModule())
                             .build();
             //@formatter:on
         }

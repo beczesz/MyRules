@@ -12,10 +12,16 @@
         android:orientation="vertical"
         >
 
-        <TextView
-            android:id="@+id/example"
+        <Button
+            android:id="@+id/generate_random"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Generate Random note"/>
+
+        <ListView
+            android:id="@+id/rules_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ListView>
 
     </LinearLayout>
 

@@ -104,7 +104,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
 
-
+    //Database
+    compile 'de.greenrobot:greendao:2.0.0'
 
     // Tools - Dependency Injection
     compile 'com.jakewharton:butterknife:7.0.1'

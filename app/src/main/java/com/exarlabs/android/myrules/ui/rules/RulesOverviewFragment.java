@@ -1,5 +1,7 @@
 package com.exarlabs.android.myrules.ui.rules;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import android.os.Bundle;
@@ -7,15 +9,20 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
+import com.exarlabs.android.myrules.business.rule.RuleManager;
+import com.exarlabs.android.myrules.model.dao.Rule;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 /**
  * Lists all the rules which are defined by the user.
@@ -50,11 +57,19 @@ public class RulesOverviewFragment extends BaseFragment {
     @Bind(R.id.build_info)
     public TextView mDevelInfo;
 
+    @Bind(R.id.rules_list)
+    public ListView mRulesListView;
+
+
     private View mRootView;
 
     @Inject
     public DevelManager mDevelManager;
 
+    @Inject
+    public RuleManager mRuleManager;
+
+    private ArrayAdapter<Rule> mAdapter ;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -82,11 +97,31 @@ public class RulesOverviewFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<Rule>());
+        mRulesListView.setAdapter(mAdapter);
+
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());
             mDevelInfo.setVisibility(View.VISIBLE);
         }
 
+        updateUI();
+
+    }
+
+    /**
+     * Update the list of rules
+     */
+    private void updateUI() {
+        mAdapter.clear();
+        mAdapter.addAll(mRuleManager.loadAllRules());
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.generate_random)
+    public void generateRandomRule() {
+        mRuleManager.insert(RuleManager.generateRandom());
+        updateUI();
     }
 
     // ------------------------------------------------------------------------

@@ -1,12 +1,15 @@
-package com.exarlabs.android.myrules.business.devel;
+package com.exarlabs.android.model.database;
 
-import com.exarlabs.android.myrules.ui.BuildConfig;
+import de.greenrobot.daogenerator.DaoGenerator;
+import de.greenrobot.daogenerator.Entity;
+import de.greenrobot.daogenerator.Schema;
+
 
 /**
- * Provides utility methods for developers
- * Created by becze on 12/15/2015.
+ * GreenDao generator class which generates the schema for the main application
  */
-public class DevelManager {
+public class DatabaseGenerator {
+
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -15,11 +18,21 @@ public class DevelManager {
     // ------------------------------------------------------------------------
     // STATIC FIELDS
     // ------------------------------------------------------------------------
+    public static final int VERSION = 1000;
+    public static final String PACKAGE = "com.exarlabs.android.myrules.model.dao";
+    public static final String OUT_DIR = "./app/src/main/java";
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
+    public static void main(String[] args) throws Exception {
+        Schema schema = new Schema(VERSION, PACKAGE);
+
+        addRule(schema);
+
+        new DaoGenerator().generateAll(schema, OUT_DIR);
+    }
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
@@ -32,17 +45,15 @@ public class DevelManager {
     // METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * @return a string which summarizes the build information in a user friendly way
-     */
-    public String getBuildDescription() {
-        String buildString = "Build: debug " + BuildConfig.FLAVOR + " ";
-        buildString += BuildConfig.HAS_BUILD_NUMBER ? "#" + BuildConfig.BUILD_NUMBER : " by " + BuildConfig.USERNAME + "@" + BuildConfig.COMPUTERNAME;
-        buildString += " (" + BuildConfig.BUILD_TIME + ")";
-        return buildString;
+    private static void addRule(Schema schema) {
+        Entity note = schema.addEntity("Rule");
+        note.addIdProperty();
+        note.addStringProperty("name").notNull();
+        note.addDateProperty("date");
     }
-
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+
 }
