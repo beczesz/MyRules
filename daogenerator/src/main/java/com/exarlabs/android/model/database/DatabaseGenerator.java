@@ -29,6 +29,7 @@ public class DatabaseGenerator {
     public static void main(String[] args) throws Exception {
         Schema schema = new Schema(VERSION, PACKAGE);
 
+        schema.enableKeepSectionsByDefault();
         addRule(schema);
 
         new DaoGenerator().generateAll(schema, OUT_DIR);
