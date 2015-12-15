@@ -6,6 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.consitions.ConditionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
+import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 
 /**
@@ -70,6 +74,15 @@ public class NavigationManager {
         }
     }
 
+    /**
+     * pops every fragment and starts the given fragment as a new one.
+     *
+     * @param fragment
+     */
+    private void openAsRoot(Fragment fragment) {
+        popEveryFragment();
+        open(fragment);
+    }
 
 
     /**
@@ -98,12 +111,34 @@ public class NavigationManager {
         if (mFragmentManager.getBackStackEntryCount() == 0) {
             // we can finish the base activity since we have no other fragments
             baseActivity.finish();
+        } else {
+            mFragmentManager.popBackStackImmediate();
         }
     }
 
     public void startRulesOverview() {
         Fragment fragment = RulesOverviewFragment.newInstance();
-        open(fragment);
+        openAsRoot(fragment);
+    }
+
+    public void startConditionsOverview() {
+        Fragment fragment = ConditionsOverviewFragment.newInstance();
+        openAsRoot(fragment);
+    }
+
+    public void startEventOverview() {
+        Fragment fragment = EventsOverviewFragment.newInstance();
+        openAsRoot(fragment);
+    }
+
+    public void startActionsOverview() {
+        Fragment fragment = ActionsOverviewFragment.newInstance();
+        openAsRoot(fragment);
+    }
+
+    public void startHistoryOverview() {
+        Fragment fragment = HistoryListFragment.newInstance();
+        openAsRoot(fragment);
     }
 
 

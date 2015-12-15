@@ -42,6 +42,7 @@ public class BaseActivity extends AppCompatActivity {
     @Inject
     public NavigationManager mNavigationManager;
 
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------

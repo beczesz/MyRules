@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.business.dagger.modules;
 
 import javax.inject.Singleton;
 
+import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 
 import dagger.Module;
@@ -19,5 +20,11 @@ public class NavigationModule {
     @Singleton
     protected NavigationManager provideNavigationManager() {
         return new NavigationManager();
+    }
+
+    @Provides
+    @Singleton
+    protected DrawerManager provideDrawerManager() {
+        return new DrawerManager();
     }
 }

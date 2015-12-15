@@ -5,6 +5,11 @@ import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.consitions.ConditionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
+import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
+import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 
 /**
@@ -25,4 +30,14 @@ public interface DaggerComponentGraph {
     void inject(MainActivity baseActivity);
 
     void inject(DaoManager daoManager);
+
+    void inject(DrawerManager drawerManager);
+
+    void inject(ConditionsOverviewFragment conditionsOverviewFragment);
+
+    void inject(EventsOverviewFragment eventsOverviewFragment);
+
+    void inject(ActionsOverviewFragment actionsOverviewFragment);
+
+    void inject(HistoryListFragment historyListFragment);
 }
