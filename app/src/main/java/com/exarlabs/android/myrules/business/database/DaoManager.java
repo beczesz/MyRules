@@ -7,6 +7,7 @@ import android.content.Context;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.DaoMaster;
 import com.exarlabs.android.myrules.model.dao.DaoSession;
+import com.exarlabs.android.myrules.model.dao.RuleConditionDao;
 import com.exarlabs.android.myrules.model.dao.RuleDao;
 
 /**
@@ -62,5 +63,9 @@ public class DaoManager {
 
     public RuleDao getRuleDao() {
         return mDaoSession.getRuleDao();
+    }
+
+    public RuleConditionDao getRuleConditionDao() {
+        return mDaoSession.getRuleConditionDao();
     }
 }

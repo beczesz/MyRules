@@ -6,7 +6,7 @@ import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
-import com.exarlabs.android.myrules.ui.consitions.ConditionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;

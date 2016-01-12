@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.condition;
 
 import java.util.List;
 
@@ -6,13 +6,14 @@ import javax.inject.Inject;
 
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.Rule;
-import com.exarlabs.android.myrules.model.dao.RuleDao;
+import com.exarlabs.android.myrules.model.dao.RuleCondition;
+import com.exarlabs.android.myrules.model.dao.RuleConditionDao;
 
 /**
- * Manager for rules.
+ * Manager for conditions.
  * Created by becze on 12/15/2015.
  */
-public class RuleManager {
+public class ConditionManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -36,28 +37,41 @@ public class RuleManager {
     // ------------------------------------------------------------------------
 
     private DaoManager mDaoManager;
-    private final RuleDao mRuleDao;
+    private final RuleConditionDao mRuleConditionDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
     @Inject
-    public RuleManager(DaoManager daoManager) {
+    public ConditionManager(DaoManager daoManager) {
         mDaoManager = daoManager;
-        mRuleDao = mDaoManager.getRuleDao();
+        mRuleConditionDao = mDaoManager.getRuleConditionDao();
     }
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<Rule> loadAllRules() {
-        return mRuleDao.loadAll();
+
+    public RuleCondition load(Long key) {
+        return mRuleConditionDao.load(key);
     }
 
-    public long insert(Rule entity) {
-        return mRuleDao.insert(entity);
+    public List<RuleCondition> loadAllConditions() {
+        return mRuleConditionDao.loadAll();
+    }
+
+    public long insert(RuleCondition entity) {
+        return mRuleConditionDao.insert(entity);
+    }
+
+    public void update(RuleCondition entity) {
+        mRuleConditionDao.update(entity);
+    }
+
+    public void deleteAll() {
+        mRuleConditionDao.deleteAll();
     }
 
     // ------------------------------------------------------------------------

@@ -10,9 +10,8 @@ package com.exarlabs.android.myrules.model.dao;
 public class Rule {
 
     private Long id;
-    /** Not-null value. */
-    private String name;
-    private java.util.Date date;
+    private int state;
+    private int eventCode;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -24,10 +23,10 @@ public class Rule {
         this.id = id;
     }
 
-    public Rule(Long id, String name, java.util.Date date) {
+    public Rule(Long id, int state, int eventCode) {
         this.id = id;
-        this.name = name;
-        this.date = date;
+        this.state = state;
+        this.eventCode = eventCode;
     }
 
     public Long getId() {
@@ -38,30 +37,23 @@ public class Rule {
         this.id = id;
     }
 
-    /** Not-null value. */
-    public String getName() {
-        return name;
+    public int getState() {
+        return state;
     }
 
-    /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setName(String name) {
-        this.name = name;
+    public void setState(int state) {
+        this.state = state;
     }
 
-    public java.util.Date getDate() {
-        return date;
+    public int getEventCode() {
+        return eventCode;
     }
 
-    public void setDate(java.util.Date date) {
-        this.date = date;
+    public void setEventCode(int eventCode) {
+        this.eventCode = eventCode;
     }
 
     // KEEP METHODS - put your custom methods here
-
-    @Override
-    public String toString() {
-        return name + " created on " + date ;
-    }
     // KEEP METHODS END
 
 }

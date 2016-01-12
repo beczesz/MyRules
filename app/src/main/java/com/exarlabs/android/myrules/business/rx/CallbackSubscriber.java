@@ -1,18 +1,13 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.rx;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.Rule;
-import com.exarlabs.android.myrules.model.dao.RuleDao;
+import rx.Subscriber;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * This Observer just adds dummy implementation for the traditional observer callbacks
+ * and forwards the result to one method
+ * Created by becze on 11/27/2015.
  */
-public class RuleManager {
+public abstract class CallbackSubscriber<T> extends Subscriber<T> {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,39 +21,41 @@ public class RuleManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static Rule generateRandom() {
-        Rule rule = new Rule();
-        return rule;
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-
-    private DaoManager mDaoManager;
-    private final RuleDao mRuleDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleDao = mDaoManager.getRuleDao();
-    }
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<Rule> loadAllRules() {
-        return mRuleDao.loadAll();
+    /**
+     * Returns the result if it was successful, otherwise an error.
+     *
+     * @param result the result of the call or null if there was an error.
+     * @param e On success it will be null, otherwise the error.
+     */
+    abstract public void onResult(T result, Throwable e);
+
+    @Override
+    public void onCompleted() {
     }
 
-    public long insert(Rule entity) {
-        return mRuleDao.insert(entity);
+    @Override
+    public void onError(Throwable e) {
+        onResult(null, e);
     }
+
+    @Override
+    public void onNext(T o) {
+        onResult(o, null);
+        onCompleted();
+    }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

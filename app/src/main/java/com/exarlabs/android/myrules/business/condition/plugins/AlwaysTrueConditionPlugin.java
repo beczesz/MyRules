@@ -1,18 +1,15 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.condition.plugins;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.Rule;
-import com.exarlabs.android.myrules.model.dao.RuleDao;
+import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
+import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * Created by becze on 12/18/2015.
  */
-public class RuleManager {
+public class AlwaysTrueConditionPlugin implements ConditionPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,40 +23,32 @@ public class RuleManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static Rule generateRandom() {
-        Rule rule = new Rule();
-        return rule;
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-
-    private DaoManager mDaoManager;
-    private final RuleDao mRuleDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleDao = mDaoManager.getRuleDao();
-    }
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<Rule> loadAllRules() {
-        return mRuleDao.loadAll();
+    @Override
+    public void initialize(List<RuleConditionProperty> properties) {
+        // do nothing
     }
 
-    public long insert(Rule entity) {
-        return mRuleDao.insert(entity);
+    @Override
+    public List<RuleConditionProperty> generateProperties() {
+        return null;
     }
 
+    @Override
+    public boolean evaluate(Event event) {
+        return true;
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

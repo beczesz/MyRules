@@ -1,18 +1,13 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.condition;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.Rule;
-import com.exarlabs.android.myrules.model.dao.RuleDao;
+import com.exarlabs.android.myrules.business.condition.plugins.AlwaysFalseConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.AlwaysTrueConditionPlugin;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * Factory pattern implementation for the condition plugins.
+ * Created by becze on 12/18/2015.
  */
-public class RuleManager {
+public class ConditionPluginFactory {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,39 +21,34 @@ public class RuleManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static Rule generateRandom() {
-        Rule rule = new Rule();
-        return rule;
+    /**
+     * Creator for the condition plugins.
+     *
+     * @param pluginType
+     * @return a new condition plugin, if no plugin found a default AlwaysTrueConditionPlugin is created.
+     */
+    public static ConditionPlugin create(int pluginType) {
+        switch (pluginType) {
+            default:
+            case Condition.Type.DEBUG_ALWAYS_TRUE:
+                return new AlwaysTrueConditionPlugin();
+
+            case Condition.Type.DEBUG_ALWAYS_FALSE:
+                return new AlwaysFalseConditionPlugin();
+        }
     }
 
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private DaoManager mDaoManager;
-    private final RuleDao mRuleDao;
-
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleDao = mDaoManager.getRuleDao();
-    }
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
-
-    public List<Rule> loadAllRules() {
-        return mRuleDao.loadAll();
-    }
-
-    public long insert(Rule entity) {
-        return mRuleDao.insert(entity);
-    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
