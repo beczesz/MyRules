@@ -1,20 +1,19 @@
-package com.exarlabs.android.myrules.business.condition;
+package com.exarlabs.android.myrules.business.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
- * A ConditionPlugin is an implementation of the behaviour of a RuleCondition.
+ * A ActionPlugin is an implementation of the behaviour of a RuleAction.
  * Is is initialized with a list of Propoerties, and this plugin, can modify, delete add new propoerties.
  * Based on these properties is can evaluate itself at any time.
  * <p/>
  * Created by becze on 12/18/2015.
  */
-public abstract class ConditionPlugin {
-
+public abstract class ActionPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -24,6 +23,9 @@ public abstract class ConditionPlugin {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = ActionPlugin.class.getSimpleName();
+
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -32,13 +34,13 @@ public abstract class ConditionPlugin {
     // FIELDS
     // ------------------------------------------------------------------------
     // List of properties
-    private List<RuleConditionProperty> mProperties;
+    private List<RuleActionProperty> mProperties;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public ConditionPlugin() {
+    public ActionPlugin() {
         mProperties = new ArrayList<>();
     }
 
@@ -48,20 +50,20 @@ public abstract class ConditionPlugin {
     // ------------------------------------------------------------------------
 
     /**
-     * Evaluates the condition based on the event wether it is true or false.
+     * Runs the action on the current thread, based on the event
      *
      * @param event
-     * @return the result of the evaluation. True if the condition holds and false otherwise
+     * @return the result of the evaluation. True if the action holds and false otherwise
      */
-    public abstract boolean evaluate(Event event);
+    public abstract boolean run(Event event);
 
     /**
      * Initializes the plugin with the saved properties
      *
      * @param properties
      */
-    public void initialize(List<RuleConditionProperty> properties) {
-        for (RuleConditionProperty property : properties) {
+    public void initialize(List<RuleActionProperty> properties) {
+        for (RuleActionProperty property : properties) {
             saveProperty(property.getKey(), property.getValue());
         }
     }
@@ -71,11 +73,11 @@ public abstract class ConditionPlugin {
     /**
      *
      * @param key
-     * @return returns true if we have the given propery with the given key
+     * @return returns true if we have the given property with the given key
      */
     public boolean hasProperty(String key) {
         if (mProperties != null) {
-            for (RuleConditionProperty property : mProperties) {
+            for (RuleActionProperty property : mProperties) {
                 if (property.getKey().equals(key)) {
                     return true;
                 }
@@ -90,10 +92,10 @@ public abstract class ConditionPlugin {
      * @param key
      * @return
      */
-    public RuleConditionProperty getProperty (String key) {
+    public RuleActionProperty getProperty (String key) {
 
         if (mProperties != null) {
-            for (RuleConditionProperty property : mProperties) {
+            for (RuleActionProperty property : mProperties) {
                 if (property.getKey().equals(key)) {
                     return property;
                 }
@@ -113,12 +115,17 @@ public abstract class ConditionPlugin {
             if (hasProperty(key)) {
                 getProperty(key).setValue(value);
             } else {
-                RuleConditionProperty property = new RuleConditionProperty();
+                RuleActionProperty property = new RuleActionProperty();
                 property.setKey(key);
                 property.setValue(value);
                 mProperties.add(property);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
     }
 
     // ------------------------------------------------------------------------
@@ -128,9 +135,9 @@ public abstract class ConditionPlugin {
     /**
      * Generates the list of properties what this plugin needs to be persisted.
      *
-     * @return the list of all the propoerties needed.
+     * @return the list of all the properties needed.
      */
-    public List<RuleConditionProperty> getProperties() {
+    public List<RuleActionProperty> getProperties() {
         return mProperties;
     }
 }

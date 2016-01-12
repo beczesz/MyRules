@@ -1,15 +1,19 @@
-package com.exarlabs.android.myrules.business.condition.plugins;
+package com.exarlabs.android.myrules.business.action.plugins;
 
 import java.util.List;
 
-import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
+import android.util.Log;
+
+import com.exarlabs.android.myrules.business.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEvent;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
- * Created by becze on 12/18/2015.
+ * Example action plugin which calculates the multiplication of a number
+ * Created by becze on 1/11/2016.
  */
-public class AlwaysFalseConditionPlugin extends ConditionPlugin {
+public class MultiplyActionPlugin extends ActionPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -19,6 +23,9 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = MultiplyActionPlugin.class.getSimpleName();
+    private static final String KEY_VALUE = "VALUE";
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -26,6 +33,8 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
+    private double mResult;
+    private double mValue;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -34,17 +43,39 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
-
     @Override
-    public void initialize(List<RuleConditionProperty> properties) {
-        // do nothing
+    public void initialize(List<RuleActionProperty> properties) {
+        super.initialize(properties);
+        mValue = Double.parseDouble(getProperty(KEY_VALUE).getValue());
     }
 
+
     @Override
-    public boolean evaluate(Event event) {
-        return false;
+    public boolean run(Event event) {
+        if (event instanceof NumberEvent) {
+            int value = ((NumberEvent) event).getValue();
+            mResult = mValue * value;
+            Log.w(TAG, "" + value + " x " + mValue + " = " + mResult);
+        }
+        return true;
     }
+
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    public double getResult() {
+        return mResult;
+    }
+
+    public double getValue() {
+
+        return mValue;
+    }
+
+    public void setValue(double value) {
+        saveProperty(KEY_VALUE, Double.toString(value));
+        mValue = value;
+    }
 }

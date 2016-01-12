@@ -1,15 +1,12 @@
-package com.exarlabs.android.myrules.business.condition.plugins;
+package com.exarlabs.android.myrules.business.event.plugins.debug;
 
-import java.util.List;
-
-import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
- * Created by becze on 12/18/2015.
+ * Example implementation of an Event which delivers an integer number
+ * Created by becze on 1/11/2016.
  */
-public class AlwaysFalseConditionPlugin extends ConditionPlugin {
+public class NumberEvent implements Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -19,6 +16,9 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = NumberEvent.class.getSimpleName();
+
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -27,24 +27,39 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // FIELDS
     // ------------------------------------------------------------------------
 
+    private int mValue;
+
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
     @Override
-    public void initialize(List<RuleConditionProperty> properties) {
-        // do nothing
+    public int getType() {
+        return Type.RULE_EVENT_NUMBER;
     }
 
     @Override
-    public boolean evaluate(Event event) {
-        return false;
+    public String toString() {
+        return TAG + "Value: " + getValue();
     }
+
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+
+    public int getValue() {
+        return mValue;
+    }
+
+    public void setValue(int value) {
+        mValue = value;
+    }
 }

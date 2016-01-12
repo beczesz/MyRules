@@ -1,15 +1,13 @@
-package com.exarlabs.android.myrules.business.condition.plugins;
+package com.exarlabs.android.myrules.business.event;
 
-import java.util.List;
-
-import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
-import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
- * Created by becze on 12/18/2015.
+ * Abstract event plugin which serveres as a base class for all the RuleEventHandler
+ * Created by becze on 1/11/2016.
  */
-public class AlwaysFalseConditionPlugin extends ConditionPlugin {
+public class EventHandlerPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -27,24 +25,64 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // FIELDS
     // ------------------------------------------------------------------------
 
+    private Observable<Event> mEventObservable;
+    private Subscriber<? super Event> mSubscriber;
+
+    private boolean isEnabled = false;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
+    public EventHandlerPlugin() {
+        // Initialize the plugin on creation
+        init();
+
+        // By default enable the plugin
+        enable();
+    }
+
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    @Override
-    public void initialize(List<RuleConditionProperty> properties) {
-        // do nothing
+    /**
+     * Dispatches a new event
+     * @param event
+     */
+    public void dispatchEvent(Event event) {
+        if (mSubscriber != null && isEnabled) {
+            mSubscriber.onNext(event);
+        }
     }
 
-    @Override
-    public boolean evaluate(Event event) {
-        return false;
+    /**
+     * Initialize the plugin by preparing an observable
+     */
+    public void init() {
+        mEventObservable = Observable.create(subscriber -> mSubscriber = subscriber);
     }
+
+    public void enable() {
+        isEnabled = true;
+    }
+
+    public void disable() {
+        isEnabled = false;
+    }
+
+
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    public Observable<Event> getEventObservable() {
+        return mEventObservable;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 }

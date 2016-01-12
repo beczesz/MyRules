@@ -1,15 +1,14 @@
-package com.exarlabs.android.myrules.business.condition.plugins;
+package com.exarlabs.android.myrules.business.event.plugins.debug;
 
-import java.util.List;
-
-import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import com.exarlabs.android.myrules.business.event.EventFactory;
+import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 
 /**
- * Created by becze on 12/18/2015.
+ * Just a timer which displatches an event in every second.
+ * Created by becze on 1/11/2016.
  */
-public class AlwaysFalseConditionPlugin extends ConditionPlugin {
+public class NumberEventHandlerPlugin extends EventHandlerPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -31,19 +30,27 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
+    public NumberEventHandlerPlugin() {
+        super();
+    }
+
+
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    @Override
-    public void initialize(List<RuleConditionProperty> properties) {
-        // do nothing
+    /**
+     * Dispatches a number event with the given integer
+     *
+     * @param i
+     */
+    public void dispatchNumber(int i) {
+        NumberEvent event = (NumberEvent) EventFactory.create(Event.Type.RULE_EVENT_NUMBER);
+        event.setValue(i);
+        dispatchEvent(event);
     }
 
-    @Override
-    public boolean evaluate(Event event) {
-        return false;
-    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

@@ -1,15 +1,14 @@
-package com.exarlabs.android.myrules.business.condition.plugins;
+package com.exarlabs.android.myrules.business.action.plugins;
 
-import java.util.List;
-
-import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
+import com.exarlabs.android.myrules.business.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEvent;
 
 /**
- * Created by becze on 12/18/2015.
+ * Example action plugin which calculates a Fibonacci number
+ * Created by becze on 1/11/2016.
  */
-public class AlwaysFalseConditionPlugin extends ConditionPlugin {
+public class FibonacciActionPlugin extends ActionPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -19,6 +18,7 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = FibonacciActionPlugin.class.getSimpleName();
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -26,6 +26,7 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
+    private long mResult;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -36,15 +37,30 @@ public class AlwaysFalseConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
 
     @Override
-    public void initialize(List<RuleConditionProperty> properties) {
-        // do nothing
+    public boolean run(Event event) {
+        if (event instanceof NumberEvent) {
+            int value = ((NumberEvent) event).getValue();
+            mResult = fib(value);
+        }
+        return true;
     }
 
-    @Override
-    public boolean evaluate(Event event) {
-        return false;
+
+    /**
+     * Naiva implementation of fibonacci
+     * @param n
+     * @return
+     */
+    public long fib(int n) {
+        if (n <= 1) return n;
+        else return fib(n-1) + fib(n-2);
     }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    public long getResult() {
+        return mResult;
+    }
 }

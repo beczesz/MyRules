@@ -1,19 +1,23 @@
-package com.exarlabs.android.myrules.business.condition;
+package com.exarlabs.android.myrules.business.action;
 
 import java.util.List;
 
+import com.exarlabs.android.myrules.business.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
- * It is a rule condition abstraction which with a bridge pattern it decouples the
- * condition implementation from the type.
+ * Base abstract class for all the rule actions. It applies a bridge pattern to decouple
+ * the implementation from the Action type.
  * <p>
- * The concrete condition implementation will specify the type of the condition and it's properties.
+ * <p>
+ * The actual Action implementation will be done by the plugins, as the condition implementation.
+ *
+ * @see {@link ConditionTree}
  * </p>
- * Created by becze on 12/18/2015.
+ * Created by becze on 1/11/2016.
  */
-public abstract class Condition {
+public abstract class Action {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -24,13 +28,9 @@ public abstract class Condition {
      */
     public static class Type {
         // Debug condition types
-        public static final int DEBUG_ALWAYS_TRUE = 100;
-        public static final int DEBUG_ALWAYS_FALSE = 101;
-        public static final int ARITHMETRIC_IS_NUMBER_EQUAL = 201;
-        public static final int ARITHMETRIC_IS_NUMBER_IN_INTERVAL = 202;
-        public static final int ARITHMETRIC_IS_NUMBER_PRIME = 203;
+        public static final int ARITHMETRIC_ACTION_MULTIPLY = 201;
+        public static final int ARITHMETRIC_ACTION_FIBONACCI = 202;
     }
-
 
     // ------------------------------------------------------------------------
     // STATIC FIELDS
@@ -45,9 +45,8 @@ public abstract class Condition {
     // ------------------------------------------------------------------------
 
     // condition plugin which encapsulates the implementation.
-    private ConditionPlugin mConditionPlugin;
+    private ActionPlugin mActionPlugin;
     private boolean isBuilt;
-
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -63,36 +62,33 @@ public abstract class Condition {
     public abstract int getType();
 
     /**
-     *
      * @return the list of properties for this condition
      */
-    public abstract List<RuleConditionProperty> getProperties();
+    public abstract List<RuleActionProperty> getProperties();
 
+    /**
+     * Run the action.
+     *
+     * @param event
+     * @return
+     */
+    public boolean run(Event event) {
+        return mActionPlugin.run(event);
+    }
 
     /**
      * Builds the condition if it is not yet built.
      */
     public void build() {
         if (!isBuilt) {
-            getConditionPlugin().initialize(getProperties());
+            getActionPlugin().initialize(getProperties());
             isBuilt = true;
         }
     }
 
-    /**
-     * Evaluates the condition and recursively all of the child-conditions based on the event.
-     *
-     * @param event
-     * @return true if the condition is true otherwise false.
-     */
-    public boolean evaluate(Event event) {
-        // If for some reason it is not yet built then build it
-        if (!isBuilt) {
-            build();
-        }
-
-        // evaluate this condition
-        return getConditionPlugin().evaluate(event);
+    @Override
+    public String toString() {
+        return getActionPlugin().toString();
     }
 
     // ------------------------------------------------------------------------
@@ -106,11 +102,11 @@ public abstract class Condition {
     /**
      * @return the plugin for this condition. It is created once when the first time is called.
      */
-    public ConditionPlugin getConditionPlugin() {
-        if (mConditionPlugin == null) {
+    public ActionPlugin getActionPlugin() {
+        if (mActionPlugin == null) {
             // First build this condition
-            mConditionPlugin = ConditionPluginFactory.create(getType());
+            mActionPlugin = ActionPluginFactory.create(getType());
         }
-        return mConditionPlugin;
+        return mActionPlugin;
     }
 }
