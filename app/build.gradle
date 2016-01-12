@@ -1,18 +1,29 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt' // This is needed for the dagger
 apply from: 'versioning.gradle'
+apply plugin: 'com.android.application' //or apply plugin: 'java'
+apply plugin: 'me.tatarka.retrolambda'
 
 
 // This is needed for the dagger
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
 
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
     }
 }
+
+
+// Required because retrolambda is on maven central
+repositories {
+    mavenCentral()
+}
+
 
 /**
  * Define project specific variables
@@ -59,6 +70,11 @@ def getAPKFileName = { variant ->
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "com.exarlabs.android.myrules.myrules"

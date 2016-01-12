@@ -1,18 +1,20 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.ui.conditions;
 
-import java.util.List;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.ui.BaseFragment;
+import com.exarlabs.android.myrules.ui.R;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * Provides an overview to the user of all the conditions.
+ * Created by becze on 11/25/2015.
  */
-public class RuleManager {
+public class ConditionsOverviewFragment extends BaseFragment {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -22,55 +24,46 @@ public class RuleManager {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = ConditionsOverviewFragment.class.getSimpleName();
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static RuleRecord generateRandom() {
-        RuleRecord rule = new RuleRecord();
-        return rule;
+    /**
+     * @return newInstance of SampleFragment
+     */
+    public static ConditionsOverviewFragment newInstance() {
+        return new ConditionsOverviewFragment();
     }
 
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-
-    private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
+    private View mRootView;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
-    }
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        DaggerManager.component().inject(this);
     }
 
-    /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
-     */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (mRootView == null) {
+            mRootView = inflater.inflate(R.layout.conditions_overview_layout, null);
+        }
+        return mRootView;
     }
-
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
-    }
-
-
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

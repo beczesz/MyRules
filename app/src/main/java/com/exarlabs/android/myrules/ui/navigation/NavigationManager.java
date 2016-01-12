@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
-import com.exarlabs.android.myrules.ui.consitions.ConditionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;

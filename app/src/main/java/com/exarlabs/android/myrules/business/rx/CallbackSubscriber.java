@@ -1,18 +1,13 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.rx;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
+import rx.Subscriber;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * This Observer just adds dummy implementation for the traditional observer callbacks
+ * and forwards the result to one method
+ * Created by becze on 11/27/2015.
  */
-public class RuleManager {
+public abstract class CallbackSubscriber<T> extends Subscriber<T> {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,50 +21,40 @@ public class RuleManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static RuleRecord generateRandom() {
-        RuleRecord rule = new RuleRecord();
-        return rule;
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-
-    private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
-    }
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
-    }
-
     /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
+     * Returns the result if it was successful, otherwise an error.
+     *
+     * @param result the result of the call or null if there was an error.
+     * @param e On success it will be null, otherwise the error.
      */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
+    abstract public void onResult(T result, Throwable e);
+
+    @Override
+    public void onCompleted() {
     }
 
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
+    @Override
+    public void onError(Throwable e) {
+        onResult(null, e);
     }
 
+    @Override
+    public void onNext(T o) {
+        onResult(o, null);
+        onCompleted();
+    }
 
 
     // ------------------------------------------------------------------------

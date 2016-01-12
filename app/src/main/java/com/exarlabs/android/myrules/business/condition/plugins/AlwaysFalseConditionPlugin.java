@@ -1,20 +1,15 @@
-package com.exarlabs.android.myrules.ui.consitions;
+package com.exarlabs.android.myrules.business.condition.plugins;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import java.util.List;
 
-import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.ui.BaseFragment;
-import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
+import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
- * Provides an overview to the user of all the conditions.
- * Created by becze on 11/25/2015.
+ * Created by becze on 12/18/2015.
  */
-public class ConditionsOverviewFragment extends BaseFragment {
+public class AlwaysFalseConditionPlugin implements ConditionPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -24,23 +19,13 @@ public class ConditionsOverviewFragment extends BaseFragment {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = ConditionsOverviewFragment.class.getSimpleName();
-
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * @return newInstance of SampleFragment
-     */
-    public static ConditionsOverviewFragment newInstance() {
-        return new ConditionsOverviewFragment();
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-    private View mRootView;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -51,20 +36,19 @@ public class ConditionsOverviewFragment extends BaseFragment {
     // ------------------------------------------------------------------------
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        DaggerManager.component().inject(this);
+    public void initialize(List<RuleConditionProperty> properties) {
+        // do nothing
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.conditions_overview_layout, null);
-        }
-        return mRootView;
+    public List<RuleConditionProperty> generateProperties() {
+        return null;
     }
 
+    @Override
+    public boolean evaluate(Event event) {
+        return false;
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

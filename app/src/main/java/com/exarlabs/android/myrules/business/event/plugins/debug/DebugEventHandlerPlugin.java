@@ -1,18 +1,18 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.event.plugins.debug;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
+import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.business.event.EventFactory;
+import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
+import rx.Observable;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * Just a timer which displatches an event in every second.
+ * Created by becze on 1/11/2016.
  */
-public class RuleManager {
+public class DebugEventHandlerPlugin extends EventHandlerPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,50 +26,35 @@ public class RuleManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static RuleRecord generateRandom() {
-        RuleRecord rule = new RuleRecord();
-        return rule;
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-
-    private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
+    public DebugEventHandlerPlugin() {
+        super();
     }
+
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
-    }
+    @Override
+    public void init() {
+        super.init();
 
-    /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
-     */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
-    }
+        Observable.timer(1, TimeUnit.SECONDS).repeat().subscribe(aLong -> {
+            DebugEvent event = (DebugEvent) EventFactory.create(Event.Type.RULE_EVENT_DEBUG);
+            event.setDebugEventData1("Debug event " + aLong);
+            event.setDebugEventData1("Current time" + System.currentTimeMillis());
 
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
+            dispatchEvent(event);
+        });
     }
-
 
 
     // ------------------------------------------------------------------------

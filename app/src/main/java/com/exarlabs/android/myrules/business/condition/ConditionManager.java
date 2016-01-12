@@ -1,18 +1,19 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.condition;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.model.dao.RuleCondition;
+import com.exarlabs.android.myrules.model.dao.RuleConditionDao;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
 
 /**
- * Manager for rules.
+ * Manager for conditions.
  * Created by becze on 12/15/2015.
  */
-public class RuleManager {
+public class ConditionManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -36,41 +37,42 @@ public class RuleManager {
     // ------------------------------------------------------------------------
 
     private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
+    private final RuleConditionDao mRuleConditionDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
     @Inject
-    public RuleManager(DaoManager daoManager) {
+    public ConditionManager(DaoManager daoManager) {
         mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
+        mRuleConditionDao = mDaoManager.getRuleConditionDao();
     }
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
+
+    public RuleCondition load(Long key) {
+        return mRuleConditionDao.load(key);
     }
 
-    /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
-     */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
+    public List<RuleCondition> loadAllConditions() {
+        return mRuleConditionDao.loadAll();
     }
 
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
+    public long insert(RuleCondition entity) {
+        return mRuleConditionDao.insert(entity);
     }
 
+    public void update(RuleCondition entity) {
+        mRuleConditionDao.update(entity);
+    }
 
+    public void deleteAll() {
+        mRuleConditionDao.deleteAll();
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

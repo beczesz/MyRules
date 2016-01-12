@@ -13,10 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
+import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.business.event.RuleEventManager;
+import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.model.dao.Rule;
+import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
@@ -69,7 +73,10 @@ public class RulesOverviewFragment extends BaseFragment {
     @Inject
     public RuleManager mRuleManager;
 
-    private ArrayAdapter<Rule> mAdapter ;
+    @Inject
+    public ConditionManager mConditionManager;
+
+    private ArrayAdapter<RuleCondition> mAdapter;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -90,14 +97,20 @@ public class RulesOverviewFragment extends BaseFragment {
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.rules_overview_layout, null);
         }
+
+
         return mRootView;
+
+
     }
+
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<Rule>());
+        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<RuleCondition>());
         mRulesListView.setAdapter(mAdapter);
 
         if (BuildConfig.DEBUG) {
@@ -114,7 +127,7 @@ public class RulesOverviewFragment extends BaseFragment {
      */
     private void updateUI() {
         mAdapter.clear();
-        mAdapter.addAll(mRuleManager.loadAllRules());
+        mAdapter.addAll(mConditionManager.loadAllConditions());
         mAdapter.notifyDataSetChanged();
     }
 
@@ -122,6 +135,15 @@ public class RulesOverviewFragment extends BaseFragment {
     public void generateRandomRule() {
         mRuleManager.insert(RuleManager.generateRandom());
         updateUI();
+
+        startEventManager();
+    }
+
+    private void startEventManager() {
+        ArrayList<EventHandlerPlugin> plugins = new ArrayList<>();
+        plugins.add(new DebugEventHandlerPlugin());
+        RuleEventManager manager = new RuleEventManager(plugins);
+        manager.init();
     }
 
     // ------------------------------------------------------------------------
