@@ -1,18 +1,12 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.action;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
+import com.exarlabs.android.myrules.business.action.plugins.HelloWorldActionPlugin;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * Factory pattern implementation for the action plugins.
+ * Created by becze on 12/18/2015.
  */
-public class RuleManager {
+public class ActionPluginFactory {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,51 +20,31 @@ public class RuleManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static RuleRecord generateRandom() {
-        RuleRecord rule = new RuleRecord();
-        return rule;
+    /**
+     * Creator for the action plugins.
+     *
+     * @param pluginType
+     * @return a new action plugin, if no plugin found a default AlwaysTrueConditionPlugin is created.
+     */
+    public static ActionPlugin create(int pluginType) {
+        switch (pluginType) {
+            default:
+            case Action.Type.DEBUG_HELLO_WORLD:
+                return new HelloWorldActionPlugin();
+        }
     }
 
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
-
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
-    }
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
-
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
-    }
-
-    /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
-     */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
-    }
-
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
-    }
-
-
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

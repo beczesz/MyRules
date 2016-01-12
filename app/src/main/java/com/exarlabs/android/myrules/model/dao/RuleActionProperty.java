@@ -5,31 +5,31 @@ package com.exarlabs.android.myrules.model.dao;
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
 /**
- * Entity mapped to table "RULE_CONDITION_PROPERTY".
+ * Entity mapped to table "RULE_ACTION_PROPERTY".
  */
-public class RuleConditionProperty {
+public class RuleActionProperty {
 
     private Long id;
     /** Not-null value. */
     private String key;
     private String value;
-    private Long conditionId;
+    private Long actionId;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
 
-    public RuleConditionProperty() {
+    public RuleActionProperty() {
     }
 
-    public RuleConditionProperty(Long id) {
+    public RuleActionProperty(Long id) {
         this.id = id;
     }
 
-    public RuleConditionProperty(Long id, String key, String value, Long conditionId) {
+    public RuleActionProperty(Long id, String key, String value, Long actionId) {
         this.id = id;
         this.key = key;
         this.value = value;
-        this.conditionId = conditionId;
+        this.actionId = actionId;
     }
 
     public Long getId() {
@@ -58,12 +58,12 @@ public class RuleConditionProperty {
         this.value = value;
     }
 
-    public Long getConditionId() {
-        return conditionId;
+    public Long getActionId() {
+        return actionId;
     }
 
-    public void setConditionId(Long conditionId) {
-        this.conditionId = conditionId;
+    public void setActionId(Long actionId) {
+        this.actionId = actionId;
     }
 
     // KEEP METHODS - put your custom methods here

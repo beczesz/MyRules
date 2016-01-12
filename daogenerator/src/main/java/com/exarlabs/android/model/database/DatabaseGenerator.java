@@ -53,45 +53,106 @@ public class DatabaseGenerator {
         schema.enableKeepSectionsByDefault();
 
         /*
-         * Add Conditions
+         * Add RuleCondition, RuleConditionProperty
          */
-        Entity condition = schema.addEntity("RuleCondition");
-        condition.setSuperclass("Condition");
-        condition.addIdProperty();
-        condition.addIntProperty("type").notNull();
-        condition.addIntProperty("operator").notNull();
+        Entity ruleCondition = schema.addEntity("RuleCondition");
+        ruleCondition.setSuperclass("Condition");
+        ruleCondition.addIdProperty();
+        ruleCondition.addIntProperty("type").notNull();
+        ruleCondition.addIntProperty("operator").notNull();
 
-        // A condition can also have a number of other conditions
-        Property parentConditionProperty = condition.addLongProperty("parentCondition").getProperty();
-        ToMany conditionToSubConditions = condition.addToMany(condition, parentConditionProperty);
-        conditionToSubConditions.setName("childConditions");
+        Entity ruleConditionProperty = schema.addEntity("RuleConditionProperty");
+        ruleConditionProperty.addIdProperty();
+        ruleConditionProperty.addStringProperty("key").notNull();
+        ruleConditionProperty.addStringProperty("value");
+
 
         /*
-         * ConditionProperties
+         * Add RuleAction and RuleActionProperty
          */
-        Entity conditionProperties = schema.addEntity("RuleConditionProperty");
-        conditionProperties.addIdProperty();
-        conditionProperties.addStringProperty("key").notNull();
-        conditionProperties.addStringProperty("value");
+        Entity ruleAction = schema.addEntity("RuleAction");
+        ruleAction.setSuperclass("Action");
+        ruleAction.addIdProperty();
+        ruleAction.addIntProperty("type").notNull();
 
-//        // A condition can have many ConditionProperties
-//        Property conditionIdProperty = conditionProperties.addLongProperty("conditionId").notNull().getProperty();
-//        ToMany conditionToConditionProperties = conditionProperties.addToMany(condition, conditionIdProperty);
-//        conditionToConditionProperties.setName("properties");
+        Entity ruleActionProperty = schema.addEntity("RuleActionProperty");
+        ruleActionProperty.addIdProperty();
+        ruleActionProperty.addStringProperty("key").notNull();
+        ruleActionProperty.addStringProperty("value");
+
+
 
         /*
-         * Add rules
+         * Add RuleRecord, RuleConditionLink, RuleActionLink
          */
-        Entity rule = schema.addEntity("Rule");
-        rule.addIdProperty();
-        rule.addIntProperty("state").notNull();
-        rule.addIntProperty("eventCode").notNull();
+        Entity ruleRecord = schema.addEntity("RuleRecord");
+        ruleRecord.setSuperclass("Rule");
+        ruleRecord.addIdProperty();
+        ruleRecord.addIntProperty("state").notNull();
+        ruleRecord.addIntProperty("eventCode").notNull();
 
-//        // A rule has one condition
-//        Property ruleConditionIdProperty = rule.addLongProperty("conditionId").getProperty();
-//        rule.addToOne(condition, ruleConditionIdProperty);
+        Entity ruleConditionLink = schema.addEntity("RuleConditionLink");
+        ruleConditionLink.addIdProperty();
+
+        Entity ruleActionLink = schema.addEntity("RuleActionLink");
+        ruleActionLink.addIdProperty();
+
+
+
+        /*
+         * Create the links between the entities
+         */
+
+        //Link 1:N RuleCondition to RuleCondition (recursive tree like connection)
+        connectOneToMany(ruleCondition, "childConditions", ruleCondition, "parentCondition");
+
+        //Link 1:N RuleCondition to RuleConditionProperty
+        connectOneToMany(ruleCondition, "properties", ruleConditionProperty, "conditionId");
+
+        // Link 1:N RuleAction to RuleActionProperty
+        connectOneToMany(ruleAction, "properties", ruleActionProperty, "actionId");
+
+        // A ruleRecord has one ruleCondition
+        connectToOne(ruleRecord, "conditionLinkId", ruleConditionLink);
+        connectToOne(ruleConditionLink, "ruleId", ruleRecord);
+        connectOneToMany(ruleCondition, "ruleConditionLinks", ruleConditionLink, "conditionId");
+        connectToOne(ruleConditionLink, "ruleConditionId", ruleCondition);
+
+        // Connect tge RuleRecord RuleAction via RuleActionLink as n:M
+        connectOneToMany(ruleRecord, "ruleActionLinks", ruleActionLink, "actionId");
+        connectToOne(ruleActionLink, "ruleRecordId", ruleRecord);
+
+        connectOneToMany(ruleAction, "ruleActionLinks", ruleActionLink, "ruleId");
+        connectToOne(ruleActionLink, "ruleActionId", ruleAction);
 
         return schema;
+    }
+
+    /**
+     * Connects two entities with 1:N relation
+     *
+     * @param entityOne - the entity which holds multiple entityMany references
+     * @param linkToManyName - the link name which holds the toMany reference
+     * @param entityMany - the entity name which is referenced by entityOne
+     * @param linkToOneName - the name of the link to the entityOne
+     */
+    private void connectOneToMany(Entity entityOne, String linkToManyName, Entity entityMany, String linkToOneName) {
+        // Connect tge RuleRecord RuleAction via RuleActionLink as n:M
+        Property entityManyLinkIdProperty = entityMany.addLongProperty(linkToOneName).getProperty();
+        ToMany toMany = entityOne.addToMany(entityMany, entityManyLinkIdProperty);
+        toMany.setName(linkToManyName);
+    }
+
+    /**
+     * Connects two entities with 1:1 relationship
+     *
+     * @param entity1
+     * @param connectionName
+     * @param entity2
+     */
+    private void connectToOne(Entity entity1, String connectionName, Entity entity2) {
+        Property connectionProperty = entity1.addLongProperty(connectionName).getProperty();
+        entity1.addToOne(entity2, connectionProperty);
     }
 
     // ------------------------------------------------------------------------

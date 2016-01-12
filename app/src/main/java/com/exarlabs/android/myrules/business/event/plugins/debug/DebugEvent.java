@@ -1,18 +1,12 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.event.plugins.debug;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
+import com.exarlabs.android.myrules.business.event.Event;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * Example event implementation
+ * Created by becze on 1/11/2016.
  */
-public class RuleManager {
+public class DebugEvent implements Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -22,57 +16,58 @@ public class RuleManager {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = DebugEvent.class.getSimpleName();
+
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
-
-    public static RuleRecord generateRandom() {
-        RuleRecord rule = new RuleRecord();
-        return rule;
-    }
 
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
+    private String mDebugEventData1 = "SampleData1";
+    private String mDebugEventData2 = "SampleData2";
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
-    }
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
+    @Override
+    public int getType() {
+        return Type.RULE_EVENT_DEBUG;
     }
 
-    /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
-     */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
+    @Override
+    public String toString() {
+        return TAG + "\n" + mDebugEventData1 + "\n" + mDebugEventData2;
     }
-
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
-    }
-
 
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+
+    public String getDebugEventData1() {
+        return mDebugEventData1;
+    }
+
+    public void setDebugEventData1(String debugEventData1) {
+        mDebugEventData1 = debugEventData1;
+    }
+
+    public String getDebugEventData2() {
+        return mDebugEventData2;
+    }
+
+    public void setDebugEventData2(String debugEventData2) {
+        mDebugEventData2 = debugEventData2;
+    }
 }

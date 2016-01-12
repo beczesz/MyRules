@@ -5,9 +5,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.Rule;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionDao;
+import com.exarlabs.android.myrules.model.dao.RuleRecord;
 
 /**
  * Manager for conditions.
@@ -27,8 +27,8 @@ public class ConditionManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static Rule generateRandom() {
-        Rule rule = new Rule();
+    public static RuleRecord generateRandom() {
+        RuleRecord rule = new RuleRecord();
         return rule;
     }
 

@@ -1,18 +1,13 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.event;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
- * Manager for rules.
- * Created by becze on 12/15/2015.
+ * Abstract event plugin which serveres as a base class for all the RuleEventHandler
+ * Created by becze on 1/11/2016.
  */
-public class RuleManager {
+public class EventHandlerPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,48 +21,55 @@ public class RuleManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static RuleRecord generateRandom() {
-        RuleRecord rule = new RuleRecord();
-        return rule;
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
+    private Observable<Event> mEventObservable;
+    private Subscriber<? super Event> mSubscriber;
+
+    private boolean isEnabled = false;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    @Inject
-    public RuleManager(DaoManager daoManager) {
-        mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
+    public EventHandlerPlugin() {
+        // Initialize the plugin on creation
+        init();
+
+        // By default enable the plugin
+        enable();
     }
+
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
+    /**
+     * Dispatches a new event
+     * @param event
+     */
+    public void dispatchEvent(Event event) {
+        if (mSubscriber != null && isEnabled) {
+            mSubscriber.onNext(event);
+        }
     }
 
     /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
+     * Initialize the plugin by preparing an observable
      */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
+    public void init() {
+        mEventObservable = Observable.create(subscriber -> mSubscriber = subscriber);
     }
 
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
+    public void enable() {
+        isEnabled = true;
+    }
+
+    public void disable() {
+        isEnabled = false;
     }
 
 
@@ -75,4 +77,12 @@ public class RuleManager {
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    public Observable<Event> getEventObservable() {
+        return mEventObservable;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 }

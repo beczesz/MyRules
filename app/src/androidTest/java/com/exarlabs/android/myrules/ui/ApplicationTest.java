@@ -3,11 +3,14 @@ package com.exarlabs.android.myrules.ui;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
+import com.exarlabs.android.myrules.business.action.Action;
 import com.exarlabs.android.myrules.business.condition.Condition;
 import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.model.dao.RuleAction;
+import com.exarlabs.android.myrules.model.dao.RuleActionDao;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionDao;
-import com.exarlabs.android.myrules.model.dao.RuleDao;
+import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
@@ -32,8 +35,9 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     // ------------------------------------------------------------------------
 
     private DaoManager mDaoManager;
-    private RuleDao mRuleDao;
+    private RuleRecordDao mRuleRecordDao;
     private RuleConditionDao mRuleConditionDao;
+    private RuleActionDao mRuleActionDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -51,21 +55,13 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     // ------------------------------------------------------------------------
 
     public void testConditions() {
-        mDaoManager = new DaoManager();
-        mRuleDao = mDaoManager.getRuleDao();
-        mRuleConditionDao = mDaoManager.getRuleConditionDao();
-
-        // delete everything in the database
-        mRuleDao.deleteAll();
-        mRuleConditionDao.deleteAll();
-
-
+        initDao();
         // create a condition structure
-        RuleCondition c1 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-        RuleCondition c2 = generateNew(Condition.Type.DEBUG_ALWAYS_FALSE, Condition.Operator.AND);
-        RuleCondition c3 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-        RuleCondition c4 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-        RuleCondition c5 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
+        RuleCondition c1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.OR);
+        RuleCondition c2 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE, Condition.Operator.AND);
+        RuleCondition c3 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.OR);
+        RuleCondition c4 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE, Condition.Operator.AND);
+        RuleCondition c5 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
 
         mRuleConditionDao.insert(c1);
         mRuleConditionDao.insert(c2);
@@ -93,13 +89,40 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         c1.build();
 
         // condition is evaluated to true
-        assertTrue(!c1.evaluate(null));
+        assertTrue(c1.evaluate(null));
     }
 
-    private RuleCondition generateNew(int type, int operator) {
+    public void testActions() {
+        initDao();
+        RuleAction ruleAction = generateNewAction(Action.Type.DEBUG_HELLO_WORLD);
+        ruleAction.build();
+        assertTrue(ruleAction.run(null));
+    }
+
+    private void initDao() {
+
+        mDaoManager = new DaoManager();
+        mRuleRecordDao = mDaoManager.getRuleRecordDao();
+        mRuleConditionDao = mDaoManager.getRuleConditionDao();
+        mRuleActionDao = mDaoManager.getRuleActionDao();
+
+        // delete everything in the database
+        mRuleRecordDao.deleteAll();
+        mRuleActionDao.deleteAll();
+        mRuleConditionDao.deleteAll();
+    }
+
+
+    private RuleCondition generateNewCondition(int type, int operator) {
         RuleCondition c = new RuleCondition();
         c.setOperator(operator);
         c.setType(type);
         return c;
+    }
+
+    private RuleAction generateNewAction(int type) {
+        RuleAction ruleAction = new RuleAction();
+        ruleAction.setType(type);
+        return ruleAction;
     }
 }

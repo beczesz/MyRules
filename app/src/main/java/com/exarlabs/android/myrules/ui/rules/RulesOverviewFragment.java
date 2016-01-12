@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.condition.Condition;
 import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
+import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.business.event.RuleEventManager;
+import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
@@ -103,55 +104,7 @@ public class RulesOverviewFragment extends BaseFragment {
 
     }
 
-    private void testConditions() {
 
-        mConditionManager.deleteAll();
-
-        // create a condition structure
-        RuleCondition c1 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-        RuleCondition c2 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-        RuleCondition c3 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-        RuleCondition c4 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-        RuleCondition c5 = generateNew(Condition.Type.DEBUG_ALWAYS_TRUE, Condition.Operator.AND);
-
-        mConditionManager.insert(c1);
-        mConditionManager.insert(c2);
-        mConditionManager.insert(c3);
-        mConditionManager.insert(c4);
-        mConditionManager.insert(c5);
-
-        // build up the relations
-        c2.setParentCondition(c1.getId());
-        c3.setParentCondition(c1.getId());
-        c4.setParentCondition(c3.getId());
-        c5.setParentCondition(c3.getId());
-
-        c1.getChildConditions().add(c2);
-        c1.getChildConditions().add(c3);
-        c3.getChildConditions().add(c4);
-        c3.getChildConditions().add(c5);
-
-        mConditionManager.update(c1);
-        mConditionManager.update(c2);
-        mConditionManager.update(c3);
-        mConditionManager.update(c4);
-        mConditionManager.update(c5);
-
-    }
-
-    private void readCondtions() {
-        RuleCondition condition = mConditionManager.load(1L);
-        condition.build();
-        boolean evaluate = condition.evaluate(null);
-        Log.w(TAG, "evaluated: " + evaluate);
-    }
-
-    private RuleCondition generateNew(int type, int operator) {
-        RuleCondition c = new RuleCondition();
-        c.setOperator(operator);
-        c.setType(type);
-        return c;
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -180,9 +133,17 @@ public class RulesOverviewFragment extends BaseFragment {
 
     @OnClick(R.id.generate_random)
     public void generateRandomRule() {
-        readCondtions();
         mRuleManager.insert(RuleManager.generateRandom());
         updateUI();
+
+        startEventManager();
+    }
+
+    private void startEventManager() {
+        ArrayList<EventHandlerPlugin> plugins = new ArrayList<>();
+        plugins.add(new DebugEventHandlerPlugin());
+        RuleEventManager manager = new RuleEventManager(plugins);
+        manager.init();
     }
 
     // ------------------------------------------------------------------------

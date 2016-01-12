@@ -1,18 +1,19 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business.action;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.model.dao.RuleAction;
+import com.exarlabs.android.myrules.model.dao.RuleActionDao;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
 
 /**
- * Manager for rules.
+ * Manager for actions.
  * Created by becze on 12/15/2015.
  */
-public class RuleManager {
+public class ActionManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -36,41 +37,42 @@ public class RuleManager {
     // ------------------------------------------------------------------------
 
     private DaoManager mDaoManager;
-    private final RuleRecordDao mRuleRecordDao;
+    private final RuleActionDao mRuleActionDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
     @Inject
-    public RuleManager(DaoManager daoManager) {
+    public ActionManager(DaoManager daoManager) {
         mDaoManager = daoManager;
-        mRuleRecordDao = mDaoManager.getRuleRecordDao();
+        mRuleActionDao = mDaoManager.getRuleActionDao();
     }
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public List<RuleRecord> loadAllRules() {
-        return mRuleRecordDao.loadAll();
+
+    public RuleAction load(Long key) {
+        return mRuleActionDao.load(key);
     }
 
-    /**
-     * Loads the list of rules which are responding to a specified event and it has the given status.
-     * @param eventCode the code of the event
-     * @param status the status of the event
-     * @return
-     */
-    public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
+    public List<RuleAction> loadAllConditions() {
+        return mRuleActionDao.loadAll();
     }
 
-    public long insert(RuleRecord entity) {
-        return mRuleRecordDao.insert(entity);
+    public long insert(RuleAction entity) {
+        return mRuleActionDao.insert(entity);
     }
 
+    public void update(RuleAction entity) {
+        mRuleActionDao.update(entity);
+    }
 
+    public void deleteAll() {
+        mRuleActionDao.deleteAll();
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
