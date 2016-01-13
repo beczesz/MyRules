@@ -10,6 +10,7 @@ import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
+import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 
 /**
@@ -141,6 +142,10 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
+    public void startAddRuleFragment(){
+        Fragment fragment = RulesAddRuleFragment.newInstance();
+        open(fragment);
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

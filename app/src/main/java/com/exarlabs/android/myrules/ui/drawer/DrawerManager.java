@@ -129,7 +129,7 @@ public class DrawerManager {
         //if you want to update the items at a later time it is recommended to keep it in a variable
         //@formatter:off
         items.add(new PrimaryDrawerItem()
-                        .withName(MenuItem.MY_ACTIONS.mLabel).withIcon(Octicons.Icon.oct_dashboard)
+                        .withName(MenuItem.MY_RULES.mLabel).withIcon(Octicons.Icon.oct_dashboard)
                         .withIconColorRes(R.color.menu_item_1).withSelectedIconColorRes(R.color.menu_item_1));
 
         items.add(new PrimaryDrawerItem()

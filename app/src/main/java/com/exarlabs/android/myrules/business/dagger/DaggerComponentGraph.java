@@ -11,6 +11,7 @@ import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
+import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 
 /**
@@ -43,4 +44,6 @@ public interface DaggerComponentGraph {
     void inject(HistoryListFragment historyListFragment);
 
     void inject(RuleService ruleService);
+
+    void inject(RulesAddRuleFragment rulesAddRuleFragment);
 }

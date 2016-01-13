@@ -1,7 +1,5 @@
 package com.exarlabs.android.myrules.ui.rules;
 
-import java.util.ArrayList;
-
 import javax.inject.Inject;
 
 import android.os.Bundle;
@@ -10,22 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
-import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
-import com.exarlabs.android.myrules.business.event.RuleEventManager;
-import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEventHandlerPlugin;
-import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
-import com.software.shell.fab.ActionButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -34,7 +26,7 @@ import butterknife.OnClick;
  * Lists all the rules which are defined by the user.
  * Created by becze on 11/25/2015.
  */
-public class RulesOverviewFragment extends BaseFragment {
+public class RulesAddRuleFragment extends BaseFragment {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -44,7 +36,7 @@ public class RulesOverviewFragment extends BaseFragment {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = RulesOverviewFragment.class.getSimpleName();
+    private static final String TAG = RulesAddRuleFragment.class.getSimpleName();
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -53,8 +45,8 @@ public class RulesOverviewFragment extends BaseFragment {
     /**
      * @return newInstance of SampleFragment
      */
-    public static RulesOverviewFragment newInstance() {
-        return new RulesOverviewFragment();
+    public static RulesAddRuleFragment newInstance() {
+        return new RulesAddRuleFragment();
     }
 
     // ------------------------------------------------------------------------
@@ -63,27 +55,20 @@ public class RulesOverviewFragment extends BaseFragment {
     @Bind(R.id.build_info)
     public TextView mDevelInfo;
 
-    @Bind(R.id.rules_list)
-    public ListView mRulesListView;
+    @Bind(R.id.edit_rule_name)
+    public EditText mRuleName;
 
-    @Bind(R.id.add_rule_action_button)
-    public ActionButton mAddRuleButton;
-
-    private View mRootView;
+    @Bind(R.id.spinner_events)
+    public Spinner mSpinnerEvents;
 
     @Inject
     public DevelManager mDevelManager;
 
     @Inject
-    public RuleManager mRuleManager;
-
-    @Inject
-    public ConditionManager mConditionManager;
-
-    @Inject
     public NavigationManager mNavigationManager;
 
-    private ArrayAdapter<RuleCondition> mAdapter;
+    private View mRootView;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -102,62 +87,36 @@ public class RulesOverviewFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.rules_overview_layout, null);
+            mRootView = inflater.inflate(R.layout.rules_add_rule, null);
         }
-
-
         return mRootView;
-
-
     }
-
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<RuleCondition>());
-        mRulesListView.setAdapter(mAdapter);
 
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());
             mDevelInfo.setVisibility(View.VISIBLE);
         }
 
-        mAddRuleButton.playShowAnimation();
-        updateUI();
-
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.list_of_events, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerEvents.setAdapter(adapter);
     }
 
-    /**
-     * Update the list of rules
-     */
-    private void updateUI() {
-        mAdapter.clear();
-        mAdapter.addAll(mConditionManager.loadAllConditions());
-        mAdapter.notifyDataSetChanged();
+    @OnClick(R.id.button_save)
+    public void saveNewRule(){
+        // TODO: save the new rule in the database
+        
     }
 
-    @OnClick(R.id.generate_random)
-    public void generateRandomRule() {
-        mRuleManager.insert(RuleManager.generateRandom());
-        updateUI();
-
-        startEventManager();
-    }
-
-    private void startEventManager() {
-        ArrayList<EventHandlerPlugin> plugins = new ArrayList<>();
-        plugins.add(new DebugEventHandlerPlugin());
-        RuleEventManager manager = new RuleEventManager(plugins);
-        manager.init();
-    }
-
-
-    @OnClick(R.id.add_rule_action_button)
-    public void showAddRuleFragment(){
-        mNavigationManager.startAddRuleFragment();
+    @OnClick(R.id.button_cancel)
+    public void cancelNewRule(){
+        mNavigationManager.navigateBack(getActivity());
     }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
