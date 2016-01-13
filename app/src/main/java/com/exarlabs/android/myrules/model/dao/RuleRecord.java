@@ -16,6 +16,7 @@ import de.greenrobot.dao.DaoException;
 public class RuleRecord extends Rule {
 
     private Long id;
+    private String ruleName;
     private int state;
     private int eventCode;
     private Long conditionLinkId;
@@ -41,8 +42,9 @@ public class RuleRecord extends Rule {
         this.id = id;
     }
 
-    public RuleRecord(Long id, int state, int eventCode, Long conditionLinkId) {
+    public RuleRecord(Long id, String ruleName, int state, int eventCode, Long conditionLinkId) {
         this.id = id;
+        this.ruleName = ruleName;
         this.state = state;
         this.eventCode = eventCode;
         this.conditionLinkId = conditionLinkId;
@@ -60,6 +62,14 @@ public class RuleRecord extends Rule {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRuleName() {
+        return ruleName;
+    }
+
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
     }
 
     public int getState() {

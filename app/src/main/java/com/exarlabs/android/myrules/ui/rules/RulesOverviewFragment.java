@@ -1,6 +1,7 @@
 package com.exarlabs.android.myrules.ui.rules;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -20,7 +21,7 @@ import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.RuleEventManager;
 import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.model.dao.RuleCondition;
+import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
@@ -29,6 +30,7 @@ import com.software.shell.fab.ActionButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import rx.Observable;
 
 /**
  * Lists all the rules which are defined by the user.
@@ -83,7 +85,7 @@ public class RulesOverviewFragment extends BaseFragment {
     @Inject
     public NavigationManager mNavigationManager;
 
-    private ArrayAdapter<RuleCondition> mAdapter;
+    private ArrayAdapter<String> mAdapter;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -104,20 +106,15 @@ public class RulesOverviewFragment extends BaseFragment {
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.rules_overview_layout, null);
         }
-
-
         return mRootView;
-
-
     }
-
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<RuleCondition>());
+        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
         mRulesListView.setAdapter(mAdapter);
 
         if (BuildConfig.DEBUG) {
@@ -135,16 +132,14 @@ public class RulesOverviewFragment extends BaseFragment {
      */
     private void updateUI() {
         mAdapter.clear();
-        mAdapter.addAll(mConditionManager.loadAllConditions());
+        List<RuleRecord> rules = mRuleManager.loadAllRules();
+        List<String> ruleNames = new ArrayList<>();
+        Observable.from(rules)
+                        .map(rule -> rule.getRuleName())
+                        .subscribe(ruleName -> ruleNames.add(ruleName));
+
+        mAdapter.addAll(ruleNames);
         mAdapter.notifyDataSetChanged();
-    }
-
-    @OnClick(R.id.generate_random)
-    public void generateRandomRule() {
-        mRuleManager.insert(RuleManager.generateRandom());
-        updateUI();
-
-        startEventManager();
     }
 
     private void startEventManager() {

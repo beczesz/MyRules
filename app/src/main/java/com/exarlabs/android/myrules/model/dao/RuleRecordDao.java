@@ -27,9 +27,10 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property State = new Property(1, int.class, "state", false, "STATE");
-        public final static Property EventCode = new Property(2, int.class, "eventCode", false, "EVENT_CODE");
-        public final static Property ConditionLinkId = new Property(3, Long.class, "conditionLinkId", false, "CONDITION_LINK_ID");
+        public final static Property RuleName = new Property(1, String.class, "ruleName", false, "RULE_NAME");
+        public final static Property State = new Property(2, int.class, "state", false, "STATE");
+        public final static Property EventCode = new Property(3, int.class, "eventCode", false, "EVENT_CODE");
+        public final static Property ConditionLinkId = new Property(4, Long.class, "conditionLinkId", false, "CONDITION_LINK_ID");
     };
 
     private DaoSession daoSession;
@@ -49,9 +50,10 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_RECORD\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"STATE\" INTEGER NOT NULL ," + // 1: state
-                "\"EVENT_CODE\" INTEGER NOT NULL ," + // 2: eventCode
-                "\"CONDITION_LINK_ID\" INTEGER);"); // 3: conditionLinkId
+                "\"RULE_NAME\" TEXT," + // 1: ruleName
+                "\"STATE\" INTEGER NOT NULL ," + // 2: state
+                "\"EVENT_CODE\" INTEGER NOT NULL ," + // 3: eventCode
+                "\"CONDITION_LINK_ID\" INTEGER);"); // 4: conditionLinkId
     }
 
     /** Drops the underlying database table. */
@@ -69,12 +71,17 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getState());
-        stmt.bindLong(3, entity.getEventCode());
+ 
+        String ruleName = entity.getRuleName();
+        if (ruleName != null) {
+            stmt.bindString(2, ruleName);
+        }
+        stmt.bindLong(3, entity.getState());
+        stmt.bindLong(4, entity.getEventCode());
  
         Long conditionLinkId = entity.getConditionLinkId();
         if (conditionLinkId != null) {
-            stmt.bindLong(4, conditionLinkId);
+            stmt.bindLong(5, conditionLinkId);
         }
     }
 
@@ -95,9 +102,10 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
     public RuleRecord readEntity(Cursor cursor, int offset) {
         RuleRecord entity = new RuleRecord( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getInt(offset + 1), // state
-            cursor.getInt(offset + 2), // eventCode
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // conditionLinkId
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // ruleName
+            cursor.getInt(offset + 2), // state
+            cursor.getInt(offset + 3), // eventCode
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // conditionLinkId
         );
         return entity;
     }
@@ -106,9 +114,10 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
     @Override
     public void readEntity(Cursor cursor, RuleRecord entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setState(cursor.getInt(offset + 1));
-        entity.setEventCode(cursor.getInt(offset + 2));
-        entity.setConditionLinkId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setRuleName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setState(cursor.getInt(offset + 2));
+        entity.setEventCode(cursor.getInt(offset + 3));
+        entity.setConditionLinkId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */

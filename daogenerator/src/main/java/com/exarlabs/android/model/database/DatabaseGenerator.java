@@ -88,6 +88,7 @@ public class DatabaseGenerator {
         Entity ruleRecord = schema.addEntity("RuleRecord");
         ruleRecord.setSuperclass("Rule");
         ruleRecord.addIdProperty();
+        ruleRecord.addStringProperty("ruleName");
         ruleRecord.addIntProperty("state").notNull();
         ruleRecord.addIntProperty("eventCode").notNull();
 

@@ -9,7 +9,8 @@
         android:id="@+id/edit_rule_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/rule_name"/>
+        android:hint="@string/rule_name"
+        android:imeOptions="actionDone"/>
 
     <Spinner
         android:id="@+id/spinner_events"

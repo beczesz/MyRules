@@ -2,11 +2,13 @@ package com.exarlabs.android.myrules.ui.rules;
 
 import javax.inject.Inject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
+import com.exarlabs.android.myrules.business.rule.RuleManager;
+import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
@@ -65,6 +69,9 @@ public class RulesAddRuleFragment extends BaseFragment {
     public DevelManager mDevelManager;
 
     @Inject
+    public RuleManager mRuleManager;
+
+    @Inject
     public NavigationManager mNavigationManager;
 
     private View mRootView;
@@ -110,12 +117,23 @@ public class RulesAddRuleFragment extends BaseFragment {
 
     @OnClick(R.id.button_save)
     public void saveNewRule(){
-        // TODO: save the new rule in the database
-        
+        RuleRecord entity = new RuleRecord();
+        String name = mRuleName.getText().toString();
+        entity.setRuleName(name);
+
+        mRuleManager.insert(entity);
+        goBack();
     }
 
     @OnClick(R.id.button_cancel)
     public void cancelNewRule(){
+        goBack();
+    }
+
+    private void goBack(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
         mNavigationManager.navigateBack(getActivity());
     }
     // ------------------------------------------------------------------------
