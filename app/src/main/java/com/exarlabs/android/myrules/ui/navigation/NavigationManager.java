@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.actions.ActionsAddActionFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
@@ -117,28 +119,9 @@ public class NavigationManager {
         }
     }
 
+    // MY RULES
     public void startRulesOverview() {
         Fragment fragment = RulesOverviewFragment.newInstance();
-        openAsRoot(fragment);
-    }
-
-    public void startConditionsOverview() {
-        Fragment fragment = ConditionsOverviewFragment.newInstance();
-        openAsRoot(fragment);
-    }
-
-    public void startEventOverview() {
-        Fragment fragment = EventsOverviewFragment.newInstance();
-        openAsRoot(fragment);
-    }
-
-    public void startActionsOverview() {
-        Fragment fragment = ActionsOverviewFragment.newInstance();
-        openAsRoot(fragment);
-    }
-
-    public void startHistoryOverview() {
-        Fragment fragment = HistoryListFragment.newInstance();
         openAsRoot(fragment);
     }
 
@@ -146,6 +129,41 @@ public class NavigationManager {
         Fragment fragment = RulesAddRuleFragment.newInstance();
         open(fragment);
     }
+
+    // MY CONDITIONS
+    public void startConditionsOverview() {
+        Fragment fragment = ConditionsOverviewFragment.newInstance();
+        openAsRoot(fragment);
+    }
+
+    public void startAddConditionFragment(){
+        Fragment fragment = ConditionsAddConditionFragment.newInstance();
+        open(fragment);
+    }
+
+    // MY EVENTS
+    public void startEventOverview() {
+        Fragment fragment = EventsOverviewFragment.newInstance();
+        openAsRoot(fragment);
+    }
+
+    // MY ACTIONS
+    public void startActionsOverview() {
+        Fragment fragment = ActionsOverviewFragment.newInstance();
+        openAsRoot(fragment);
+    }
+
+    public void startAddActionFragment(){
+        Fragment fragment = ActionsAddActionFragment.newInstance();
+        open(fragment);
+    }
+
+    // HISTORY
+    public void startHistoryOverview() {
+        Fragment fragment = HistoryListFragment.newInstance();
+        openAsRoot(fragment);
+    }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

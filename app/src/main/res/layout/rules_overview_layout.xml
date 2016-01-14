@@ -11,9 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <ListView
-            android:id="@+id/rules_list"
+            android:id="@+id/listView_rules"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -39,7 +38,7 @@
         tools:text="Build: D#256 (2015/01/12 12:36:25)"/>
 
     <com.software.shell.fab.ActionButton
-        android:id="@+id/add_rule_action_button"
+        android:id="@+id/fab_add_rule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -50,6 +49,6 @@
         fab:type = "DEFAULT"
         fab:button_color="@color/colorAccent"
         fab:image="@drawable/fab_plus_icon"
-        fab:show_animation="@anim/fab_fade_in"
-        />
+        fab:show_animation="@anim/fab_roll_from_down"/>
+
 </RelativeLayout>

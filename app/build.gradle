@@ -150,6 +150,9 @@ dependencies {
 
     // floating action button
     compile 'com.github.shell-software:fab:1.1.2'
+    // expandable layout
+    compile 'com.github.aakira:expandable-layout:1.4.1@aar'
+
 
     // Development / Analytics
     compile 'com.facebook.stetho:stetho:1.2.0'

@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         mNavigationManager.startRulesOverview();
 
         initDrawer();
+
     }
 
     /**

@@ -22,6 +22,7 @@ import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
+import com.github.aakira.expandablelayout.ExpandableLayout;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -64,6 +65,11 @@ public class RulesAddRuleFragment extends BaseFragment {
 
     @Bind(R.id.spinner_events)
     public Spinner mSpinnerEvents;
+
+    @Bind(R.id.expandable_layout_actions)
+    public ExpandableLayout mExpandableActions;
+    @Bind(R.id.expandable_layout_conditions)
+    public ExpandableLayout mExpandableConditions;
 
     @Inject
     public DevelManager mDevelManager;
@@ -113,6 +119,7 @@ public class RulesAddRuleFragment extends BaseFragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.list_of_events, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerEvents.setAdapter(adapter);
+
     }
 
     @OnClick(R.id.button_save)
@@ -136,6 +143,22 @@ public class RulesAddRuleFragment extends BaseFragment {
 
         mNavigationManager.navigateBack(getActivity());
     }
+
+    @OnClick(R.id.expandActions)
+    public void expandActions(){
+        if(mExpandableActions.isExpanded())
+            mExpandableActions.collapse();
+        else
+            mExpandableActions.expand();
+    }
+    @OnClick(R.id.expandConditions)
+    public void expandConditions(){
+        if(mExpandableConditions.isExpanded())
+            mExpandableConditions.collapse();
+        else
+            mExpandableConditions.expand();
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

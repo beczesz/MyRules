@@ -25,6 +25,7 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Type = new Property(1, int.class, "type", false, "TYPE");
+        public final static Property ActionName = new Property(2, String.class, "actionName", false, "ACTION_NAME");
     };
 
     private DaoSession daoSession;
@@ -44,7 +45,8 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_ACTION\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"TYPE\" INTEGER NOT NULL );"); // 1: type
+                "\"TYPE\" INTEGER NOT NULL ," + // 1: type
+                "\"ACTION_NAME\" TEXT);"); // 2: actionName
     }
 
     /** Drops the underlying database table. */
@@ -63,6 +65,11 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getType());
+ 
+        String actionName = entity.getActionName();
+        if (actionName != null) {
+            stmt.bindString(3, actionName);
+        }
     }
 
     @Override
@@ -82,7 +89,8 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
     public RuleAction readEntity(Cursor cursor, int offset) {
         RuleAction entity = new RuleAction( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getInt(offset + 1) // type
+            cursor.getInt(offset + 1), // type
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // actionName
         );
         return entity;
     }
@@ -92,6 +100,7 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
     public void readEntity(Cursor cursor, RuleAction entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setType(cursor.getInt(offset + 1));
+        entity.setActionName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     /** @inheritdoc */

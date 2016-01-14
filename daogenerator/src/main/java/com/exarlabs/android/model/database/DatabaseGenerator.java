@@ -58,6 +58,7 @@ public class DatabaseGenerator {
         Entity ruleCondition = schema.addEntity("RuleCondition");
         ruleCondition.setSuperclass("Condition");
         ruleCondition.addIdProperty();
+        ruleCondition.addStringProperty("conditionName");
         ruleCondition.addIntProperty("type").notNull();
         ruleCondition.addIntProperty("operator").notNull();
 
@@ -77,6 +78,7 @@ public class DatabaseGenerator {
 
         Entity ruleActionProperty = schema.addEntity("RuleActionProperty");
         ruleActionProperty.addIdProperty();
+        ruleAction.addStringProperty("actionName");
         ruleActionProperty.addStringProperty("key").notNull();
         ruleActionProperty.addStringProperty("value");
 

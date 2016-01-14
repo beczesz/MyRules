@@ -22,7 +22,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/spinner_events"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:id="@+id/relativeLayout">
         <Button
             android:id="@+id/button_save"
             android:layout_width="wrap_content"
@@ -36,6 +37,77 @@
             android:layout_toRightOf="@id/button_save"
             android:text="@string/cancel"/>
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/expandActions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relativeLayout"
+        android:text="Actions"/>
+    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/expandable_layout_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/expandActions"
+        app:ael_expanded="false"
+        app:ael_duration="500"
+        app:ael_interpolator="bounce"
+        app:ael_orientation="vertical">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="sample" />
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text"
+            android:text="sample2" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text2"
+            android:text="sample3" />
+    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+    <TextView
+        android:id="@+id/expandConditions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/expandable_layout_actions"
+        android:text="Conditions"/>
+    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/expandable_layout_conditions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/expandConditions"
+        app:ael_expanded="false"
+        app:ael_duration="500"
+        app:ael_interpolator="bounce"
+        app:ael_orientation="vertical">
+
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="sample4" />
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text3"
+            android:text="sample5" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text4"
+            android:text="sample6" />
+    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
 
     <TextView
         android:id="@+id/build_info"

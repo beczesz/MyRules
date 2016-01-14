@@ -17,6 +17,7 @@ public class RuleAction extends Action  {
 
     private Long id;
     private int type;
+    private String actionName;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -37,9 +38,10 @@ public class RuleAction extends Action  {
         this.id = id;
     }
 
-    public RuleAction(Long id, int type) {
+    public RuleAction(Long id, int type, String actionName) {
         this.id = id;
         this.type = type;
+        this.actionName = actionName;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -62,6 +64,14 @@ public class RuleAction extends Action  {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getActionName() {
+        return actionName;
+    }
+
+    public void setActionName(String actionName) {
+        this.actionName = actionName;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
