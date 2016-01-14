@@ -64,8 +64,8 @@ public class MyRulesApplication extends Application {
             // Facebook Stetho
             Stetho.initializeWithDefaults(this);
         }
-    }
 
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

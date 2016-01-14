@@ -1,42 +1,37 @@
 package com.exarlabs.android.myrules.ui.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
-import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
-import com.exarlabs.android.myrules.business.event.RuleEventManager;
-import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
-import com.software.shell.fab.ActionButton;
+import com.github.aakira.expandablelayout.ExpandableLayout;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import rx.Observable;
 
 /**
  * Lists all the rules which are defined by the user.
  * Created by becze on 11/25/2015.
  */
-public class RulesOverviewFragment extends BaseFragment {
+public class RulesAddRuleFragment extends BaseFragment {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -46,7 +41,7 @@ public class RulesOverviewFragment extends BaseFragment {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = RulesOverviewFragment.class.getSimpleName();
+    private static final String TAG = RulesAddRuleFragment.class.getSimpleName();
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -55,8 +50,8 @@ public class RulesOverviewFragment extends BaseFragment {
     /**
      * @return newInstance of SampleFragment
      */
-    public static RulesOverviewFragment newInstance() {
-        return new RulesOverviewFragment();
+    public static RulesAddRuleFragment newInstance() {
+        return new RulesAddRuleFragment();
     }
 
     // ------------------------------------------------------------------------
@@ -65,13 +60,16 @@ public class RulesOverviewFragment extends BaseFragment {
     @Bind(R.id.build_info)
     public TextView mDevelInfo;
 
-    @Bind(R.id.listView_rules)
-    public ListView mRulesListView;
+    @Bind(R.id.edit_rule_name)
+    public EditText mRuleName;
 
-    @Bind(R.id.fab_add_rule)
-    public ActionButton mAddRuleButton;
+    @Bind(R.id.spinner_events)
+    public Spinner mSpinnerEvents;
 
-    private View mRootView;
+    @Bind(R.id.expandable_layout_actions)
+    public ExpandableLayout mExpandableActions;
+    @Bind(R.id.expandable_layout_conditions)
+    public ExpandableLayout mExpandableConditions;
 
     @Inject
     public DevelManager mDevelManager;
@@ -80,12 +78,10 @@ public class RulesOverviewFragment extends BaseFragment {
     public RuleManager mRuleManager;
 
     @Inject
-    public ConditionManager mConditionManager;
-
-    @Inject
     public NavigationManager mNavigationManager;
 
-    private ArrayAdapter<String> mAdapter;
+    private View mRootView;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -98,15 +94,13 @@ public class RulesOverviewFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
-
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.rules_overview_layout, null);
+            mRootView = inflater.inflate(R.layout.rules_add_rule, null);
         }
         return mRootView;
     }
@@ -116,48 +110,55 @@ public class RulesOverviewFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initActionBar(true, getString(R.string.my_rules));
-
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
-        mRulesListView.setAdapter(mAdapter);
 
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());
             mDevelInfo.setVisibility(View.VISIBLE);
         }
 
-        mAddRuleButton.playShowAnimation();
-        updateUI();
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.list_of_events, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerEvents.setAdapter(adapter);
 
     }
 
-    /**
-     * Update the list of rules
-     */
-    private void updateUI() {
-        mAdapter.clear();
-        List<RuleRecord> rules = mRuleManager.loadAllRules();
-        List<String> ruleNames = new ArrayList<>();
-        Observable.from(rules)
-                        .map(rule -> rule.getRuleName())
-                        .subscribe(ruleName -> ruleNames.add(ruleName));
+    @OnClick(R.id.button_save)
+    public void saveNewRule(){
+        RuleRecord entity = new RuleRecord();
+        String name = mRuleName.getText().toString();
+        entity.setRuleName(name);
 
-        mAdapter.addAll(ruleNames);
-        mAdapter.notifyDataSetChanged();
+        mRuleManager.insert(entity);
+        goBack();
     }
 
-    private void startEventManager() {
-        ArrayList<EventHandlerPlugin> plugins = new ArrayList<>();
-        plugins.add(new DebugEventHandlerPlugin());
-        RuleEventManager manager = new RuleEventManager(plugins);
-        manager.init();
+    @OnClick(R.id.button_cancel)
+    public void cancelNewRule(){
+        goBack();
     }
 
+    private void goBack(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
-    @OnClick(R.id.fab_add_rule)
-    public void showAddRuleFragment(){
-        mNavigationManager.startAddRuleFragment();
+        mNavigationManager.navigateBack(getActivity());
     }
+
+    @OnClick(R.id.expandActions)
+    public void expandActions(){
+        if(mExpandableActions.isExpanded())
+            mExpandableActions.collapse();
+        else
+            mExpandableActions.expand();
+    }
+    @OnClick(R.id.expandConditions)
+    public void expandConditions(){
+        if(mExpandableConditions.isExpanded())
+            mExpandableConditions.collapse();
+        else
+            mExpandableConditions.expand();
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

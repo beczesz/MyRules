@@ -27,9 +27,10 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Type = new Property(1, int.class, "type", false, "TYPE");
-        public final static Property Operator = new Property(2, int.class, "operator", false, "OPERATOR");
-        public final static Property ParentCondition = new Property(3, Long.class, "parentCondition", false, "PARENT_CONDITION");
+        public final static Property ConditionName = new Property(1, String.class, "conditionName", false, "CONDITION_NAME");
+        public final static Property Type = new Property(2, int.class, "type", false, "TYPE");
+        public final static Property Operator = new Property(3, int.class, "operator", false, "OPERATOR");
+        public final static Property ParentCondition = new Property(4, Long.class, "parentCondition", false, "PARENT_CONDITION");
     };
 
     private DaoSession daoSession;
@@ -50,9 +51,10 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_CONDITION\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"TYPE\" INTEGER NOT NULL ," + // 1: type
-                "\"OPERATOR\" INTEGER NOT NULL ," + // 2: operator
-                "\"PARENT_CONDITION\" INTEGER);"); // 3: parentCondition
+                "\"CONDITION_NAME\" TEXT," + // 1: conditionName
+                "\"TYPE\" INTEGER NOT NULL ," + // 2: type
+                "\"OPERATOR\" INTEGER NOT NULL ," + // 3: operator
+                "\"PARENT_CONDITION\" INTEGER);"); // 4: parentCondition
     }
 
     /** Drops the underlying database table. */
@@ -70,12 +72,17 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getType());
-        stmt.bindLong(3, entity.getOperator());
+ 
+        String conditionName = entity.getConditionName();
+        if (conditionName != null) {
+            stmt.bindString(2, conditionName);
+        }
+        stmt.bindLong(3, entity.getType());
+        stmt.bindLong(4, entity.getOperator());
  
         Long parentCondition = entity.getParentCondition();
         if (parentCondition != null) {
-            stmt.bindLong(4, parentCondition);
+            stmt.bindLong(5, parentCondition);
         }
     }
 
@@ -96,9 +103,10 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
     public RuleCondition readEntity(Cursor cursor, int offset) {
         RuleCondition entity = new RuleCondition( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getInt(offset + 1), // type
-            cursor.getInt(offset + 2), // operator
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // parentCondition
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // conditionName
+            cursor.getInt(offset + 2), // type
+            cursor.getInt(offset + 3), // operator
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // parentCondition
         );
         return entity;
     }
@@ -107,9 +115,10 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
     @Override
     public void readEntity(Cursor cursor, RuleCondition entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setType(cursor.getInt(offset + 1));
-        entity.setOperator(cursor.getInt(offset + 2));
-        entity.setParentCondition(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setConditionName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setType(cursor.getInt(offset + 2));
+        entity.setOperator(cursor.getInt(offset + 3));
+        entity.setParentCondition(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */

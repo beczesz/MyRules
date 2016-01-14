@@ -2,4 +2,21 @@
     <string name="app_name">My Rules</string>
     <string name="action_settings">Settings</string>
     <string name="exit_message">Are you sure you want to exit?</string>
+
+
+    <string name="my_rules">My Rules</string>
+    <string name="my_actions">My Actions</string>
+    <string name="my_conditions">My Conditions</string>
+
+    <string-array name="list_of_events">
+        <item>Select an Event</item>
+        <item>Incoming call</item>
+        <item>Incoming SMS</item>
+    </string-array>
+
+    <string name="rule_name">Rule name</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="action_name">Action name</string>
+    <string name="condition_name">Condition name</string>
 </resources>

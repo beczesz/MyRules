@@ -6,11 +6,14 @@ import com.exarlabs.android.myrules.business.rule.RuleService;
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionsAddActionFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
+import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 
 /**
@@ -43,4 +46,10 @@ public interface DaggerComponentGraph {
     void inject(HistoryListFragment historyListFragment);
 
     void inject(RuleService ruleService);
+
+    void inject(RulesAddRuleFragment rulesAddRuleFragment);
+
+    void inject(ActionsAddActionFragment actionsAddActionFragment);
+
+    void inject(ConditionsAddConditionFragment conditionsAddConditionFragment);
 }

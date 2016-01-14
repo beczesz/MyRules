@@ -15,6 +15,7 @@ import com.exarlabs.android.myrules.business.condition.Condition;
 public class RuleCondition extends Condition  {
 
     private Long id;
+    private String conditionName;
     private int type;
     private int operator;
     private Long parentCondition;
@@ -39,8 +40,9 @@ public class RuleCondition extends Condition  {
         this.id = id;
     }
 
-    public RuleCondition(Long id, int type, int operator, Long parentCondition) {
+    public RuleCondition(Long id, String conditionName, int type, int operator, Long parentCondition) {
         this.id = id;
+        this.conditionName = conditionName;
         this.type = type;
         this.operator = operator;
         this.parentCondition = parentCondition;
@@ -58,6 +60,14 @@ public class RuleCondition extends Condition  {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getConditionName() {
+        return conditionName;
+    }
+
+    public void setConditionName(String conditionName) {
+        this.conditionName = conditionName;
     }
 
     public int getType() {

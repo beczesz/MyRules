@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-    >
+                android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/example"
-            android:text="Conditions"
+        <ListView
+            android:id="@+id/listView_conditions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -26,7 +25,32 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/build_info"
+        style="@style/DevelInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        tools:text="Build: D#256 (2015/01/12 12:36:25)"/>
+
+
+    <com.software.shell.fab.ActionButton
+        android:id="@+id/fab_add_condition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default"
+
+        fab:type = "DEFAULT"
+        fab:button_color="@color/colorAccent"
+        fab:image="@drawable/fab_plus_icon"
+        fab:show_animation="@anim/fab_roll_from_down"/>
+
 
 </RelativeLayout>

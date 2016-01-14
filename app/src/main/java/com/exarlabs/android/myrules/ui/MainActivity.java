@@ -3,13 +3,14 @@ package com.exarlabs.android.myrules.ui;
 import javax.inject.Inject;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
+import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
@@ -64,6 +65,7 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         mNavigationManager.startRulesOverview();
 
         initDrawer();
+
     }
 
     /**
@@ -103,17 +105,18 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
      */
     protected void showExitDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(R.string.exit_message).setCancelable(false).setPositiveButton(android.R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                finish();
-                            }
-                        }).setNegativeButton(android.R.string.cancel, null);
+        alertDialogBuilder.setMessage(R.string.exit_message)
+                        .setCancelable(false)
+                        .setPositiveButton(android.R.string.yes, (dialog, id) -> {finish();})
+                        .setNegativeButton(android.R.string.cancel, null);
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
