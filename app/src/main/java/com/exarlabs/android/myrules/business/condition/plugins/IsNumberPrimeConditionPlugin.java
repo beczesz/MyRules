@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEvent;
+import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
 
 /**
  * Example implementation where this plugin can decide if a number is prime or not

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
                 xmlns:fab="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -10,6 +10,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/lbl_rules_engine_starter"
+                style="@style/Header1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_start_rules_engine"
+                />
+
+
+            <com.mikepenz.iconics.view.IconicsTextView
+                android:id="@+id/lbl_rules_engine_starter_icon"
+                style="@style/Header1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_default"
+                android:text="@string/lbl_start_rules_engine_icon"
+                />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/temp_number_event_displatcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temp Dispatch Number Event"
+            />
 
         <ListView
             android:id="@+id/listView_rules"
@@ -43,12 +78,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/padding_default"
         android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
 
-        fab:type = "DEFAULT"
         fab:button_color="@color/colorAccent"
         fab:image="@drawable/fab_plus_icon"
-        fab:show_animation="@anim/fab_roll_from_down"/>
+        fab:show_animation="@anim/fab_roll_from_down"
+        fab:type="DEFAULT"/>
 
 </RelativeLayout>

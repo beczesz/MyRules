@@ -1,7 +1,8 @@
 package com.exarlabs.android.myrules.business.event;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+
+import android.util.Log;
 
 import rx.Observable;
 
@@ -22,6 +23,9 @@ public class RuleEventManager {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = RuleEventManager.class.getSimpleName();
+
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -33,7 +37,7 @@ public class RuleEventManager {
     /**
      * List of plugins which are dispatching the events
      */
-    private List<EventHandlerPlugin> mPlugins;
+    private Collection<? extends EventHandlerPlugin> mPlugins;
     private Observable<Event> mEventObservable;
 
     // ------------------------------------------------------------------------
@@ -42,11 +46,9 @@ public class RuleEventManager {
 
     /**
      * Creates a rule event manager with the list of plugins
-     *
-     * @param plugins
      */
-    public RuleEventManager(List<EventHandlerPlugin> plugins) {
-        mPlugins = plugins;
+    public RuleEventManager(EventPluginManager eventPluginManager) {
+        mPlugins = eventPluginManager.getPlugins();
     }
 
     // ------------------------------------------------------------------------
@@ -57,13 +59,14 @@ public class RuleEventManager {
      * Initialize the event manager.
      */
     public void init() {
-        List<Observable<Event>> mEventPluginObservables = new ArrayList<>();
-
-        for (EventHandlerPlugin plugin : mPlugins) {
-            mEventPluginObservables.add(plugin.getEventObservable());
-        }
-
-        mEventObservable = Observable.from(mEventPluginObservables).flatMap(event -> event);
+        mEventObservable = Observable.from(mPlugins)
+                            .map(plugin -> {
+                                Log.w(TAG, "Event Manager initialized: " + plugin);
+                                return plugin.getEventObservable();
+                            }).flatMap(event -> {
+                                Log.w(TAG, "Event Manager initialized with event: " + event);
+                            return event;
+                        });
     }
 
 

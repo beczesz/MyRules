@@ -51,7 +51,7 @@ public class EventHandlerPlugin {
      * Dispatches a new event
      * @param event
      */
-    public void dispatchEvent(Event event) {
+    protected void dispatchEvent(Event event) {
         if (mSubscriber != null && isEnabled) {
             mSubscriber.onNext(event);
         }

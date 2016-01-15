@@ -20,7 +20,7 @@ import com.exarlabs.android.myrules.business.condition.plugins.AlwaysTrueConditi
 import com.exarlabs.android.myrules.business.condition.plugins.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.business.condition.plugins.IsNumberInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEvent;
+import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleActionDao;
