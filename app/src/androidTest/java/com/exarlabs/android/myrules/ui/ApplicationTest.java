@@ -198,7 +198,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         Collections.addAll(ruleConditions, cTrue, cTrue1, cInterval, cPrime, cEqual);
         mConditionManager.saveConditions(ruleConditions);
 
-        // create dependencies beween conditions
+        // create dependencies between conditions
         // Build the condition tree
         RuleConditionTree.Builder builder = new ConditionTree.Builder();
         builder.add(cTrue, new RuleCondition[] { cEqual, cTrue1 }, ConditionTree.Operator.OR);

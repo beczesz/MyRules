@@ -1,6 +1,5 @@
 package com.exarlabs.android.myrules.ui.actions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +24,6 @@ import com.software.shell.fab.ActionButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import rx.Observable;
 
 /**
  * Provides an overview to the user of all the actions.
@@ -78,7 +75,7 @@ public class ActionsOverviewFragment extends BaseFragment {
     @Inject
     public NavigationManager mNavigationManager;
 
-    private ArrayAdapter<String> mAdapter;
+    private ActionsArrayAdapter mAdapter;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -110,7 +107,8 @@ public class ActionsOverviewFragment extends BaseFragment {
 
         initActionBar(true, getString(R.string.my_actions));
 
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
+        mAdapter = new ActionsArrayAdapter(getContext());
+
         mActionsListView.setAdapter(mAdapter);
 
         if (BuildConfig.DEBUG) {
@@ -129,12 +127,7 @@ public class ActionsOverviewFragment extends BaseFragment {
     private void updateUI() {
         mAdapter.clear();
         List<RuleAction> actions = mActionManager.loadAllConditions();
-        List<String> actionNames = new ArrayList<>();
-        Observable.from(actions)
-                        .map(action -> action.getActionName())
-                        .subscribe(actionName -> actionNames.add(actionName));
-
-        mAdapter.addAll(actionNames);
+        mAdapter.addAll(actions);
         mAdapter.notifyDataSetChanged();
     }
 
