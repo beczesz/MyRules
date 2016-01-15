@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.exarlabs.android.myrules.model.dao.RuleAction;
@@ -35,6 +36,9 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
 
         @Bind(R.id.expandable_layout)
         public ExpandableLayout expandableLayout;
+
+        @Bind(R.id.button_edit_action)
+        public Button editAction;
 
         @Bind(R.id.item_name)
         public TextView itemName;
@@ -100,8 +104,12 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         RuleAction action = (RuleAction) mRuleActions.toArray()[position];
 
         holder.headerText.setText(action.getActionName());
-        ((View) holder.headerText.getParent()).setOnClickListener(this);
-        holder.itemName.setText(action.getId()+"");
+        ((View) holder.headerText.getParent().getParent()).setOnClickListener(this);
+        holder.itemName.setText(action.getId() + "");
+        holder.editAction.setTag(action.getId());
+
+
+        ButterKnife.bind(ActionsOverviewFragment.class, root);
 
         return root;
     }

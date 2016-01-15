@@ -153,8 +153,8 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
-    public void startAddActionFragment(){
-        Fragment fragment = ActionsAddActionFragment.newInstance();
+    public void startAddActionFragment(Long id){
+        Fragment fragment = ActionsAddActionFragment.newInstance(id);
         open(fragment);
     }
 

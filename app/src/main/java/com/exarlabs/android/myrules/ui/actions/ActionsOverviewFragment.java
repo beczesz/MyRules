@@ -9,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.action.ActionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
@@ -134,9 +136,21 @@ public class ActionsOverviewFragment extends BaseFragment {
 
     @OnClick(R.id.fab_add_action)
     public void showAddActionFragment(){
-        mNavigationManager.startAddActionFragment();
+        showAddActionFragment(null);
     }
 
+    public void showAddActionFragment(Long id){
+        mNavigationManager.startAddActionFragment(id);
+    }
+
+    @Nullable
+    @OnClick(R.id.button_edit_action)
+    public void editAction(View editButton){
+        Toast.makeText(getContext(), "bu", Toast.LENGTH_SHORT).show();
+        Button button = (Button) editButton;
+        Long id = (Long) button.getTag();
+        showAddActionFragment(id);
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
