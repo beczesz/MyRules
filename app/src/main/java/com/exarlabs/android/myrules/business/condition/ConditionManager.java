@@ -7,7 +7,11 @@ import javax.inject.Inject;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionDao;
-import com.exarlabs.android.myrules.model.dao.RuleRecord;
+import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import com.exarlabs.android.myrules.model.dao.RuleConditionPropertyDao;
+import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
+import com.exarlabs.android.myrules.model.dao.RuleConditionTreeDao;
+
 
 /**
  * Manager for conditions.
@@ -27,10 +31,6 @@ public class ConditionManager {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static RuleRecord generateRandom() {
-        RuleRecord rule = new RuleRecord();
-        return rule;
-    }
 
     // ------------------------------------------------------------------------
     // FIELDS
@@ -38,6 +38,8 @@ public class ConditionManager {
 
     private DaoManager mDaoManager;
     private final RuleConditionDao mRuleConditionDao;
+    private final RuleConditionTreeDao mRuleConditionTreeDao;
+    private final RuleConditionPropertyDao mRuleConditionPropertyDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -47,6 +49,8 @@ public class ConditionManager {
     public ConditionManager(DaoManager daoManager) {
         mDaoManager = daoManager;
         mRuleConditionDao = mDaoManager.getRuleConditionDao();
+        mRuleConditionTreeDao = mDaoManager.getRuleConditionTreeDao();
+        mRuleConditionPropertyDao = mDaoManager.getRuleConditionPropertyDao();
     }
 
     // ------------------------------------------------------------------------
@@ -54,8 +58,12 @@ public class ConditionManager {
     // ------------------------------------------------------------------------
 
 
-    public RuleCondition load(Long key) {
+    public RuleCondition loadCondition(Long key) {
         return mRuleConditionDao.load(key);
+    }
+
+    public RuleConditionTree loadConditionTree(Long key) {
+        return mRuleConditionTreeDao.load(key);
     }
 
     public List<RuleCondition> loadAllConditions() {
@@ -74,7 +82,116 @@ public class ConditionManager {
         mRuleConditionDao.deleteAll();
     }
 
-    // ------------------------------------------------------------------------
-    // GETTERS / SETTTERS
-    // ------------------------------------------------------------------------
+    /**
+     * Inserts/Updates a condition taking care of it's property changes
+     *
+     * @param condition
+     */
+    public void saveCondition(RuleCondition condition) {
+        // Save the condition and it's properties
+        mRuleConditionDao.insertOrReplace(condition);
+        condition.getProperties().clear();
+        List<RuleConditionProperty> properties = condition.getConditionPlugin().getProperties();
+        condition.getProperties().addAll(properties);
+
+        // set the parent condition
+        for (RuleConditionProperty property : properties) {
+            property.setConditionId(condition.getId());
+        }
+
+        mRuleConditionPropertyDao.insertOrReplaceInTx(properties);
+
+        if (!condition.isBuilt()) {
+            condition.build();
+        }
+    }
+
+    /**
+     * Save a list of conditions.
+     * Note: this is not saved in a transaction.
+     *
+     * @param conditions
+     */
+    public void saveConditions(List<RuleCondition> conditions) {
+        for (RuleCondition c : conditions) {
+            saveCondition(c);
+        }
+    }
+
+
+    /**
+     * Removes the condition tree with the given root.
+     * It is deleted on the current thread on which is invoked.
+     * Note the root must be attached.
+     *
+     * @param root
+     */
+    public void removeConditionTree(RuleConditionTree root) {
+        List<RuleConditionTree> childConditions = root.getChildConditions();
+        if (childConditions != null) {
+            for (RuleConditionTree child : childConditions) {
+                removeConditionTree(child);
+            }
+        }
+
+        // Delete last the root
+        mRuleConditionTreeDao.delete(root);
+    }
+
+    /**
+     * Builds the condition tree by inserting the RuleConditionTree into the database
+     * Note:  the inertion is done on the caller thread.
+     */
+    public void insertConditionTree(RuleConditionTree root) {
+        insertConditionTree(null, root);
+    }
+
+    private void insertConditionTree(RuleConditionTree parent, RuleConditionTree root) {
+
+        // Insert the root
+        if (parent != null) {
+            root.setParentCondition(parent.getId());
+        }
+        mRuleConditionTreeDao.insertOrReplace(root);
+        if (parent != null && parent.getChildConditions() != null && !parent.getChildConditions().contains(root)) {
+            parent.getChildConditions().add(root);
+        }
+
+
+        // Recursively insert every child and attach to the root
+        List<RuleConditionTree> children = root.getTempChildConditions();
+        if (children != null) {
+            for (RuleConditionTree child : children) {
+                insertConditionTree(root, child);
+            }
+        }
+    }
+
+
+    /**
+     * Deletes the old condition tree and rebuilds the new one.
+     *
+     * @param oldTree the root of the old tree
+     * @param newCodnitionTree the Builder of the new tree
+     * @return the root for the new tree.
+     */
+    public RuleConditionTree rebuildConditionTree(RuleConditionTree oldTree, RuleConditionTree.Builder newCodnitionTree) {
+        RuleConditionTree newRoot = newCodnitionTree.build();
+        removeConditionTree(oldTree);
+        insertConditionTree(newRoot);
+        return newRoot;
+    }
+
+    /**
+     * Builds the condition tree
+     *
+     * @param newCodnitionTree
+     * @return
+     */
+    public RuleConditionTree buildConditionTree(RuleConditionTree.Builder newCodnitionTree) {
+        RuleConditionTree newRoot = newCodnitionTree.build();
+        insertConditionTree(newRoot);
+        return newRoot;
+    }
+
 }

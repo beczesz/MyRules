@@ -17,8 +17,6 @@ public class RuleCondition extends Condition  {
     private Long id;
     private String conditionName;
     private int type;
-    private int operator;
-    private Long parentCondition;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -26,9 +24,7 @@ public class RuleCondition extends Condition  {
     /** Used for active entity operations. */
     private transient RuleConditionDao myDao;
 
-    private List<RuleCondition> childConditions;
     private List<RuleConditionProperty> properties;
-    private List<RuleConditionLink> ruleConditionLinks;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -40,12 +36,10 @@ public class RuleCondition extends Condition  {
         this.id = id;
     }
 
-    public RuleCondition(Long id, String conditionName, int type, int operator, Long parentCondition) {
+    public RuleCondition(Long id, String conditionName, int type) {
         this.id = id;
         this.conditionName = conditionName;
         this.type = type;
-        this.operator = operator;
-        this.parentCondition = parentCondition;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -78,44 +72,6 @@ public class RuleCondition extends Condition  {
         this.type = type;
     }
 
-    public int getOperator() {
-        return operator;
-    }
-
-    public void setOperator(int operator) {
-        this.operator = operator;
-    }
-
-    public Long getParentCondition() {
-        return parentCondition;
-    }
-
-    public void setParentCondition(Long parentCondition) {
-        this.parentCondition = parentCondition;
-    }
-
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<RuleCondition> getChildConditions() {
-        if (childConditions == null) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            RuleConditionDao targetDao = daoSession.getRuleConditionDao();
-            List<RuleCondition> childConditionsNew = targetDao._queryRuleCondition_ChildConditions(id);
-            synchronized (this) {
-                if(childConditions == null) {
-                    childConditions = childConditionsNew;
-                }
-            }
-        }
-        return childConditions;
-    }
-
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    public synchronized void resetChildConditions() {
-        childConditions = null;
-    }
-
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
     public List<RuleConditionProperty> getProperties() {
         if (properties == null) {
@@ -136,28 +92,6 @@ public class RuleCondition extends Condition  {
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     public synchronized void resetProperties() {
         properties = null;
-    }
-
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<RuleConditionLink> getRuleConditionLinks() {
-        if (ruleConditionLinks == null) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            RuleConditionLinkDao targetDao = daoSession.getRuleConditionLinkDao();
-            List<RuleConditionLink> ruleConditionLinksNew = targetDao._queryRuleCondition_RuleConditionLinks(id);
-            synchronized (this) {
-                if(ruleConditionLinks == null) {
-                    ruleConditionLinks = ruleConditionLinksNew;
-                }
-            }
-        }
-        return ruleConditionLinks;
-    }
-
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    public synchronized void resetRuleConditionLinks() {
-        ruleConditionLinks = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */

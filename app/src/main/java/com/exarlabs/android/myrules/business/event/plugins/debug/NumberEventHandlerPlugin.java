@@ -1,13 +1,14 @@
-package com.exarlabs.android.myrules.business.action;
+package com.exarlabs.android.myrules.business.event.plugins.debug;
 
-import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.business.event.EventFactory;
+import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 
 /**
- * Factory pattern implementation for the action plugins.
- * Created by becze on 12/18/2015.
+ * Just a timer which displatches an event in every second.
+ * Created by becze on 1/11/2016.
  */
-public class ActionPluginFactory {
+public class NumberEventHandlerPlugin extends EventHandlerPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -21,24 +22,6 @@ public class ActionPluginFactory {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * Creator for the action plugins.
-     *
-     * @param pluginType
-     * @return a new action plugin, if no plugin found a default AlwaysTrueConditionPlugin is created.
-     */
-    public static ActionPlugin create(int pluginType) {
-        switch (pluginType) {
-            default:
-            case Action.Type.ARITHMETRIC_ACTION_FIBONACCI:
-                return new FibonacciActionPlugin();
-
-            case Action.Type.ARITHMETRIC_ACTION_MULTIPLY:
-                return new MultiplyActionPlugin();
-
-        }
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
@@ -47,9 +30,26 @@ public class ActionPluginFactory {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
+    public NumberEventHandlerPlugin() {
+        super();
+    }
+
+
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
+
+    /**
+     * Dispatches a number event with the given integer
+     *
+     * @param i
+     */
+    public void dispatchNumber(int i) {
+        NumberEvent event = (NumberEvent) EventFactory.create(Event.Type.RULE_EVENT_NUMBER);
+        event.setValue(i);
+        dispatchEvent(event);
+    }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

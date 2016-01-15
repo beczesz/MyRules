@@ -6,13 +6,14 @@ import android.util.Log;
 
 import com.exarlabs.android.myrules.business.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEvent;
 import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
- * Example action plugin
+ * Example action plugin which calculates the multiplication of a number
  * Created by becze on 1/11/2016.
  */
-public class HelloWorldActionPlugin implements ActionPlugin {
+public class MultiplyActionPlugin extends ActionPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -22,7 +23,9 @@ public class HelloWorldActionPlugin implements ActionPlugin {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = HelloWorldActionPlugin.class.getSimpleName();
+    private static final String TAG = MultiplyActionPlugin.class.getSimpleName();
+    private static final String KEY_VALUE = "VALUE";
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -30,6 +33,8 @@ public class HelloWorldActionPlugin implements ActionPlugin {
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
+    private double mResult;
+    private double mValue;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -40,21 +45,37 @@ public class HelloWorldActionPlugin implements ActionPlugin {
     // ------------------------------------------------------------------------
     @Override
     public void initialize(List<RuleActionProperty> properties) {
-
+        super.initialize(properties);
+        mValue = Double.parseDouble(getProperty(KEY_VALUE).getValue());
     }
 
-    @Override
-    public List<RuleActionProperty> generateProperties() {
-        return null;
-    }
 
     @Override
     public boolean run(Event event) {
-        Log.w(TAG, "run: " + this + " Hello World!");
+        if (event instanceof NumberEvent) {
+            int value = ((NumberEvent) event).getValue();
+            mResult = mValue * value;
+            Log.w(TAG, "" + value + " x " + mValue + " = " + mResult);
+        }
         return true;
     }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    public double getResult() {
+        return mResult;
+    }
+
+    public double getValue() {
+
+        return mValue;
+    }
+
+    public void setValue(double value) {
+        saveProperty(KEY_VALUE, Double.toString(value));
+        mValue = value;
+    }
 }

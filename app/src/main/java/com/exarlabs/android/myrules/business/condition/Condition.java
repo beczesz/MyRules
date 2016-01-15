@@ -3,6 +3,7 @@ package com.exarlabs.android.myrules.business.condition;
 import java.util.List;
 
 import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
  * It is a rule condition abstraction which with a bridge pattern it decouples the
@@ -22,20 +23,14 @@ public abstract class Condition {
      * Encapsulates the Condition Types.
      */
     public static class Type {
-
         // Debug condition types
         public static final int DEBUG_ALWAYS_TRUE = 100;
         public static final int DEBUG_ALWAYS_FALSE = 101;
+        public static final int ARITHMETRIC_IS_NUMBER_EQUAL = 201;
+        public static final int ARITHMETRIC_IS_NUMBER_IN_INTERVAL = 202;
+        public static final int ARITHMETRIC_IS_NUMBER_PRIME = 203;
     }
 
-    /**
-     * The tyepe of the logical operator
-     */
-    public static class Operator {
-        public static final int AND = 1;
-        public static final int OR = 2;
-
-    }
 
     // ------------------------------------------------------------------------
     // STATIC FIELDS
@@ -63,36 +58,23 @@ public abstract class Condition {
     // ------------------------------------------------------------------------
 
     /**
-     * @return the list of child conditions.
-     */
-    public abstract List<? extends Condition> getChildConditions();
-
-    /**
      * @return the type of the condition
      */
     public abstract int getType();
 
     /**
-     * @return the logical operator type which holds for the children
+     *
+     * @return the list of properties for this condition
      */
-    public abstract int getOperator();
+    public abstract List<RuleConditionProperty> getProperties();
+
 
     /**
      * Builds the condition if it is not yet built.
      */
     public void build() {
         if (!isBuilt) {
-
-            // First build this condition
-            mConditionPlugin = ConditionPluginFactory.create(getType());
-
-            List<? extends Condition> childConditions = getChildConditions();
-            if (childConditions != null) {
-                for (Condition condition : childConditions) {
-                    condition.build();
-                }
-            }
-
+            getConditionPlugin().initialize(getProperties());
             isBuilt = true;
         }
     }
@@ -110,26 +92,7 @@ public abstract class Condition {
         }
 
         // evaluate this condition
-        boolean isConditionHolds = mConditionPlugin.evaluate(event);
-        int operator = getOperator();
-
-        // Evaluate all of the child conditions recursively if we have children
-        List<? extends Condition> childConditions = getChildConditions();
-        if (childConditions != null) {
-            for (Condition condition : childConditions) {
-                switch (operator) {
-                    case Operator.AND:
-                        isConditionHolds = isConditionHolds && condition.evaluate(event);
-                        break;
-
-                    case Operator.OR:
-                        isConditionHolds = isConditionHolds || condition.evaluate(event);
-                        break;
-                }
-            }
-        }
-
-        return isConditionHolds;
+        return getConditionPlugin().evaluate(event);
     }
 
     // ------------------------------------------------------------------------
@@ -138,5 +101,16 @@ public abstract class Condition {
 
     public boolean isBuilt() {
         return isBuilt;
+    }
+
+    /**
+     * @return the plugin for this condition. It is created once when the first time is called.
+     */
+    public ConditionPlugin getConditionPlugin() {
+        if (mConditionPlugin == null) {
+            // First build this condition
+            mConditionPlugin = ConditionPluginFactory.create(getType());
+        }
+        return mConditionPlugin;
     }
 }

@@ -3,10 +3,10 @@ package com.exarlabs.android.myrules.business.event.plugins.debug;
 import com.exarlabs.android.myrules.business.event.Event;
 
 /**
- * Example event implementation
+ * Example implementation of an Event which delivers an integer number
  * Created by becze on 1/11/2016.
  */
-public class DebugEvent implements Event {
+public class NumberEvent implements Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -16,7 +16,7 @@ public class DebugEvent implements Event {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = DebugEvent.class.getSimpleName();
+    private static final String TAG = NumberEvent.class.getSimpleName();
 
 
     // ------------------------------------------------------------------------
@@ -27,8 +27,8 @@ public class DebugEvent implements Event {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private String mDebugEventData1 = "SampleData1";
-    private String mDebugEventData2 = "SampleData2";
+    private int mValue;
+
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -41,12 +41,12 @@ public class DebugEvent implements Event {
 
     @Override
     public int getType() {
-        return Type.RULE_EVENT_DEBUG;
+        return Type.RULE_EVENT_NUMBER;
     }
 
     @Override
     public String toString() {
-        return TAG + "\n" + mDebugEventData1 + "\n" + mDebugEventData2;
+        return TAG + "Value: " + getValue();
     }
 
 
@@ -55,19 +55,11 @@ public class DebugEvent implements Event {
     // ------------------------------------------------------------------------
 
 
-    public String getDebugEventData1() {
-        return mDebugEventData1;
+    public int getValue() {
+        return mValue;
     }
 
-    public void setDebugEventData1(String debugEventData1) {
-        mDebugEventData1 = debugEventData1;
-    }
-
-    public String getDebugEventData2() {
-        return mDebugEventData2;
-    }
-
-    public void setDebugEventData2(String debugEventData2) {
-        mDebugEventData2 = debugEventData2;
+    public void setValue(int value) {
+        mValue = value;
     }
 }

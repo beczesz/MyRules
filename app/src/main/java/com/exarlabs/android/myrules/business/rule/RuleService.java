@@ -11,8 +11,9 @@ import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.event.Event;
 import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.RuleEventManager;
-import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEventHandlerPlugin;
-import com.exarlabs.android.myrules.model.dao.RuleActionLink;
+import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEventHandlerPlugin;
+import com.exarlabs.android.myrules.model.dao.RuleAction;
+import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 
 import rx.Observable;
@@ -65,7 +66,10 @@ public class RuleService {
         mRuleEventManager.getEventObservable()
                         .map(event -> new Pair<>(event, mRuleManager.getRules(event.getType(), RuleState.STATE_ACTIVE)))
                         .flatMap(pair -> Observable.from(pair.second).map(record -> new Pair<>(pair.first, (RuleRecord) record)))
-                        .filter(eventRulePair -> eventRulePair.second.getRuleConditionLink().getRuleCondition().evaluate(eventRulePair.first))
+                        .filter(eventRulePair -> {
+                            RuleConditionTree ruleConditionTree = eventRulePair.second.getRuleConditionTree();
+                            return ruleConditionTree != null ? ruleConditionTree.evaluate(eventRulePair.first) : false;
+                        })
                         .subscribe(getRuleResolveSubscriber());
         //@formatter:on
     }
@@ -84,7 +88,7 @@ public class RuleService {
 
             @Override
             public void onNext(Pair<Event, RuleRecord> eventRulePair) {
-                executeRule(eventRulePair.first, eventRulePair.second.getRuleActionLinks());
+                executeRule(eventRulePair.first, eventRulePair.second.getRuleActions());
             }
         };
     }
@@ -94,16 +98,16 @@ public class RuleService {
      *
      * @param actions
      */
-    private void executeRule(Event event, List<RuleActionLink> actions) {
+    private void executeRule(Event event, List<RuleAction> actions) {
         // TODO make it sequential
-        for (RuleActionLink actionLink : actions) {
-            actionLink.getRuleAction().run(event);
+        for (RuleAction ruleAction : actions) {
+            ruleAction.run(event);
         }
     }
 
     private List<EventHandlerPlugin> getEventPlugins() {
         List<EventHandlerPlugin> plugins = new ArrayList<>();
-        plugins.add(new DebugEventHandlerPlugin());
+        plugins.add(new NumberEventHandlerPlugin());
         return plugins;
     }
 

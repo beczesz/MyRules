@@ -25,6 +25,12 @@ repositories {
 }
 
 
+// Required because retrolambda is on maven central
+repositories {
+    mavenCentral()
+}
+
+
 /**
  * Define project specific variables
  */
@@ -70,6 +76,11 @@ def getAPKFileName = { variant ->
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

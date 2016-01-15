@@ -2,6 +2,9 @@ package com.exarlabs.android.myrules.business.condition;
 
 import com.exarlabs.android.myrules.business.condition.plugins.AlwaysFalseConditionPlugin;
 import com.exarlabs.android.myrules.business.condition.plugins.AlwaysTrueConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.IsNumberEqualConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.IsNumberInIntervalConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.IsNumberPrimeConditionPlugin;
 
 /**
  * Factory pattern implementation for the condition plugins.
@@ -35,6 +38,15 @@ public class ConditionPluginFactory {
 
             case Condition.Type.DEBUG_ALWAYS_FALSE:
                 return new AlwaysFalseConditionPlugin();
+
+            case Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL:
+                return new IsNumberEqualConditionPlugin();
+
+            case Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL:
+                return new IsNumberInIntervalConditionPlugin();
+
+            case Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME:
+                return new IsNumberPrimeConditionPlugin();
         }
     }
 

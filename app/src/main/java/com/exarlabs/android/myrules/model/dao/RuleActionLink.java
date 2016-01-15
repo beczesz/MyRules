@@ -13,9 +13,9 @@ import de.greenrobot.dao.DaoException;
 public class RuleActionLink {
 
     private Long id;
-    private Long actionId;
-    private Long ruleRecordId;
     private Long ruleId;
+    private Long ruleRecordId;
+    private Long actionId;
     private Long ruleActionId;
 
     /** Used to resolve relations */
@@ -41,11 +41,11 @@ public class RuleActionLink {
         this.id = id;
     }
 
-    public RuleActionLink(Long id, Long actionId, Long ruleRecordId, Long ruleId, Long ruleActionId) {
+    public RuleActionLink(Long id, Long ruleId, Long ruleRecordId, Long actionId, Long ruleActionId) {
         this.id = id;
-        this.actionId = actionId;
-        this.ruleRecordId = ruleRecordId;
         this.ruleId = ruleId;
+        this.ruleRecordId = ruleRecordId;
+        this.actionId = actionId;
         this.ruleActionId = ruleActionId;
     }
 
@@ -63,12 +63,12 @@ public class RuleActionLink {
         this.id = id;
     }
 
-    public Long getActionId() {
-        return actionId;
+    public Long getRuleId() {
+        return ruleId;
     }
 
-    public void setActionId(Long actionId) {
-        this.actionId = actionId;
+    public void setRuleId(Long ruleId) {
+        this.ruleId = ruleId;
     }
 
     public Long getRuleRecordId() {
@@ -79,12 +79,12 @@ public class RuleActionLink {
         this.ruleRecordId = ruleRecordId;
     }
 
-    public Long getRuleId() {
-        return ruleId;
+    public Long getActionId() {
+        return actionId;
     }
 
-    public void setRuleId(Long ruleId) {
-        this.ruleId = ruleId;
+    public void setActionId(Long actionId) {
+        this.actionId = actionId;
     }
 
     public Long getRuleActionId() {

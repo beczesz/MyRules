@@ -53,20 +53,24 @@ public class DatabaseGenerator {
         schema.enableKeepSectionsByDefault();
 
         /*
-         * Add RuleCondition, RuleConditionProperty
+         * Add RuleCondition, RuleConditionProperty and ConditionTree
          */
         Entity ruleCondition = schema.addEntity("RuleCondition");
         ruleCondition.setSuperclass("Condition");
         ruleCondition.addIdProperty();
         ruleCondition.addStringProperty("conditionName");
         ruleCondition.addIntProperty("type").notNull();
-        ruleCondition.addIntProperty("operator").notNull();
 
         Entity ruleConditionProperty = schema.addEntity("RuleConditionProperty");
         ruleConditionProperty.addIdProperty();
         ruleConditionProperty.addStringProperty("key").notNull();
         ruleConditionProperty.addStringProperty("value");
 
+        Entity ruleConditionTree = schema.addEntity("RuleConditionTree");
+        ruleConditionTree.setSuperclass("ConditionTree");
+        ruleConditionTree.addIdProperty();
+        ruleConditionTree.addIntProperty("operator").notNull();
+        ruleConditionTree.addIntProperty("state").notNull();
 
         /*
          * Add RuleAction and RuleActionProperty
@@ -94,9 +98,6 @@ public class DatabaseGenerator {
         ruleRecord.addIntProperty("state").notNull();
         ruleRecord.addIntProperty("eventCode").notNull();
 
-        Entity ruleConditionLink = schema.addEntity("RuleConditionLink");
-        ruleConditionLink.addIdProperty();
-
         Entity ruleActionLink = schema.addEntity("RuleActionLink");
         ruleActionLink.addIdProperty();
 
@@ -107,7 +108,10 @@ public class DatabaseGenerator {
          */
 
         //Link 1:N RuleCondition to RuleCondition (recursive tree like connection)
-        connectOneToMany(ruleCondition, "childConditions", ruleCondition, "parentCondition");
+        connectOneToMany(ruleConditionTree, "childConditions", ruleConditionTree, "parentCondition");
+
+        // Link 1:1 RuleConditionTree and RuleCondition
+        connectToOne(ruleConditionTree, "conditionId", ruleCondition);
 
         //Link 1:N RuleCondition to RuleConditionProperty
         connectOneToMany(ruleCondition, "properties", ruleConditionProperty, "conditionId");
@@ -115,17 +119,14 @@ public class DatabaseGenerator {
         // Link 1:N RuleAction to RuleActionProperty
         connectOneToMany(ruleAction, "properties", ruleActionProperty, "actionId");
 
-        // A ruleRecord has one ruleCondition
-        connectToOne(ruleRecord, "conditionLinkId", ruleConditionLink);
-        connectToOne(ruleConditionLink, "ruleId", ruleRecord);
-        connectOneToMany(ruleCondition, "ruleConditionLinks", ruleConditionLink, "conditionId");
-        connectToOne(ruleConditionLink, "ruleConditionId", ruleCondition);
+        // 1:1 link from RuleRecord to RuleConditionTree
+        connectToOne(ruleRecord, "ruleConditionTreeId", ruleConditionTree);
 
         // Connect tge RuleRecord RuleAction via RuleActionLink as n:M
-        connectOneToMany(ruleRecord, "ruleActionLinks", ruleActionLink, "actionId");
+        connectOneToMany(ruleRecord, "ruleActionLinks", ruleActionLink, "ruleId");
         connectToOne(ruleActionLink, "ruleRecordId", ruleRecord);
 
-        connectOneToMany(ruleAction, "ruleActionLinks", ruleActionLink, "ruleId");
+        connectOneToMany(ruleAction, "ruleActionLinks", ruleActionLink, "actionId");
         connectToOne(ruleActionLink, "ruleActionId", ruleAction);
 
         return schema;

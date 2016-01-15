@@ -1,6 +1,5 @@
 package com.exarlabs.android.myrules.model.dao;
 
-import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -8,8 +7,6 @@ import android.database.sqlite.SQLiteStatement;
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
 import de.greenrobot.dao.internal.DaoConfig;
-import de.greenrobot.dao.query.Query;
-import de.greenrobot.dao.query.QueryBuilder;
 
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 
@@ -29,13 +26,10 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property ConditionName = new Property(1, String.class, "conditionName", false, "CONDITION_NAME");
         public final static Property Type = new Property(2, int.class, "type", false, "TYPE");
-        public final static Property Operator = new Property(3, int.class, "operator", false, "OPERATOR");
-        public final static Property ParentCondition = new Property(4, Long.class, "parentCondition", false, "PARENT_CONDITION");
     };
 
     private DaoSession daoSession;
 
-    private Query<RuleCondition> ruleCondition_ChildConditionsQuery;
 
     public RuleConditionDao(DaoConfig config) {
         super(config);
@@ -52,9 +46,7 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_CONDITION\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"CONDITION_NAME\" TEXT," + // 1: conditionName
-                "\"TYPE\" INTEGER NOT NULL ," + // 2: type
-                "\"OPERATOR\" INTEGER NOT NULL ," + // 3: operator
-                "\"PARENT_CONDITION\" INTEGER);"); // 4: parentCondition
+                "\"TYPE\" INTEGER NOT NULL );"); // 2: type
     }
 
     /** Drops the underlying database table. */
@@ -78,12 +70,6 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
             stmt.bindString(2, conditionName);
         }
         stmt.bindLong(3, entity.getType());
-        stmt.bindLong(4, entity.getOperator());
- 
-        Long parentCondition = entity.getParentCondition();
-        if (parentCondition != null) {
-            stmt.bindLong(5, parentCondition);
-        }
     }
 
     @Override
@@ -104,9 +90,7 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         RuleCondition entity = new RuleCondition( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // conditionName
-            cursor.getInt(offset + 2), // type
-            cursor.getInt(offset + 3), // operator
-            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // parentCondition
+            cursor.getInt(offset + 2) // type
         );
         return entity;
     }
@@ -117,8 +101,6 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setConditionName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setType(cursor.getInt(offset + 2));
-        entity.setOperator(cursor.getInt(offset + 3));
-        entity.setParentCondition(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */
@@ -144,18 +126,4 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         return true;
     }
     
-    /** Internal query to resolve the "childConditions" to-many relationship of RuleCondition. */
-    public List<RuleCondition> _queryRuleCondition_ChildConditions(Long parentCondition) {
-        synchronized (this) {
-            if (ruleCondition_ChildConditionsQuery == null) {
-                QueryBuilder<RuleCondition> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.ParentCondition.eq(null));
-                ruleCondition_ChildConditionsQuery = queryBuilder.build();
-            }
-        }
-        Query<RuleCondition> query = ruleCondition_ChildConditionsQuery.forCurrentThread();
-        query.setParameter(0, parentCondition);
-        return query.list();
-    }
-
 }

@@ -29,9 +29,9 @@ public class RuleActionLinkDao extends AbstractDao<RuleActionLink, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property ActionId = new Property(1, Long.class, "actionId", false, "ACTION_ID");
+        public final static Property RuleId = new Property(1, Long.class, "ruleId", false, "RULE_ID");
         public final static Property RuleRecordId = new Property(2, Long.class, "ruleRecordId", false, "RULE_RECORD_ID");
-        public final static Property RuleId = new Property(3, Long.class, "ruleId", false, "RULE_ID");
+        public final static Property ActionId = new Property(3, Long.class, "actionId", false, "ACTION_ID");
         public final static Property RuleActionId = new Property(4, Long.class, "ruleActionId", false, "RULE_ACTION_ID");
     };
 
@@ -54,9 +54,9 @@ public class RuleActionLinkDao extends AbstractDao<RuleActionLink, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_ACTION_LINK\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"ACTION_ID\" INTEGER," + // 1: actionId
+                "\"RULE_ID\" INTEGER," + // 1: ruleId
                 "\"RULE_RECORD_ID\" INTEGER," + // 2: ruleRecordId
-                "\"RULE_ID\" INTEGER," + // 3: ruleId
+                "\"ACTION_ID\" INTEGER," + // 3: actionId
                 "\"RULE_ACTION_ID\" INTEGER);"); // 4: ruleActionId
     }
 
@@ -76,9 +76,9 @@ public class RuleActionLinkDao extends AbstractDao<RuleActionLink, Long> {
             stmt.bindLong(1, id);
         }
  
-        Long actionId = entity.getActionId();
-        if (actionId != null) {
-            stmt.bindLong(2, actionId);
+        Long ruleId = entity.getRuleId();
+        if (ruleId != null) {
+            stmt.bindLong(2, ruleId);
         }
  
         Long ruleRecordId = entity.getRuleRecordId();
@@ -86,9 +86,9 @@ public class RuleActionLinkDao extends AbstractDao<RuleActionLink, Long> {
             stmt.bindLong(3, ruleRecordId);
         }
  
-        Long ruleId = entity.getRuleId();
-        if (ruleId != null) {
-            stmt.bindLong(4, ruleId);
+        Long actionId = entity.getActionId();
+        if (actionId != null) {
+            stmt.bindLong(4, actionId);
         }
  
         Long ruleActionId = entity.getRuleActionId();
@@ -114,9 +114,9 @@ public class RuleActionLinkDao extends AbstractDao<RuleActionLink, Long> {
     public RuleActionLink readEntity(Cursor cursor, int offset) {
         RuleActionLink entity = new RuleActionLink( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // actionId
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // ruleId
             cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // ruleRecordId
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // ruleId
+            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // actionId
             cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // ruleActionId
         );
         return entity;
@@ -126,9 +126,9 @@ public class RuleActionLinkDao extends AbstractDao<RuleActionLink, Long> {
     @Override
     public void readEntity(Cursor cursor, RuleActionLink entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setActionId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setRuleId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setRuleRecordId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setRuleId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setActionId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
         entity.setRuleActionId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
@@ -156,30 +156,30 @@ public class RuleActionLinkDao extends AbstractDao<RuleActionLink, Long> {
     }
     
     /** Internal query to resolve the "ruleActionLinks" to-many relationship of RuleRecord. */
-    public List<RuleActionLink> _queryRuleRecord_RuleActionLinks(Long actionId) {
+    public List<RuleActionLink> _queryRuleRecord_RuleActionLinks(Long ruleId) {
         synchronized (this) {
             if (ruleRecord_RuleActionLinksQuery == null) {
                 QueryBuilder<RuleActionLink> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.ActionId.eq(null));
+                queryBuilder.where(Properties.RuleId.eq(null));
                 ruleRecord_RuleActionLinksQuery = queryBuilder.build();
             }
         }
         Query<RuleActionLink> query = ruleRecord_RuleActionLinksQuery.forCurrentThread();
-        query.setParameter(0, actionId);
+        query.setParameter(0, ruleId);
         return query.list();
     }
 
     /** Internal query to resolve the "ruleActionLinks" to-many relationship of RuleAction. */
-    public List<RuleActionLink> _queryRuleAction_RuleActionLinks(Long ruleId) {
+    public List<RuleActionLink> _queryRuleAction_RuleActionLinks(Long actionId) {
         synchronized (this) {
             if (ruleAction_RuleActionLinksQuery == null) {
                 QueryBuilder<RuleActionLink> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.RuleId.eq(null));
+                queryBuilder.where(Properties.ActionId.eq(null));
                 ruleAction_RuleActionLinksQuery = queryBuilder.build();
             }
         }
         Query<RuleActionLink> query = ruleAction_RuleActionLinksQuery.forCurrentThread();
-        query.setParameter(0, ruleId);
+        query.setParameter(0, actionId);
         return query.list();
     }
 

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.exarlabs.android.myrules.business.action.ActionManager;
+import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
@@ -37,15 +39,19 @@ public class RuleManager {
 
     private DaoManager mDaoManager;
     private final RuleRecordDao mRuleRecordDao;
+    private final ConditionManager mConditionManager;
+    private final ActionManager mActionManager;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
     @Inject
-    public RuleManager(DaoManager daoManager) {
+    public RuleManager(DaoManager daoManager, ConditionManager conditionManager, ActionManager actionManager) {
         mDaoManager = daoManager;
         mRuleRecordDao = mDaoManager.getRuleRecordDao();
+        mConditionManager = conditionManager;
+        mActionManager = actionManager;
     }
 
     // ------------------------------------------------------------------------
@@ -58,6 +64,7 @@ public class RuleManager {
 
     /**
      * Loads the list of rules which are responding to a specified event and it has the given status.
+     *
      * @param eventCode the code of the event
      * @param status the status of the event
      * @return
@@ -70,7 +77,30 @@ public class RuleManager {
         return mRuleRecordDao.insert(entity);
     }
 
+    /**
+     * Saves / updates a rule record on the current thread.
+     *
+     * @return
+     */
+    public long saveRuleRecord(RuleRecord ruleRecord) {
 
+        long id = mRuleRecordDao.insertOrReplace(ruleRecord);
+
+        // save update the conditions
+        mConditionManager.insertConditionTree(ruleRecord.getRuleConditionTree());
+
+        // if there were any temporary actions save them
+        ruleRecord.addTempraryRuleActions();
+        // save the actions
+        mActionManager.saveActionLinks(ruleRecord, ruleRecord.getRuleActionLinks());
+
+        // save the rule
+        return id;
+    }
+
+    public RuleRecord load(Long key) {
+        return mRuleRecordDao.load(key);
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

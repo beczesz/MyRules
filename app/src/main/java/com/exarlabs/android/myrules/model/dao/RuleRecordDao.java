@@ -30,7 +30,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         public final static Property RuleName = new Property(1, String.class, "ruleName", false, "RULE_NAME");
         public final static Property State = new Property(2, int.class, "state", false, "STATE");
         public final static Property EventCode = new Property(3, int.class, "eventCode", false, "EVENT_CODE");
-        public final static Property ConditionLinkId = new Property(4, Long.class, "conditionLinkId", false, "CONDITION_LINK_ID");
+        public final static Property RuleConditionTreeId = new Property(4, Long.class, "ruleConditionTreeId", false, "RULE_CONDITION_TREE_ID");
     };
 
     private DaoSession daoSession;
@@ -53,7 +53,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
                 "\"RULE_NAME\" TEXT," + // 1: ruleName
                 "\"STATE\" INTEGER NOT NULL ," + // 2: state
                 "\"EVENT_CODE\" INTEGER NOT NULL ," + // 3: eventCode
-                "\"CONDITION_LINK_ID\" INTEGER);"); // 4: conditionLinkId
+                "\"RULE_CONDITION_TREE_ID\" INTEGER);"); // 4: ruleConditionTreeId
     }
 
     /** Drops the underlying database table. */
@@ -79,9 +79,9 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         stmt.bindLong(3, entity.getState());
         stmt.bindLong(4, entity.getEventCode());
  
-        Long conditionLinkId = entity.getConditionLinkId();
-        if (conditionLinkId != null) {
-            stmt.bindLong(5, conditionLinkId);
+        Long ruleConditionTreeId = entity.getRuleConditionTreeId();
+        if (ruleConditionTreeId != null) {
+            stmt.bindLong(5, ruleConditionTreeId);
         }
     }
 
@@ -105,7 +105,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // ruleName
             cursor.getInt(offset + 2), // state
             cursor.getInt(offset + 3), // eventCode
-            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // conditionLinkId
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // ruleConditionTreeId
         );
         return entity;
     }
@@ -117,7 +117,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         entity.setRuleName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setState(cursor.getInt(offset + 2));
         entity.setEventCode(cursor.getInt(offset + 3));
-        entity.setConditionLinkId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setRuleConditionTreeId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */
@@ -150,9 +150,9 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getRuleConditionLinkDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T0", daoSession.getRuleConditionTreeDao().getAllColumns());
             builder.append(" FROM RULE_RECORD T");
-            builder.append(" LEFT JOIN RULE_CONDITION_LINK T0 ON T.\"CONDITION_LINK_ID\"=T0.\"_id\"");
+            builder.append(" LEFT JOIN RULE_CONDITION_TREE T0 ON T.\"RULE_CONDITION_TREE_ID\"=T0.\"_id\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -163,8 +163,8 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         RuleRecord entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
-        RuleConditionLink ruleConditionLink = loadCurrentOther(daoSession.getRuleConditionLinkDao(), cursor, offset);
-        entity.setRuleConditionLink(ruleConditionLink);
+        RuleConditionTree ruleConditionTree = loadCurrentOther(daoSession.getRuleConditionTreeDao(), cursor, offset);
+        entity.setRuleConditionTree(ruleConditionTree);
 
         return entity;    
     }

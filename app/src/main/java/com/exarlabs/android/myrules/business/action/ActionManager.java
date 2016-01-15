@@ -1,5 +1,6 @@
 package com.exarlabs.android.myrules.business.action;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -7,6 +8,10 @@ import javax.inject.Inject;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleActionDao;
+import com.exarlabs.android.myrules.model.dao.RuleActionLink;
+import com.exarlabs.android.myrules.model.dao.RuleActionLinkDao;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
+import com.exarlabs.android.myrules.model.dao.RuleActionPropertyDao;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 
 /**
@@ -38,6 +43,8 @@ public class ActionManager {
 
     private DaoManager mDaoManager;
     private final RuleActionDao mRuleActionDao;
+    private final RuleActionLinkDao mRuleActionLinkDao;
+    private final RuleActionPropertyDao mRuleActionPropertiesDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -47,6 +54,8 @@ public class ActionManager {
     public ActionManager(DaoManager daoManager) {
         mDaoManager = daoManager;
         mRuleActionDao = mDaoManager.getRuleActionDao();
+        mRuleActionLinkDao = mDaoManager.getRuleActionLinkDao();
+        mRuleActionPropertiesDao = mDaoManager.getRuleActionPropertyDao();
     }
 
     // ------------------------------------------------------------------------
@@ -54,7 +63,7 @@ public class ActionManager {
     // ------------------------------------------------------------------------
 
 
-    public RuleAction load(Long key) {
+    public RuleAction loadAction(Long key) {
         return mRuleActionDao.load(key);
     }
 
@@ -74,6 +83,77 @@ public class ActionManager {
         mRuleActionDao.deleteAll();
     }
 
+    /**
+     * Inserts/Updates an action taking care of it's property changes
+     *
+     * @param ruleAction
+     */
+    public void saveAction(RuleAction ruleAction) {
+        // Save the ruleAction and it's properties
+        mRuleActionDao.insertOrReplace(ruleAction);
+        ruleAction.getProperties().clear();
+        List<RuleActionProperty> properties = ruleAction.getActionPlugin().getProperties();
+        ruleAction.getProperties().addAll(properties);
+
+        // set the parent for the property actions
+        for (RuleActionProperty property : properties) {
+            property.setActionId(ruleAction.getId());
+        }
+        mRuleActionPropertiesDao.insertOrReplaceInTx(properties);
+
+        if (!ruleAction.isBuilt()) {
+            ruleAction.build();
+        }
+    }
+
+    /**
+     * Save a list of ruleActions.
+     * Note: this is not saved in a transaction.
+     *
+     * @param ruleActions
+     */
+    public void saveActions(List<RuleAction> ruleActions) {
+        for (RuleAction ruleAction : ruleActions) {
+            saveAction(ruleAction);
+        }
+    }
+
+    public void saveActions(RuleAction... actions) {
+        saveActions(Arrays.asList(actions));
+    }
+
+    /**
+     * Inserts/Updates an action taking care of it's property changes
+     *
+     * @param ruleRecord
+     * @param ruleActionLink
+     */
+    public void saveActionLink(RuleRecord ruleRecord, RuleActionLink ruleActionLink) {
+        ruleActionLink.setRuleId(ruleRecord.getId());
+        // set the 1:N link for rule actions
+        ruleActionLink.getRuleAction().getRuleActionLinks().add(ruleActionLink);
+        ruleActionLink.setActionId(ruleActionLink.getRuleAction().getId());
+        mRuleActionLinkDao.insertOrReplace(ruleActionLink);
+
+    }
+
+
+    /**
+     * Save a list of ruleActionsLinks.
+     * Note: this is not saved in a transaction.
+     *
+     * @param ruleRecord
+     * @param ruleActionLinks
+     */
+    public void saveActionLinks(RuleRecord ruleRecord, List<RuleActionLink> ruleActionLinks) {
+        for (RuleActionLink ruleAction : ruleActionLinks) {
+            saveActionLink(ruleRecord, ruleAction);
+        }
+    }
+
+    public void saveActionsLinks(RuleRecord ruleRecord, RuleActionLink... actions) {
+        saveActionLinks(ruleRecord, Arrays.asList(actions));
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

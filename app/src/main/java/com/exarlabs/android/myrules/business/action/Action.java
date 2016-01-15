@@ -1,15 +1,19 @@
 package com.exarlabs.android.myrules.business.action;
 
-import com.exarlabs.android.myrules.business.condition.Condition;
+import java.util.List;
+
+import com.exarlabs.android.myrules.business.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
  * Base abstract class for all the rule actions. It applies a bridge pattern to decouple
  * the implementation from the Action type.
- *
  * <p>
- *     The actual Action implementation will be done by the plugins, as the condition implementation.
- *     @see {@link Condition}
+ * <p>
+ * The actual Action implementation will be done by the plugins, as the condition implementation.
+ *
+ * @see {@link ConditionTree}
  * </p>
  * Created by becze on 1/11/2016.
  */
@@ -23,9 +27,9 @@ public abstract class Action {
      * Encapsulates the Condition Types.
      */
     public static class Type {
-
         // Debug condition types
-        public static final int DEBUG_HELLO_WORLD = 100;
+        public static final int ARITHMETRIC_ACTION_MULTIPLY = 201;
+        public static final int ARITHMETRIC_ACTION_FIBONACCI = 202;
     }
 
     // ------------------------------------------------------------------------
@@ -58,7 +62,13 @@ public abstract class Action {
     public abstract int getType();
 
     /**
+     * @return the list of properties for this condition
+     */
+    public abstract List<RuleActionProperty> getProperties();
+
+    /**
      * Run the action.
+     *
      * @param event
      * @return
      */
@@ -71,11 +81,14 @@ public abstract class Action {
      */
     public void build() {
         if (!isBuilt) {
-
-            // First build this condition
-            mActionPlugin = ActionPluginFactory.create(getType());
+            getActionPlugin().initialize(getProperties());
             isBuilt = true;
         }
+    }
+
+    @Override
+    public String toString() {
+        return getActionPlugin().toString();
     }
 
     // ------------------------------------------------------------------------
@@ -84,5 +97,16 @@ public abstract class Action {
 
     public boolean isBuilt() {
         return isBuilt;
+    }
+
+    /**
+     * @return the plugin for this condition. It is created once when the first time is called.
+     */
+    public ActionPlugin getActionPlugin() {
+        if (mActionPlugin == null) {
+            // First build this condition
+            mActionPlugin = ActionPluginFactory.create(getType());
+        }
+        return mActionPlugin;
     }
 }

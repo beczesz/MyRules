@@ -1,10 +1,6 @@
 package com.exarlabs.android.myrules.business.event;
 
-import com.exarlabs.android.myrules.business.condition.Condition;
-import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
-import com.exarlabs.android.myrules.business.condition.plugins.AlwaysFalseConditionPlugin;
-import com.exarlabs.android.myrules.business.condition.plugins.AlwaysTrueConditionPlugin;
-import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEvent;
+import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEvent;
 
 /**
  * Factory pattern implementation for the events.
@@ -33,8 +29,8 @@ public class EventFactory {
     public static Event create(int eventType) {
         switch (eventType) {
             default:
-            case Event.Type.RULE_EVENT_DEBUG:
-                return new DebugEvent();
+            case Event.Type.RULE_EVENT_NUMBER:
+                return new NumberEvent();
         }
     }
 

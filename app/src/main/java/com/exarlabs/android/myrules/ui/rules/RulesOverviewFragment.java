@@ -17,9 +17,6 @@ import android.widget.TextView;
 import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
-import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
-import com.exarlabs.android.myrules.business.event.RuleEventManager;
-import com.exarlabs.android.myrules.business.event.plugins.debug.DebugEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
@@ -146,12 +143,6 @@ public class RulesOverviewFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    private void startEventManager() {
-        ArrayList<EventHandlerPlugin> plugins = new ArrayList<>();
-        plugins.add(new DebugEventHandlerPlugin());
-        RuleEventManager manager = new RuleEventManager(plugins);
-        manager.init();
-    }
 
 
     @OnClick(R.id.fab_add_rule)
