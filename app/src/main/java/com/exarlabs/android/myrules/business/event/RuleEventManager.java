@@ -2,8 +2,6 @@ package com.exarlabs.android.myrules.business.event;
 
 import java.util.Collection;
 
-import android.util.Log;
-
 import rx.Observable;
 
 /**
@@ -59,14 +57,11 @@ public class RuleEventManager {
      * Initialize the event manager.
      */
     public void init() {
+        //@formatter:off
         mEventObservable = Observable.from(mPlugins)
-                            .map(plugin -> {
-                                Log.w(TAG, "Event Manager initialized: " + plugin);
-                                return plugin.getEventObservable();
-                            }).flatMap(event -> {
-                                Log.w(TAG, "Event Manager initialized with event: " + event);
-                            return event;
-                        });
+                            .map(plugin -> plugin.getEventObservable())
+                            .flatMap(event -> event);
+        //@formatter:on
     }
 
 

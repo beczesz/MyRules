@@ -71,7 +71,7 @@ public class NavigationManager {
                                                  R.anim.slide_out_right,
                                                  R.anim.slide_in_right,
                                                  R.anim.slide_out_left)
-                            .addToBackStack(fragment.toString())
+                            .addToBackStack(fragment.getClass().getSimpleName())
                             .commit();
             //@formatter:on
         }

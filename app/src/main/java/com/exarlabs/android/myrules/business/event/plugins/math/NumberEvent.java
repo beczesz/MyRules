@@ -46,7 +46,7 @@ public class NumberEvent implements Event {
 
     @Override
     public String toString() {
-        return TAG + "Value: " + getValue();
+        return TAG + "(Value: " + getValue() + ")";
     }
 
 

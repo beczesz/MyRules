@@ -260,6 +260,7 @@ public class RulesOverviewFragment extends BaseFragment {
         RuleRecord ruleRecord = new RuleRecord();
 
         // set the event
+        ruleRecord.setRuleName("Sample Rule");
         ruleRecord.setEventCode(event.getType());
         ruleRecord.setRuleConditionTree(root);
         ruleRecord.addRuleActions(aFib, aMultiply);

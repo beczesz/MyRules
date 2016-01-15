@@ -1,6 +1,5 @@
 package com.exarlabs.android.myrules.business.rule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,9 +16,7 @@ import android.util.Pair;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.RuleEventManager;
-import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
@@ -75,7 +72,6 @@ public class RulesEngineService extends Service {
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-
 
 
     @Inject
@@ -135,11 +131,8 @@ public class RulesEngineService extends Service {
         PendingIntent pIntent = PendingIntent.getActivity(this, NOTIFICATION, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setOngoing(true)
-                        .setContentText(getString(R.string.rules_engine_running))
-                        .setContentIntent(pIntent);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher).setContentTitle(getString(R.string.app_name)).setOngoing(true).setContentText(
+                        getString(R.string.rules_engine_running)).setContentIntent(pIntent);
 
         // Send the notification.
         startForeground(NOTIFICATION, mBuilder.build());
@@ -153,54 +146,87 @@ public class RulesEngineService extends Service {
 
         //@formatter:off
         mRuleEventManager.getEventObservable()
+                        .filter(event -> isRunning())
                         .map(event -> {
-                             Log.w(TAG, "Event dipatched : " + event);
+                             logEventDispatched(event);
                             return new Pair<>(event, mRuleManager.getRules(event.getType(), RuleState.STATE_ACTIVE));
                         })
                         .flatMap(pair -> Observable.from(pair.second).map(record -> new Pair<>(pair.first, (RuleRecord) record)))
                         .filter(eventRulePair -> {
                             RuleConditionTree ruleConditionTree = eventRulePair.second.getRuleConditionTree();
-                            return ruleConditionTree != null ? ruleConditionTree.evaluate(eventRulePair.first) : false;
+                            boolean result = ruleConditionTree != null ? ruleConditionTree.evaluate(eventRulePair.first) : false;
+                            logEventEvaluated(eventRulePair.first, eventRulePair.second, result);
+                            return  result;
                         })
                         .subscribe(getRuleResolveSubscriber());
         //@formatter:on
     }
 
+
+
     private Observer<? super Pair<Event, RuleRecord>> getRuleResolveSubscriber() {
         return new Observer<Pair<Event, RuleRecord>>() {
             @Override
             public void onCompleted() {
-
+                // This should be never called.
             }
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
             }
 
             @Override
             public void onNext(Pair<Event, RuleRecord> eventRulePair) {
-                executeRule(eventRulePair.first, eventRulePair.second.getRuleActions());
+                executeRule(eventRulePair.first, eventRulePair.second);
             }
         };
     }
 
     /**
-     * Exectutes the rules actions
+     * Exectutes the rules ruleRecord
      *
-     * @param actions
+     * @param ruleRecord
      */
-    private void executeRule(Event event, List<RuleAction> actions) {
+    private void executeRule(Event event, RuleRecord ruleRecord) {
         // TODO make it sequential
-        for (RuleAction ruleAction : actions) {
+        List<RuleAction> ruleActions = ruleRecord.getRuleActions();
+        for (RuleAction ruleAction : ruleActions) {
             ruleAction.run(event);
+            logActionRun(event, ruleRecord, ruleAction);
         }
     }
 
-    private List<EventHandlerPlugin> getEventPlugins() {
-        List<EventHandlerPlugin> plugins = new ArrayList<>();
-        plugins.add(new NumberEventHandlerPlugin());
-        return plugins;
+
+
+    /**
+     * Log the rule evaluation for the given event.
+     *
+     * @param event
+     * @param ruleRecord
+     * @param result
+     */
+    private void logEventEvaluated(Event event, RuleRecord ruleRecord, boolean result) {
+        Log.w(TAG, " --> Rule " + ruleRecord + " by event: " + event + " is evaluated to " + result);
+    }
+
+    /**
+     * Log a new event dispatch
+     *
+     * @param event
+     */
+    private void logEventDispatched(Event event) {
+        Log.w(TAG, " --> New " + event + " dispatched.");
+    }
+
+    /**
+     * Log the ruleaction execution for the given rule dispatched by the event.
+     * @param event
+     * @param ruleRecord
+     * @param ruleAction
+     */
+    private void logActionRun(Event event, RuleRecord ruleRecord, RuleAction ruleAction) {
+        Log.w(TAG, "--> Action: " + ruleAction + " is executed for " + " rule " + ruleRecord + " triggered by Event: " + event + "\n");
     }
 
     // ------------------------------------------------------------------------

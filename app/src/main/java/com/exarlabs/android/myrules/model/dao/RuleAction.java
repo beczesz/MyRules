@@ -143,6 +143,13 @@ public class RuleAction extends Action  {
     }
 
     // KEEP METHODS - put your custom methods here
+
+    /**
+     * @return is the record attached
+     */
+    public boolean isAttached() {
+        return daoSession != null;
+    }
     // KEEP METHODS END
 
 }
