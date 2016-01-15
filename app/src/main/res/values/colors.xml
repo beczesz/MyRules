@@ -14,7 +14,6 @@
     <color name="background">@color/md_grey_100</color>
 
     <!-- Drawer menu item color -->
-
     <color name="menu_item_selected">@color/md_grey_200</color>
     <color name="menu_item_selected_text">@color/text_primary</color>
 
@@ -24,4 +23,9 @@
     <color name="menu_item_3">@color/md_cyan_700</color>
     <color name="menu_item_4">@color/md_orange_700</color>
     <color name="menu_item_5">@color/md_brown_700</color>
+
+
+    <!-- Service colors -->
+    <color name="green">@color/md_green_700</color>
+    <color name="red">@color/md_red_700</color>
 </resources>

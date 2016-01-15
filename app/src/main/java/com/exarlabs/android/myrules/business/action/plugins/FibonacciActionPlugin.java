@@ -1,8 +1,10 @@
 package com.exarlabs.android.myrules.business.action.plugins;
 
+import android.util.Log;
+
 import com.exarlabs.android.myrules.business.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.business.event.plugins.debug.NumberEvent;
+import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
 
 /**
  * Example action plugin which calculates a Fibonacci number
@@ -41,6 +43,7 @@ public class FibonacciActionPlugin extends ActionPlugin {
         if (event instanceof NumberEvent) {
             int value = ((NumberEvent) event).getValue();
             mResult = fib(value);
+            Log.w(TAG, "Fib of: " + value + " is " + mResult);
         }
         return true;
     }
@@ -48,12 +51,13 @@ public class FibonacciActionPlugin extends ActionPlugin {
 
     /**
      * Naiva implementation of fibonacci
+     *
      * @param n
      * @return
      */
     public long fib(int n) {
         if (n <= 1) return n;
-        else return fib(n-1) + fib(n-2);
+        else return fib(n - 1) + fib(n - 2);
     }
 
     // ------------------------------------------------------------------------

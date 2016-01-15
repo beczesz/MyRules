@@ -16,4 +16,10 @@
         <item name="android:visibility">gone</item>
     </style>
 
+
+    <style name="Header1" parent="TextView">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

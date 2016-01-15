@@ -11,6 +11,9 @@
         android:theme="@style/AppTheme" >
 
 
+        <service android:name="com.exarlabs.android.myrules.business.rule.RulesEngineService"/>
+
+
         <activity
             android:name="com.exarlabs.android.myrules.ui.MainActivity"
             android:label="@string/app_name"

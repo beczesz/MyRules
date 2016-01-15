@@ -1,12 +1,16 @@
 package com.exarlabs.android.myrules.business.event;
 
-import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
 
 /**
- * Factory pattern implementation for the events.
- * Created by becze on 12/18/2015.
+ * The plugin manager keeps track of al the plugins written and their actual state.
+ * Created by becze on 1/15/2016.
  */
-public class EventFactory {
+public class EventPluginManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -20,27 +24,40 @@ public class EventFactory {
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * Creator for the event plugins.
-     *
-     * @param type
-     * @return a new event
-     */
-    public static Event create(int eventType) {
-        switch (eventType) {
-            default:
-            case Event.Type.RULE_EVENT_NUMBER:
-                return new NumberEvent();
-        }
-    }
-
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
 
+    private Map<Class<? extends EventHandlerPlugin>, EventHandlerPlugin> mPluginMap;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
+
+    public EventPluginManager() {
+        mPluginMap = new HashMap<>();
+
+        // Add the plugins
+        mPluginMap.put(NumberEventHandlerPlugin.class, new NumberEventHandlerPlugin());
+    }
+
+    /**
+     * @return the list of plugins
+     */
+    public Collection<EventHandlerPlugin> getPlugins() {
+        return mPluginMap.values();
+    }
+
+    /**
+     * Returns the instance of the plugin.
+     *
+     * @param key
+     * @return
+     */
+    public EventHandlerPlugin get(Class<? extends EventHandlerPlugin> key) {
+        return mPluginMap.get(key);
+    }
 
     // ------------------------------------------------------------------------
     // METHODS

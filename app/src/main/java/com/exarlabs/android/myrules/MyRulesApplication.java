@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.facebook.stetho.Stetho;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.Iconics;
 import com.norbsoft.typefacehelper.TypefaceCollection;
 import com.norbsoft.typefacehelper.TypefaceHelper;
 
@@ -59,6 +61,8 @@ public class MyRulesApplication extends Application {
                 .create();
         TypefaceHelper.init(typeface);
         //@formatter:on
+
+        Iconics.registerFont(new FontAwesome());
 
         if (BuildConfig.DEBUG) {
             // Facebook Stetho

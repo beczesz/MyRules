@@ -19,4 +19,10 @@
     <string name="cancel">Cancel</string>
     <string name="action_name">Action name</string>
     <string name="condition_name">Condition name</string>
+    <string name="rules_engine_running">Rules Engine Running</string>
+
+    <string name="lbl_start_rules_engine">Start Rules Engine</string>
+    <string name="lbl_stop_rules_engine">Stop Rules Engine</string>
+    <string name="lbl_start_rules_engine_icon">{faw-play}</string>
+    <string name="lbl_stop_rules_engine_icon">{faw-stop}</string>
 </resources>

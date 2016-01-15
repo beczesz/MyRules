@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.business.event.plugins.debug;
+package com.exarlabs.android.myrules.business.event.plugins.math;
 
 import com.exarlabs.android.myrules.business.event.Event;
 
