@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.exarlabs.android.myrules.business.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
@@ -17,7 +18,7 @@ import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
  * </p>
  * Created by becze on 1/11/2016.
  */
-public abstract class Action {
+public abstract class Action implements GreenDaoEntity{
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -73,7 +74,7 @@ public abstract class Action {
      * @return
      */
     public boolean run(Event event) {
-        return mActionPlugin.run(event);
+        return getActionPlugin().run(event);
     }
 
     /**
@@ -88,8 +89,9 @@ public abstract class Action {
 
     @Override
     public String toString() {
-        return getActionPlugin().toString();
+        return isAttached() ? getActionPlugin().toString() : "Unsaved " + this ;
     }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

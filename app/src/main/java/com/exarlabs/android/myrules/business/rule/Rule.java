@@ -47,6 +47,8 @@ public abstract class Rule implements GreenDaoEntity {
     // METHODS
     // ------------------------------------------------------------------------
 
+    protected abstract String getRuleName();
+
     protected abstract RuleConditionTree getRuleConditionTree();
 
     protected abstract List<RuleActionLink> getRuleActionLinks();
@@ -132,6 +134,12 @@ public abstract class Rule implements GreenDaoEntity {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "(" + getRuleName() + ")";
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
