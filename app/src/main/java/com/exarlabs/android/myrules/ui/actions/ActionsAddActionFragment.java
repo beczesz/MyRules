@@ -51,8 +51,10 @@ public class ActionsAddActionFragment extends BaseFragment {
     public static ActionsAddActionFragment newInstance(Long id) {
         Bundle args = new Bundle();
         ActionsAddActionFragment fragment = new ActionsAddActionFragment();
-        args.putLong(KEY_RULE_ACTION_ID, id);
-        fragment.setArguments(args);
+        if(id != null) {
+            args.putLong(KEY_RULE_ACTION_ID, id);
+            fragment.setArguments(args);
+        }
         return fragment;
     }
 
@@ -89,7 +91,11 @@ public class ActionsAddActionFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
-        mId = (Long) getArguments().get(KEY_RULE_ACTION_ID);
+        Bundle args = getArguments();
+        if(args != null){
+            mId = (Long) getArguments().get(KEY_RULE_ACTION_ID);
+        }
+
     }
 
     @Nullable
@@ -119,11 +125,21 @@ public class ActionsAddActionFragment extends BaseFragment {
 
     @OnClick(R.id.button_save)
     public void saveNewAction(){
-        RuleAction entity = new RuleAction();
-        String name = mActionName.getText().toString();
-        entity.setActionName(name);
+        // ADD NEW
+        if(mId == null) {
+            RuleAction entity = new RuleAction();
+            String name = mActionName.getText().toString();
+            entity.setActionName(name);
 
-        mActionManager.insert(entity);
+            mActionManager.insert(entity);
+
+        // IN EDIT MODE
+        }else{
+            RuleAction entity = mActionManager.loadAction(mId);
+            String name = mActionName.getText().toString();
+            entity.setActionName(name);
+            mActionManager.update(entity);
+        }
         goBack();
     }
 

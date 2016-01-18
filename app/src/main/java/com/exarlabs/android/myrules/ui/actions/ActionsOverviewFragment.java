@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,7 +108,7 @@ public class ActionsOverviewFragment extends BaseFragment {
 
         initActionBar(true, getString(R.string.my_actions));
 
-        mAdapter = new ActionsArrayAdapter(getContext());
+        mAdapter = new ActionsArrayAdapter(getContext(), this);
 
         mActionsListView.setAdapter(mAdapter);
 
@@ -143,13 +142,8 @@ public class ActionsOverviewFragment extends BaseFragment {
         mNavigationManager.startAddActionFragment(id);
     }
 
-    @Nullable
-    @OnClick(R.id.button_edit_action)
-    public void editAction(View editButton){
-        Toast.makeText(getContext(), "bu", Toast.LENGTH_SHORT).show();
-        Button button = (Button) editButton;
-        Long id = (Long) button.getTag();
-        showAddActionFragment(id);
+    public void editAction(Long actionId){
+        showAddActionFragment(actionId);
     }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

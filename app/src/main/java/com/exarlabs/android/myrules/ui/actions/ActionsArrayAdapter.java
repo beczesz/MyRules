@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.R;
@@ -27,7 +29,7 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
 
     static class ActionHolder
     {
-        private ActionHolder(View view) {
+        public ActionHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
@@ -42,7 +44,6 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
 
         @Bind(R.id.item_name)
         public TextView itemName;
-
     }
     // ------------------------------------------------------------------------
     // TYPES
@@ -64,8 +65,11 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
     // FIELDS
     // ------------------------------------------------------------------------
 
+    private ActionsOverviewFragment handleEditClick;
+
     private Context mContext;
     private Collection<? extends RuleAction> mRuleActions;
+
 
     // ------------------------------------------------------------------------
     // INITIALIZERS
@@ -74,9 +78,10 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public ActionsArrayAdapter(Context context) {
+    public ActionsArrayAdapter(Context context, ActionsOverviewFragment actionsOverviewFragment) {
         super(context, R.layout.actions_list_view_item);
         mContext = context;
+        this.handleEditClick = actionsOverviewFragment;
     }
 
     // ------------------------------------------------------------------------
@@ -104,12 +109,12 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         RuleAction action = (RuleAction) mRuleActions.toArray()[position];
 
         holder.headerText.setText(action.getActionName());
+        // make the list items expandable
         ((View) holder.headerText.getParent().getParent()).setOnClickListener(this);
+
         holder.itemName.setText(action.getId() + "");
         holder.editAction.setTag(action.getId());
-
-
-        ButterKnife.bind(ActionsOverviewFragment.class, root);
+        holder.editAction.setOnClickListener(this);
 
         return root;
     }
@@ -122,9 +127,20 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
 
     @Override
     public void onClick(View view) {
-        ActionHolder holder = new ActionHolder(view);
-        if (holder.expandableLayout.isExpanded()) holder.expandableLayout.collapse();
-        else holder.expandableLayout.expand();
+        // clicked on a RelativeLayout -> expand the list item
+        if(view.getClass().equals(RelativeLayout.class)){
+            ActionHolder holder = new ActionHolder(view);
+            if (holder.expandableLayout.isExpanded()) holder.expandableLayout.collapse();
+            else holder.expandableLayout.expand();
+
+        // else on a button
+        } else {
+            Button button = (Button) view;
+            Long id = (Long) button.getTag();
+            handleEditClick.editAction(id);
+        }
     }
+
+
 
 }
