@@ -7,6 +7,8 @@
     <string name="my_rules">My Rules</string>
     <string name="my_actions">My Actions</string>
     <string name="my_conditions">My Conditions</string>
+    <string name="history">History</string>
+    <string name="debug">Debug</string>
 
     <string-array name="list_of_events">
         <item>Select an Event</item>

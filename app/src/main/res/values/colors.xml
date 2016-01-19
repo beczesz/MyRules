@@ -23,6 +23,7 @@
     <color name="menu_item_3">@color/md_cyan_700</color>
     <color name="menu_item_4">@color/md_orange_700</color>
     <color name="menu_item_5">@color/md_brown_700</color>
+    <color name="menu_item_6">@color/md_red_900</color>
 
 
     <!-- Service colors -->

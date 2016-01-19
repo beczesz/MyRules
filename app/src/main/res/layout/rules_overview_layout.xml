@@ -39,13 +39,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/temp_number_event_displatcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Temp Dispatch Number Event"
-            />
-
         <ListView
             android:id="@+id/listView_rules"
             android:layout_width="wrap_content"

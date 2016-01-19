@@ -58,7 +58,7 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
         if (event instanceof NumberEvent) {
             int value = ((NumberEvent) event).getValue();
             boolean isEqual = mValue == value;
-            Log.w(TAG, "Value: " + value + " is indide: " + isEqual);
+            Log.w(TAG, "Value: " + value + " is indeed: " + isEqual);
             return isEqual;
         }
 

@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.exarlabs.android.myrules.business.action.ActionManager;
+import com.exarlabs.android.myrules.business.action.ActionPluginManager;
 import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.event.EventPluginManager;
@@ -25,6 +26,12 @@ public class BusinessModule {
     @Singleton
     protected EventPluginManager providesEventPluginManager() {
         return new EventPluginManager();
+    }
+
+    @Provides
+    @Singleton
+    protected ActionPluginManager providesActionPluginManager() {
+        return new ActionPluginManager();
     }
 
     @Inject

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.action.ActionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
@@ -30,7 +29,7 @@ import butterknife.OnClick;
  * Provides an overview to the user of all the actions.
  * Created by becze on 11/25/2015.
  */
-public class ActionsOverviewFragment extends BaseFragment {
+public class ActionsOverviewFragment extends BaseFragment implements OnActionEditListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -108,7 +107,8 @@ public class ActionsOverviewFragment extends BaseFragment {
 
         initActionBar(true, getString(R.string.my_actions));
 
-        mAdapter = new ActionsArrayAdapter(getContext(), this);
+        mAdapter = new ActionsArrayAdapter(getContext());
+        mAdapter.setOnActionEditListener(this);
 
         mActionsListView.setAdapter(mAdapter);
 
@@ -142,7 +142,8 @@ public class ActionsOverviewFragment extends BaseFragment {
         mNavigationManager.startAddActionFragment(id);
     }
 
-    public void editAction(Long actionId){
+    @Override
+    public void onActionEdit(Long actionId) {
         showAddActionFragment(actionId);
     }
     // ------------------------------------------------------------------------

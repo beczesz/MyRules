@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -34,12 +35,12 @@ public class DrawerManager {
 
 
     public enum MenuItem {
-
         MY_RULES("My Rules"),
         MY_EVENTS("My Events"),
         MY_CONDITIONS("My Conditions"),
         MY_ACTIONS("My Actions"),
-        HISTORY("History");
+        HISTORY("History"),
+        DEBUG("Debug");
 
         private String mLabel;
 
@@ -67,14 +68,17 @@ public class DrawerManager {
     public NavigationManager mNavigationManager;
 
     private Drawer mDrawer;
+    private Context mContext;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public DrawerManager() {
+    public DrawerManager(Context context) {
         // we always select the first item on creation
         mLastSelectedItem = MenuItem.MY_RULES;
         DaggerManager.component().inject(this);
+
+        mContext = context;
     }
 
     // ------------------------------------------------------------------------
@@ -105,6 +109,9 @@ public class DrawerManager {
 
     private AccountHeader getAccountHeader(Activity activity) {
         //@formatter:off
+
+//        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View view = inflater.inflate(R.layout.drawer_header, null);
         return new AccountHeaderBuilder()
                         .withActivity(activity)
                         .withHeaderBackground(R.color.primary_dark)
@@ -148,6 +155,11 @@ public class DrawerManager {
                         .withName(MenuItem.HISTORY.mLabel).withIcon(FontAwesome.Icon.faw_sign_out)
                         .withIconColorRes(R.color.menu_item_5).withSelectedIconColorRes(R.color.menu_item_5));
 
+        if(BuildConfig.DEBUG){
+            items.add(new PrimaryDrawerItem()
+                        .withName(MenuItem.DEBUG.mLabel).withIcon(FontAwesome.Icon.faw_bug)
+                        .withIconColorRes(R.color.menu_item_6).withSelectedIconColorRes(R.color.menu_item_6));
+        }
 
         //@formatter:on
         decorate(items);

@@ -61,7 +61,7 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
         if (event instanceof NumberEvent) {
             int value = ((NumberEvent) event).getValue();
             boolean isInside = mMin <= value && mMax >= value;
-            Log.w(TAG, "Value: " + value + " is indide: " + isInside);
+            Log.w(TAG, "Value: " + value + " is indeed: " + isInside);
             return isInside;
         }
 
