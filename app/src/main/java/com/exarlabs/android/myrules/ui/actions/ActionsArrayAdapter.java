@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * It's a special array adapter for list view items showing the actions
  * Created by atiyka on 2016.01.15..
  */
 public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements View.OnClickListener {

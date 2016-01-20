@@ -215,6 +215,10 @@ public class DrawerManager {
                         mNavigationManager.startHistoryOverview();
                         break;
 
+                    case DEBUG:
+                        mNavigationManager.startDebugOverview();
+                        break;
+
                     default:
                         mNavigationManager.startRulesOverview();
                         break;

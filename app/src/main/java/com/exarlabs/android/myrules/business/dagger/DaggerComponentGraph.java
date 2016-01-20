@@ -1,6 +1,8 @@
 package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
+import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.rule.RulesEngineService;
 import com.exarlabs.android.myrules.ui.BaseActivity;
@@ -55,4 +57,8 @@ public interface DaggerComponentGraph {
     void inject(ConditionsAddConditionFragment conditionsAddConditionFragment);
 
     void inject(DebugOverviewFragment debugOverviewFragment);
+
+    void inject(SendSmsActionPlugin sendSmsActionPlugin);
+
+    void inject(RejectCallActionPlugin rejectCallActionPlugin);
 }

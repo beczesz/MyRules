@@ -127,7 +127,7 @@ public class ActionsOverviewFragment extends BaseFragment implements OnActionEdi
      */
     private void updateUI() {
         mAdapter.clear();
-        List<RuleAction> actions = mActionManager.loadAllConditions();
+        List<RuleAction> actions = mActionManager.loadAllActions();
         mAdapter.addAll(actions);
         mAdapter.notifyDataSetChanged();
     }

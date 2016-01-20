@@ -17,6 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * It's a special array adapter for list view items in the Debug menu
  * Created by atiyka on 2016.01.15..
  */
 public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> implements View.OnClickListener{

@@ -10,6 +10,7 @@ public interface Event {
      */
     public static class Type {
         public static final int RULE_EVENT_NUMBER = 1000;
+        //public static final int RULE_EVENT_SMS = 2000;
     }
 
     // ------------------------------------------------------------------------

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.exarlabs.android.myrules.business.action.Action;
 import com.exarlabs.android.myrules.business.action.ActionManager;
 import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.condition.Condition;
 import com.exarlabs.android.myrules.business.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.condition.ConditionTree;
@@ -190,7 +191,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         Collections.addAll(ruleConditions, cTrue, cTrue1, cInterval, cPrime, cEqual);
         mConditionManager.saveConditions(ruleConditions);
 
-        // create dependencies beween conditions
+        // create dependencies between conditions
         // Build the condition tree
         RuleConditionTree.Builder builder = new ConditionTree.Builder();
         builder.add(cTrue, new RuleCondition[] { cEqual, cTrue1 }, ConditionTree.Operator.OR);
@@ -205,7 +206,13 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         ((MultiplyActionPlugin) aMultiply.getActionPlugin()).setValue(5);
 
         RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI);
-        mActionManager.saveActions(aFib, aMultiply);
+
+        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
+        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
+        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
+
+
+        mActionManager.saveActions(aFib, aMultiply, aSms);
 
         // Create a rule with these actions and conditions
         RuleRecord ruleRecord = new RuleRecord();
@@ -214,7 +221,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         ruleRecord.setRuleName("Sample Rule");
         ruleRecord.setEventCode(event.getType());
         ruleRecord.setRuleConditionTree(root);
-        ruleRecord.addRuleActions(aFib, aMultiply);
+        ruleRecord.addRuleActions(aFib, aMultiply, aSms);
         mRuleManager.saveRuleRecord(ruleRecord);
     }
 
