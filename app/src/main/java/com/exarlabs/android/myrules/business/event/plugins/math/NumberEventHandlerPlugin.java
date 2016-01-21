@@ -35,9 +35,16 @@ public class NumberEventHandlerPlugin extends EventHandlerPlugin {
     }
 
 
+
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
+
+
+    @Override
+    protected boolean initPlugin() {
+        return false;
+    }
 
     /**
      * Dispatches a number event with the given integer
