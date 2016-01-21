@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.business.rule;
+package com.exarlabs.android.myrules.business;
 
 import java.util.List;
 
@@ -17,6 +17,8 @@ import android.util.Pair;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.event.Event;
 import com.exarlabs.android.myrules.business.event.RuleEventManager;
+import com.exarlabs.android.myrules.business.rule.RuleManager;
+import com.exarlabs.android.myrules.business.rule.RuleState;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
