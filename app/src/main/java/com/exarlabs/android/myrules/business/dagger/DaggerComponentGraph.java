@@ -10,6 +10,8 @@ import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsAddActionFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
@@ -61,4 +63,8 @@ public interface DaggerComponentGraph {
     void inject(SendSmsActionPlugin sendSmsActionPlugin);
 
     void inject(RejectCallActionPlugin rejectCallActionPlugin);
+
+    void inject(ConditionDetailsFragment conditionDetailsFragment);
+
+    void inject(ConditionPluginFragment conditionPluginFragment);
 }

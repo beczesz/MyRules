@@ -20,13 +20,12 @@ import butterknife.ButterKnife;
  * It's a special array adapter for list view items in the Debug menu
  * Created by atiyka on 2016.01.15..
  */
-public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> implements View.OnClickListener{
+public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> implements View.OnClickListener {
     // ------------------------------------------------------------------------
     // STATIC CLASSES
     // ------------------------------------------------------------------------
 
-    static class ViewHolder
-    {
+    static class ViewHolder {
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
@@ -79,7 +78,7 @@ public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> impleme
     // METHODS
     // ------------------------------------------------------------------------
 
-    public void setOnTriggerEventListener(OnTriggerEventListener listener){
+    public void setOnTriggerEventListener(OnTriggerEventListener listener) {
         mTriggerEventListener = listener;
     }
 
@@ -87,15 +86,12 @@ public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> impleme
     public View getView(int position, View convertView, ViewGroup parent) {
         View root;
 
-        if(convertView == null)
-        {
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             root = inflater.inflate(R.layout.debug_list_view_item, parent, false);
-
             root.setTag(new ViewHolder(root));
-        }
-        else
-        {
+
+        } else {
             root = convertView;
         }
 
@@ -120,10 +116,8 @@ public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> impleme
     public void onClick(View view) {
         Button button = (Button) view;
         EventHandlerPlugin event = (EventHandlerPlugin) button.getTag();
-        if(mTriggerEventListener != null)
-            mTriggerEventListener.triggerEvent(event);
+        if (mTriggerEventListener != null) mTriggerEventListener.triggerEvent(event);
     }
-
 
 
 }

@@ -25,6 +25,8 @@ import com.exarlabs.android.myrules.ui.R;
 
 import rx.Observable;
 import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Service class which runs in background waiting for rule events and handling them.
@@ -148,20 +150,24 @@ public class RulesEngineService extends Service {
         mRuleEventManager.getEventObservable()
                         .filter(event -> isRunning())
                         .map(event -> {
-                             logEventDispatched(event);
+                            // Log the events and prepare a bundle with the list of rules which are responding to
+                            // the given event
+                            logEventDispatched(event);
                             return new Pair<>(event, mRuleManager.getRules(event.getType(), RuleState.STATE_ACTIVE));
                         })
                         .flatMap(pair -> Observable.from(pair.second).map(record -> new Pair<>(pair.first, (RuleRecord) record)))
                         .filter(eventRulePair -> {
+                            // Evaluate each rules and
                             RuleConditionTree ruleConditionTree = eventRulePair.second.getRuleConditionTree();
                             boolean result = ruleConditionTree != null ? ruleConditionTree.evaluate(eventRulePair.first) : false;
                             logEventEvaluated(eventRulePair.first, eventRulePair.second, result);
                             return  result;
                         })
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(getRuleResolveSubscriber());
         //@formatter:on
     }
-
 
 
     private Observer<? super Pair<Event, RuleRecord>> getRuleResolveSubscriber() {
@@ -189,6 +195,8 @@ public class RulesEngineService extends Service {
      * @param ruleRecord
      */
     private void executeRule(Event event, RuleRecord ruleRecord) {
+        Log.w("BSZ", "Observed on thread: " + Thread.currentThread().getName());
+
         // TODO make it sequential
         List<RuleAction> ruleActions = ruleRecord.getRuleActions();
         for (RuleAction ruleAction : ruleActions) {
@@ -196,7 +204,6 @@ public class RulesEngineService extends Service {
             logActionRun(event, ruleRecord, ruleAction);
         }
     }
-
 
 
     /**
@@ -208,6 +215,7 @@ public class RulesEngineService extends Service {
      */
     private void logEventEvaluated(Event event, RuleRecord ruleRecord, boolean result) {
         Log.w(TAG, " --> Rule " + ruleRecord + " by event: " + event + " is evaluated to " + result);
+        Log.w("BSZ", "Subscribed on thread: " + Thread.currentThread().getName());
     }
 
     /**
@@ -221,6 +229,7 @@ public class RulesEngineService extends Service {
 
     /**
      * Log the ruleaction execution for the given rule dispatched by the event.
+     *
      * @param event
      * @param ruleRecord
      * @param ruleAction

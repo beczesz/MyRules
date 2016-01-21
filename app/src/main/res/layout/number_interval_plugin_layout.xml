@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <EditText
+            android:id="@+id/interval_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/lbl_hint_interv_start"
+            android:inputType="number"/>
+
+        <EditText
+
+            android:id="@+id/interval_end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/lbl_hint_interv_end"
+            android:inputType="number"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>

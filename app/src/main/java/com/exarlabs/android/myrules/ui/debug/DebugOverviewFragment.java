@@ -21,6 +21,7 @@ import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin
 import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.condition.Condition;
 import com.exarlabs.android.myrules.business.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.condition.ConditionPluginFactory;
 import com.exarlabs.android.myrules.business.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.condition.plugins.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.business.condition.plugins.IsNumberInIntervalConditionPlugin;
@@ -42,10 +43,9 @@ import com.exarlabs.android.myrules.ui.R;
 import butterknife.Bind;
 
 /**
- *
  * Created by atiyka on 1/19/2016.
  */
-public class DebugOverviewFragment extends BaseFragment implements OnTriggerEventListener{
+public class DebugOverviewFragment extends BaseFragment implements OnTriggerEventListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -131,7 +131,11 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         mAdapter = new EventsArrayAdapter(getContext());
         mAdapter.setOnTriggerEventListener(this);
         mEventPlugins.setAdapter(mAdapter);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
         updateUI();
     }
 
@@ -148,7 +152,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
     @Override
     public void triggerEvent(EventHandlerPlugin event) {
-        if(event.getClass().equals(NumberEventHandlerPlugin.class)){
+        if (event.getClass().equals(NumberEventHandlerPlugin.class)) {
             dispatchNumberEvent();
         }
     }
@@ -229,6 +233,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     private RuleCondition generateNewCondition(int type) {
         RuleCondition c = new RuleCondition();
         c.setType(type);
+        c.setConditionName(ConditionPluginFactory.create(type).getClass().getSimpleName());
         return c;
     }
 
