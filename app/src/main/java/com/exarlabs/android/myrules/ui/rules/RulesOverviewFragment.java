@@ -21,7 +21,7 @@ import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
 import com.exarlabs.android.myrules.business.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.business.rule.RulesEngineService;
+import com.exarlabs.android.myrules.business.RulesEngineService;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;

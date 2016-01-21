@@ -4,7 +4,7 @@ import com.exarlabs.android.myrules.MyRulesApplication;
 import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.business.rule.RulesEngineService;
+import com.exarlabs.android.myrules.business.RulesEngineService;
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;

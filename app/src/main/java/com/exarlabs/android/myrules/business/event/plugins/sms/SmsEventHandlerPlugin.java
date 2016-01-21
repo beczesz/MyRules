@@ -1,17 +1,15 @@
-package com.exarlabs.android.myrules.business.event;
+package com.exarlabs.android.myrules.business.event.plugins.sms;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
-import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.business.event.EventFactory;
+import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 
 /**
- * The plugin manager keeps track of al the plugins written and their actual state.
- * Created by becze on 1/15/2016.
+ * Just a timer which displatches an event in every second.
+ * Created by becze on 1/11/2016.
  */
-public class EventPluginManager {
+public class SmsEventHandlerPlugin extends EventHandlerPlugin {
+
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
@@ -28,42 +26,26 @@ public class EventPluginManager {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private Map<Class<? extends EventHandlerPlugin>, EventHandlerPlugin> mPluginMap;
-
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-
-    public EventPluginManager() {
-        mPluginMap = new HashMap<>();
-
-        // Add the plugins
-        mPluginMap.put(NumberEventHandlerPlugin.class, new NumberEventHandlerPlugin());
-        mPluginMap.put(SmsEventHandlerPlugin.class, new SmsEventHandlerPlugin());
-
+    public SmsEventHandlerPlugin() {
+        super();
     }
 
-    /**
-     * @return the list of plugins
-     */
-    public Collection<EventHandlerPlugin> getPlugins() {
-        return mPluginMap.values();
-    }
-
-    /**
-     * Returns the instance of the plugin.
-     *
-     * @param key
-     * @return
-     */
-    public EventHandlerPlugin get(Class<? extends EventHandlerPlugin> key) {
-        return mPluginMap.get(key);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
+
+    public void dispatchSms(String sender, String message) {
+        SmsEvent event = (SmsEvent) EventFactory.create(Event.Type.RULE_EVENT_SMS);
+        event.setSender(sender);
+        event.setMessage(message);
+        dispatchEvent(event);
+    }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
