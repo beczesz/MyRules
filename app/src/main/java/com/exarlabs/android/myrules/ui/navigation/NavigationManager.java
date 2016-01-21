@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionsAddActionFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
@@ -126,7 +127,7 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
-    public void startAddRuleFragment(){
+    public void startAddRuleFragment() {
         Fragment fragment = RulesAddRuleFragment.newInstance();
         open(fragment);
     }
@@ -137,7 +138,7 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
-    public void startAddConditionFragment(){
+    public void startAddConditionFragment() {
         Fragment fragment = ConditionsAddConditionFragment.newInstance();
         open(fragment);
     }
@@ -154,7 +155,7 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
-    public void startAddActionFragment(Long id){
+    public void startAddActionFragment(Long id) {
         Fragment fragment = ActionsAddActionFragment.newInstance(id);
         open(fragment);
     }
@@ -167,9 +168,14 @@ public class NavigationManager {
 
 
     // DEBUG
-    public void startDebugOverview(){
+    public void startDebugOverview() {
         Fragment fragment = DebugOverviewFragment.newInstance();
         openAsRoot(fragment);
+    }
+
+    public void startConditionsDetails(Long id, int type) {
+        Fragment fragment = ConditionDetailsFragment.newInstance(id, type);
+        open(fragment);
     }
 
     // ------------------------------------------------------------------------

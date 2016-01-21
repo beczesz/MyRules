@@ -26,6 +26,7 @@ import com.software.shell.fab.ActionButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 import rx.Observable;
 
 /**
@@ -79,6 +80,7 @@ public class ConditionsOverviewFragment extends BaseFragment {
     public NavigationManager mNavigationManager;
 
     private ArrayAdapter<String> mAdapter;
+    private List<RuleCondition> mRuleConditions;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -112,6 +114,7 @@ public class ConditionsOverviewFragment extends BaseFragment {
         mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
         mConditionsListView.setAdapter(mAdapter);
 
+
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());
             mDevelInfo.setVisibility(View.VISIBLE);
@@ -127,9 +130,9 @@ public class ConditionsOverviewFragment extends BaseFragment {
      */
     private void updateUI() {
         mAdapter.clear();
-        List<RuleCondition> conditions = mConditionManager.loadAllConditions();
+        mRuleConditions = mConditionManager.loadAllConditions();
         List<String> conditionNames = new ArrayList<>();
-        Observable.from(conditions)
+        Observable.from(mRuleConditions)
                         .map(condition -> condition.getConditionName())
                         .subscribe(conditionName -> conditionNames.add(conditionName));
 
@@ -140,6 +143,12 @@ public class ConditionsOverviewFragment extends BaseFragment {
     @OnClick(R.id.fab_add_condition)
     public void showAddConditionFragment(){
         mNavigationManager.startAddConditionFragment();
+    }
+
+    @OnItemClick(R.id.listView_conditions)
+    public void onConditionClicked(int position) {
+        RuleCondition ruleCondition = mRuleConditions.get(position);
+        mNavigationManager.startConditionsDetails(ruleCondition.getId(), ruleCondition.getType());
     }
 
     // ------------------------------------------------------------------------

@@ -90,6 +90,7 @@ public class ConditionManager {
     public void saveCondition(RuleCondition condition) {
         // Save the condition and it's properties
         mRuleConditionDao.insertOrReplace(condition);
+        mRuleConditionPropertyDao.deleteInTx(condition.getProperties());
         condition.getProperties().clear();
         List<RuleConditionProperty> properties = condition.getConditionPlugin().getProperties();
         condition.getProperties().addAll(properties);
