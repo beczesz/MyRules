@@ -65,7 +65,12 @@ public abstract class EventHandlerPlugin {
      */
     protected void dispatchEvent(Event event) {
         if (mSubscriber != null && isEnabled) {
-            mSubscriber.onNext(event);
+            new Thread(TAG) {
+                @Override
+                public void run() {
+                    mSubscriber.onNext(event);
+                }
+            }.start();
         }
     }
 
