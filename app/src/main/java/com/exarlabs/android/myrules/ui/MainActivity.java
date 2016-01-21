@@ -4,10 +4,12 @@ import javax.inject.Inject;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.RulesEngineService;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -54,6 +56,10 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // start rulesEngine service
+        if(!RulesEngineService.isRunning())
+            startService(new Intent(this, RulesEngineService.class));
 
         // Inject members
         DaggerManager.component().inject(this);

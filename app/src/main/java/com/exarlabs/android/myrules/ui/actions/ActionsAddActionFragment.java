@@ -40,6 +40,7 @@ public class ActionsAddActionFragment extends BaseFragment {
 
     private static final String TAG = ActionsAddActionFragment.class.getSimpleName();
 
+    private static final String KEY_RULE_ACTION_ID = "RULE_ACTION_ID";
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -47,8 +48,14 @@ public class ActionsAddActionFragment extends BaseFragment {
     /**
      * @return newInstance of SampleFragment
      */
-    public static ActionsAddActionFragment newInstance() {
-        return new ActionsAddActionFragment();
+    public static ActionsAddActionFragment newInstance(Long id) {
+        Bundle args = new Bundle();
+        ActionsAddActionFragment fragment = new ActionsAddActionFragment();
+        if(id != null) {
+            args.putLong(KEY_RULE_ACTION_ID, id);
+            fragment.setArguments(args);
+        }
+        return fragment;
     }
 
     // ------------------------------------------------------------------------
@@ -70,6 +77,7 @@ public class ActionsAddActionFragment extends BaseFragment {
     public NavigationManager mNavigationManager;
 
     private View mRootView;
+    private Long mId = null;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -83,6 +91,11 @@ public class ActionsAddActionFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
+        Bundle args = getArguments();
+        if(args != null){
+            mId = (Long) getArguments().get(KEY_RULE_ACTION_ID);
+        }
+
     }
 
     @Nullable
@@ -99,21 +112,34 @@ public class ActionsAddActionFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());
             mDevelInfo.setVisibility(View.VISIBLE);
         }
 
+        if(mId != null){
+            RuleAction ruleAction = mActionManager.loadAction(mId);
+            mActionName.setText(ruleAction.getActionName());
+        }
     }
 
     @OnClick(R.id.button_save)
     public void saveNewAction(){
-        RuleAction entity = new RuleAction();
-        String name = mActionName.getText().toString();
-        entity.setActionName(name);
+        // ADD NEW
+        if(mId == null) {
+            RuleAction entity = new RuleAction();
+            String name = mActionName.getText().toString();
+            entity.setActionName(name);
 
-        mActionManager.insert(entity);
+            mActionManager.insert(entity);
+
+        // IN EDIT MODE
+        }else{
+            RuleAction entity = mActionManager.loadAction(mId);
+            String name = mActionName.getText().toString();
+            entity.setActionName(name);
+            mActionManager.update(entity);
+        }
         goBack();
     }
 

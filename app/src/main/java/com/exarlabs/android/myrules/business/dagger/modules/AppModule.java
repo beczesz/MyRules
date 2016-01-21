@@ -29,6 +29,7 @@ public class AppModule {
         return app;
     }
 
+
     @Provides
     @Singleton
     protected Context provideApplicationContext() {

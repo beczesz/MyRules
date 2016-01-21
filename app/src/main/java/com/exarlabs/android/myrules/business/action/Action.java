@@ -31,6 +31,8 @@ public abstract class Action implements GreenDaoEntity{
         // Debug condition types
         public static final int ARITHMETRIC_ACTION_MULTIPLY = 201;
         public static final int ARITHMETRIC_ACTION_FIBONACCI = 202;
+
+        public static final int SEND_SMS_ACTION = 301;
     }
 
     // ------------------------------------------------------------------------

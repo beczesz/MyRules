@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.business.action;
 
 import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
 import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 
 /**
  * Factory pattern implementation for the action plugins.
@@ -36,6 +37,8 @@ public class ActionPluginFactory {
             case Action.Type.ARITHMETRIC_ACTION_MULTIPLY:
                 return new MultiplyActionPlugin();
 
+            case Action.Type.SEND_SMS_ACTION:
+                return new SendSmsActionPlugin();
         }
     }
 

@@ -1,16 +1,17 @@
-package com.exarlabs.android.myrules.business.event;
+package com.exarlabs.android.myrules.business.action;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
 
 /**
  * The plugin manager keeps track of al the plugins written and their actual state.
- * Created by becze on 1/15/2016.
+ * Created by atiyka on 1/19/2016.
  */
-public class EventPluginManager {
+public class ActionPluginManager {
+
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
@@ -27,24 +28,24 @@ public class EventPluginManager {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private Map<Class<? extends EventHandlerPlugin>, EventHandlerPlugin> mPluginMap;
+    private Map<Class<? extends ActionPlugin>, ActionPlugin> mPluginMap;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
 
-    public EventPluginManager() {
+    public ActionPluginManager() {
         mPluginMap = new HashMap<>();
 
         // Add the plugins
-        mPluginMap.put(NumberEventHandlerPlugin.class, new NumberEventHandlerPlugin());
+        mPluginMap.put(FibonacciActionPlugin.class, new FibonacciActionPlugin());
     }
 
     /**
      * @return the list of plugins
      */
-    public Collection<EventHandlerPlugin> getPlugins() {
+    public Collection<ActionPlugin> getPlugins() {
         return mPluginMap.values();
     }
 
@@ -54,7 +55,7 @@ public class EventPluginManager {
      * @param key
      * @return
      */
-    public EventHandlerPlugin get(Class<? extends EventHandlerPlugin> key) {
+    public ActionPlugin get(Class<? extends ActionPlugin> key) {
         return mPluginMap.get(key);
     }
 

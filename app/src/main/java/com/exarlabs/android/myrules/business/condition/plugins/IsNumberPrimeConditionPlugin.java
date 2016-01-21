@@ -43,7 +43,7 @@ public class IsNumberPrimeConditionPlugin extends ConditionPlugin {
         if (event instanceof NumberEvent) {
             int value = ((NumberEvent) event).getValue();
             boolean prime = isPrime(value);
-            Log.w(TAG, "Numeber: " + value + " is prime -> " + prime);
+            Log.w(TAG, "Number: " + value + " is prime -> " + prime);
             return prime;
         }
 

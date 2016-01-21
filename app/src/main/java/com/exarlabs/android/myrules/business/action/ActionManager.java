@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import android.util.Log;
+
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleActionDao;
@@ -67,7 +69,7 @@ public class ActionManager {
         return mRuleActionDao.load(key);
     }
 
-    public List<RuleAction> loadAllConditions() {
+    public List<RuleAction> loadAllActions() {
         return mRuleActionDao.loadAll();
     }
 
