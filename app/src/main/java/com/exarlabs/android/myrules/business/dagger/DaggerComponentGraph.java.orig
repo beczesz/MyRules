@@ -66,16 +66,11 @@ public interface DaggerComponentGraph {
 
     void inject(RejectCallActionPlugin rejectCallActionPlugin);
 
-<<<<<<< HEAD
     void inject(ConditionDetailsFragment conditionDetailsFragment);
 
     void inject(SmsEventHandlerPlugin smsEventHandlerPlugin);
 
     void inject(ConditionPluginFragment conditionPluginFragment);
     
-=======
-    void inject(SmsEventHandlerPlugin smsEventHandlerPlugin);
-
->>>>>>> e9134cf14ea3118e513323e9020b7aa35fda3f8c
     void inject(CallEventHandlerPlugin callEventHandlerPlugin);
 }
