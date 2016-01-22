@@ -308,12 +308,8 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
         RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI);
 
-        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
-        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
-        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
 
-
-        mActionManager.saveActions(aFib, aMultiply, aSms);
+        mActionManager.saveActions(aFib, aMultiply);
 
         // Create a rule with these actions and conditions
         RuleRecord ruleRecord = new RuleRecord();
@@ -322,7 +318,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         ruleRecord.setRuleName("Sample Rule");
         ruleRecord.setEventCode(event.getType());
         ruleRecord.setRuleConditionTree(root);
-        ruleRecord.addRuleActions(aFib, aMultiply, aSms);
+        ruleRecord.addRuleActions(aFib, aMultiply);
         mRuleManager.saveRuleRecord(ruleRecord);
     }
 
