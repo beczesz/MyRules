@@ -200,7 +200,6 @@ public class RulesEngineService extends Service {
     }
 
 
-
     /**
      * Log the rule evaluation for the given event.
      *

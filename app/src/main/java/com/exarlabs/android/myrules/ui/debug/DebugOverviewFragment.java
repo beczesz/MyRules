@@ -30,6 +30,8 @@ import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEvent;
+import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
@@ -151,6 +153,53 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         if(event.getClass().equals(NumberEventHandlerPlugin.class)){
             dispatchNumberEvent();
         }
+        else if(event.getClass().equals(SmsEventHandlerPlugin.class)){
+            testSmsEventRule();
+        }
+    }
+
+    public void testSmsEventRule(){
+        if (mRuleManager.loadAllRules().size() != 0) {
+            return;
+        }
+
+        // Create the event
+        SmsEvent event = new SmsEvent();
+
+
+         /*
+         * Create the conditions
+         */
+        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        mConditionManager.saveCondition(cTrue);
+
+        // create dependencies between conditions
+        // Build the condition tree
+        RuleConditionTree.Builder builder = new ConditionTree.Builder();
+        builder.add(cTrue, new RuleCondition[] { cTrue, cTrue }, ConditionTree.Operator.OR);
+        RuleConditionTree root = mConditionManager.buildConditionTree(builder);
+
+
+        /*
+         * Create actions
+         */
+
+//        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
+//        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
+//        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
+
+
+//        mActionManager.saveActions(aFib, aMultiply, aSms);
+
+        // Create a rule with these actions and conditions
+        RuleRecord ruleRecord = new RuleRecord();
+
+        // set the event
+        ruleRecord.setRuleName("Sample Rule");
+        ruleRecord.setEventCode(event.getType());
+        ruleRecord.setRuleConditionTree(root);
+//        ruleRecord.addRuleActions(aFib, aMultiply, aSms);
+        mRuleManager.saveRuleRecord(ruleRecord);
     }
 
     public void dispatchNumberEvent() {
