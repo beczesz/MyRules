@@ -66,8 +66,6 @@ public interface DaggerComponentGraph {
 
     void inject(RejectCallActionPlugin rejectCallActionPlugin);
 
-    void inject(SmsEventHandlerPlugin smsEventHandlerPlugin);
-
     void inject(ConditionDetailsFragment conditionDetailsFragment);
 
     void inject(SmsEventHandlerPlugin smsEventHandlerPlugin);
@@ -75,6 +73,4 @@ public interface DaggerComponentGraph {
     void inject(CallEventHandlerPlugin callEventHandlerPlugin);
 
     void inject(ConditionPluginFragment conditionPluginFragment);
-    
-    void inject(CallEventHandlerPlugin callEventHandlerPlugin);
 }
