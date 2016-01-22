@@ -88,7 +88,7 @@ public abstract class ActionPlugin {
     }
 
     /**
-     * Retruns the propery with the given key
+     * Returns the property with the given key
      * @param key
      * @return
      */

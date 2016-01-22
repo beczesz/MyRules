@@ -16,6 +16,8 @@ import android.util.Log;
 import com.exarlabs.android.myrules.business.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.event.Event;
+import com.exarlabs.android.myrules.business.event.plugins.call.CallEvent;
+import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEvent;
 import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
@@ -63,21 +65,38 @@ public class SendSmsActionPlugin extends ActionPlugin {
     @Override
     public void initialize(List<RuleActionProperty> properties) {
         super.initialize(properties);
-        mPhoneNumber = getProperty(KEY_PHONE_NUMBER).getValue();
-        mMessage = getProperty(KEY_MESSAGE).getValue();
+        if(getProperty(KEY_PHONE_NUMBER) != null)
+            mPhoneNumber = getProperty(KEY_PHONE_NUMBER).getValue();
+
+        if(getProperty(KEY_MESSAGE) != null)
+            mMessage = getProperty(KEY_MESSAGE).getValue();
     }
 
     @Override
     public boolean run(Event event) {
-        if(mPhoneNumber == null){
+        // reply to sender
+        if(event.getType() == Event.Type.RULE_EVENT_SMS) {
+            SmsEvent smsEvent = (SmsEvent) event;
+            sendSMS(smsEvent.getSender(), "I have got! :)");
+
+        }else if(event.getType() == Event.Type.RULE_EVENT_CALL){
+            CallEvent callEvent = (CallEvent) event;
+            sendSMS(callEvent.getCaller(), mMessage);
+
+        }else if(mPhoneNumber == null){
             Log.w(TAG, "The phone number is null");
             return false;
         }
-        sendSMS(mPhoneNumber, mMessage);
+
+        //sendSMS(mPhoneNumber, mMessage);
         return true;
     }
 
-    // sends an SMS to the given phone number, with the specified value
+    /**
+     * Sends an SMS to the given phone number, with the specified value
+     * @param phoneNumber
+     * @param message
+     */
     public void sendSMS(String phoneNumber, String message)
     {
         String SENT = "SMS_SENT";
@@ -153,5 +172,10 @@ public class SendSmsActionPlugin extends ActionPlugin {
     public void setMessage(String message) {
         saveProperty(KEY_MESSAGE, message);
         this.mMessage = message;
+    }
+
+    @Override
+    public String toString() {
+        return TAG;
     }
 }

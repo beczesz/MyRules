@@ -9,6 +9,7 @@ import android.util.Log;
 
 /**
  * Listens for the incoming sms messages
+ *
  * Created by atiyka on 2016.01.21..
  */
 public class IncomingSmsListener extends BroadcastReceiver{
@@ -51,10 +52,13 @@ public class IncomingSmsListener extends BroadcastReceiver{
 
     public void setOnSmsReceivedListener(OnSmsReceivedListener onSmsReceivedListener) {
         this.mOnSmsReceivedListener = onSmsReceivedListener;
-        Log.w(TAG, "setOnSmsReceivedListener");
     }
 
-    // listens for the incoming SMSes
+    /**
+     * It will be executed when you get an SMS
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {

@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.business.action;
 
 import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
 import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 
 /**
@@ -39,6 +40,9 @@ public class ActionPluginFactory {
 
             case Action.Type.SEND_SMS_ACTION:
                 return new SendSmsActionPlugin();
+
+            case Action.Type.REJECT_CALL_ACTION:
+                return new RejectCallActionPlugin();
         }
     }
 
