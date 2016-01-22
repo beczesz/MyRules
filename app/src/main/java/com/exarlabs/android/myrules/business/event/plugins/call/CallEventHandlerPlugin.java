@@ -1,9 +1,10 @@
-package com.exarlabs.android.myrules.business.event.plugins.sms;
+package com.exarlabs.android.myrules.business.event.plugins.call;
 
 import javax.inject.Inject;
 
 import android.content.Context;
-import android.content.IntentFilter;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
@@ -12,11 +13,11 @@ import com.exarlabs.android.myrules.business.event.EventFactory;
 import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 
 /**
- * The plugin converts the received SMS to an SmsEvent
+ * The plugin converts the incoming call event to a CallEvent
  *
- * Created by atiyka on 1/21/2016.
+ * Created by atiyka on 1/22/2016.
  */
-public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsReceivedListener{
+public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnIncomingCallListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -25,7 +26,7 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     // ------------------------------------------------------------------------
     // STATIC FIELDS
     // ------------------------------------------------------------------------
-    private static final String TAG = SmsEventHandlerPlugin.class.getSimpleName();
+    private static final String TAG = CallEventHandlerPlugin.class.getSimpleName();
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -35,7 +36,7 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private IncomingSmsListener smsListener;
+//    private IncomingCallListener callListener;
 
     @Inject
     public Context mContext;
@@ -44,9 +45,7 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public SmsEventHandlerPlugin(){
 
-    }
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
@@ -54,26 +53,23 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     protected boolean initPlugin() {
         DaggerManager.component().inject(this);
 
-        smsListener = new IncomingSmsListener();
-        smsListener.setOnSmsReceivedListener(this);
+        CallStateListener callStateListener = new CallStateListener();
+        callStateListener.setOnIncomingCallListener(this);
 
-        IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-        // since SMS_RECEIVED is sent via ordered broadcast, we have to make sure that we
-        // receive this with highest priority in case a receiver aborts the broadcast!
-        intentFilter.setPriority(1000000);
-        mContext.registerReceiver(smsListener, intentFilter);
+        // setting to listen for the incoming calls
+        TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+
         return true;
     }
 
     @Override
-    public void getSms(String sender, String message) {
-        SmsEvent event = (SmsEvent) EventFactory.create(Event.Type.RULE_EVENT_SMS);
-        event.setSender(sender);
-        event.setMessage(message);
-        dispatchEvent(event);
+    public void getCall(String caller) {
+        CallEvent event = (CallEvent) EventFactory.create(Event.Type.RULE_EVENT_CALL);
+        event.setCaller(caller);
 
-        Log.w(TAG, "SMS from: " + sender);
-        Log.w(TAG, "SMS text: " + message);
+        dispatchEvent(event);
+        Log.w(TAG, "Call from: " + caller);
     }
 
     // ------------------------------------------------------------------------

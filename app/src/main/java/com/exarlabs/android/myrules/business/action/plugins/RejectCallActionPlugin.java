@@ -20,6 +20,7 @@ import com.android.internal.telephony.ITelephony;
 
 /**
  * Action plugin which rejects a call
+ *
  * Created by atiyka on 1/20/2016.
  */
 public class RejectCallActionPlugin extends ActionPlugin {
@@ -45,14 +46,12 @@ public class RejectCallActionPlugin extends ActionPlugin {
     @Inject
     public Context mContext;
 
-    private TelephonyManager telephonyManager;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
     public RejectCallActionPlugin(){
         DaggerManager.component().inject(this);
-        telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     // ------------------------------------------------------------------------
@@ -69,11 +68,16 @@ public class RejectCallActionPlugin extends ActionPlugin {
         return true;
     }
 
-    // rejects a call by finding the ITelephony methods with reflection
+    /**
+     * rejects a call by finding the ITelephony methods with reflection
+     */
     private void rejectCall(){
         AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         int ringerMode = audioManager.getRingerMode();
         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+
+        TelephonyManager telephonyManager;
+        telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
 
         try {
             Class telephonyManagerClass = Class.forName(telephonyManager.getClass().getName());

@@ -5,6 +5,7 @@ import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlug
 import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.RulesEngineService;
+import com.exarlabs.android.myrules.business.event.plugins.call.CallEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
@@ -64,4 +65,6 @@ public interface DaggerComponentGraph {
     void inject(RejectCallActionPlugin rejectCallActionPlugin);
 
     void inject(SmsEventHandlerPlugin smsEventHandlerPlugin);
+
+    void inject(CallEventHandlerPlugin callEventHandlerPlugin);
 }

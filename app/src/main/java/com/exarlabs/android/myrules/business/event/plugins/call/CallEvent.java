@@ -1,13 +1,13 @@
-package com.exarlabs.android.myrules.business.event.plugins.sms;
+package com.exarlabs.android.myrules.business.event.plugins.call;
 
 import com.exarlabs.android.myrules.business.event.Event;
 
 /**
- * Implementation of an SMS event
+ * Implementation of an Call event
  *
- * Created by atiyka on 1/21/2016.
+ * Created by atiyka on 1/22/2016.
  */
-public class SmsEvent implements Event {
+public class CallEvent implements Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -17,8 +17,7 @@ public class SmsEvent implements Event {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = SmsEvent.class.getSimpleName();
-
+    private static final String TAG = CallEvent.class.getSimpleName();
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -28,9 +27,7 @@ public class SmsEvent implements Event {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private String mSender;
-    private String mMessage;
-
+    private String mCaller;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -43,32 +40,24 @@ public class SmsEvent implements Event {
 
     @Override
     public int getType() {
-        return Type.RULE_EVENT_SMS;
+        return Type.RULE_EVENT_CALL;
     }
 
     @Override
     public String toString() {
-        return TAG + "(Sender: " + mSender + ", Message: " + mMessage +")";
+        return TAG + "(Caller: " + mCaller +")";
     }
-
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
 
-    public void setSender(String sender) {
-        this.mSender = sender;
+
+    public void setCaller(String caller) {
+        this.mCaller = caller;
     }
 
-    public void setMessage(String message) {
-        this.mMessage = message;
-    }
-
-    public String getSender() {
-        return mSender;
-    }
-
-    public String getMessage() {
-        return mMessage;
+    public String getCaller() {
+        return mCaller;
     }
 }
