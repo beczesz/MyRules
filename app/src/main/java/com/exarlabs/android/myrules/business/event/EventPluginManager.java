@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.exarlabs.android.myrules.business.event.plugins.call.CallEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
 
 /**
  * The plugin manager keeps track of al the plugins written and their actual state.
@@ -39,6 +41,9 @@ public class EventPluginManager {
 
         // Add the plugins
         mPluginMap.put(NumberEventHandlerPlugin.class, new NumberEventHandlerPlugin());
+        mPluginMap.put(SmsEventHandlerPlugin.class, new SmsEventHandlerPlugin());
+        mPluginMap.put(CallEventHandlerPlugin.class, new CallEventHandlerPlugin());
+
     }
 
     /**

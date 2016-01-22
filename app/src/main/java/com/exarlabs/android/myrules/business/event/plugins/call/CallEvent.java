@@ -1,15 +1,13 @@
-package com.exarlabs.android.myrules.business.action;
+package com.exarlabs.android.myrules.business.event.plugins.call;
 
-import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
+import com.exarlabs.android.myrules.business.event.Event;
 
 /**
- * Factory pattern implementation for the action plugins.
- * Created by becze on 12/18/2015.
+ * Implementation of an Call event
+ *
+ * Created by atiyka on 1/22/2016.
  */
-public class ActionPluginFactory {
+public class CallEvent implements Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -19,46 +17,47 @@ public class ActionPluginFactory {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = CallEvent.class.getSimpleName();
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
-
-    /**
-     * Creator for the action plugins.
-     *
-     * @param pluginType
-     * @return a new action plugin, if no plugin found a default AlwaysTrueConditionPlugin is created.
-     */
-    public static ActionPlugin create(int pluginType) {
-        switch (pluginType) {
-            default:
-            case Action.Type.ARITHMETRIC_ACTION_FIBONACCI:
-                return new FibonacciActionPlugin();
-
-            case Action.Type.ARITHMETRIC_ACTION_MULTIPLY:
-                return new MultiplyActionPlugin();
-
-            case Action.Type.SEND_SMS_ACTION:
-                return new SendSmsActionPlugin();
-
-            case Action.Type.REJECT_CALL_ACTION:
-                return new RejectCallActionPlugin();
-        }
-    }
 
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
 
+    private String mCaller;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
+    @Override
+    public int getType() {
+        return Type.RULE_EVENT_CALL;
+    }
+
+    @Override
+    public String toString() {
+        return TAG + "(Caller: " + mCaller +")";
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+
+    public void setCaller(String caller) {
+        this.mCaller = caller;
+    }
+
+    public String getCaller() {
+        return mCaller;
+    }
 }

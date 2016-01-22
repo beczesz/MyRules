@@ -1,6 +1,8 @@
 package com.exarlabs.android.myrules.business.event;
 
+import com.exarlabs.android.myrules.business.event.plugins.call.CallEvent;
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
+import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEvent;
 
 /**
  * Factory pattern implementation for the events.
@@ -31,6 +33,10 @@ public class EventFactory {
             default:
             case Event.Type.RULE_EVENT_NUMBER:
                 return new NumberEvent();
+            case Event.Type.RULE_EVENT_SMS:
+                return new SmsEvent();
+            case Event.Type.RULE_EVENT_CALL:
+                return new CallEvent();
         }
     }
 

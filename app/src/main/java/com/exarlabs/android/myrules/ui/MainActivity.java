@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.exarlabs.android.myrules.business.RulesEngineService;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.rule.RulesEngineService;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.mikepenz.iconics.context.IconicsContextWrapper;

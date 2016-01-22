@@ -59,8 +59,7 @@ public class RuleEventManager {
     public void init() {
         //@formatter:off
         mEventObservable = Observable.from(mPlugins)
-                            .map(plugin -> plugin.getEventObservable())
-                            .flatMap(event -> event);
+                            .flatMap(plugin -> plugin.getEventObservable());
         //@formatter:on
     }
 

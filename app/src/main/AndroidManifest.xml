@@ -6,6 +6,12 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
+    // needed for calls
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+
     <application
         android:name="com.exarlabs.android.myrules.MyRulesApplication"
         android:allowBackup="true"
@@ -15,7 +21,7 @@
         android:theme="@style/AppTheme" >
 
 
-        <service android:name="com.exarlabs.android.myrules.business.rule.RulesEngineService"/>
+        <service android:name="com.exarlabs.android.myrules.business.RulesEngineService"/>
 
 
         <activity
@@ -27,6 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

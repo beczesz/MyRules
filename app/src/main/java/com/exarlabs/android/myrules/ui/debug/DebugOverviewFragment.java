@@ -27,10 +27,13 @@ import com.exarlabs.android.myrules.business.condition.plugins.IsNumberEqualCond
 import com.exarlabs.android.myrules.business.condition.plugins.IsNumberInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
+import com.exarlabs.android.myrules.business.event.Event;
 import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.EventPluginManager;
+import com.exarlabs.android.myrules.business.event.plugins.call.CallEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
@@ -155,7 +158,101 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         if (event.getClass().equals(NumberEventHandlerPlugin.class)) {
             dispatchNumberEvent();
         }
+        else if(event.getClass().equals(SmsEventHandlerPlugin.class)){
+            testSmsEventRule();
+        }
+        else if(event.getClass().equals(CallEventHandlerPlugin.class)){
+            testCallEventRule();
+        }
     }
+
+    /**
+     * we create a rule which listens for the incoming calls, rejects it, and sends back an sms
+     */
+    public void testCallEventRule(){
+        if (mRuleManager.loadAllRules().size() != 0) {
+            return;
+        }
+
+         /*
+         * Create the conditions
+         */
+        // ToDo: to be handled an event without conditions and without building the condition tree
+        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        mConditionManager.saveCondition(cTrue);
+
+        // create dependencies between conditions
+        // Build the condition tree
+        RuleConditionTree.Builder builder = new ConditionTree.Builder();
+        builder.add(cTrue, new RuleCondition[] { cTrue, cTrue }, ConditionTree.Operator.OR);
+        RuleConditionTree root = mConditionManager.buildConditionTree(builder);
+
+        /*
+         * Create actions
+         */
+
+        RuleAction aRejectCall = generateNewAction(Action.Type.REJECT_CALL_ACTION);
+
+        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
+        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("I'll call you back later.");
+
+        mActionManager.saveActions(aRejectCall, aSms);
+
+        // Create a rule with these actions and conditions
+        RuleRecord ruleRecord = new RuleRecord();
+
+        // set the event
+        ruleRecord.setRuleName("Reject call Rule");
+        ruleRecord.setEventCode(Event.Type.RULE_EVENT_CALL);
+        ruleRecord.setRuleConditionTree(root);
+        ruleRecord.addRuleActions(aRejectCall, aSms);
+        mRuleManager.saveRuleRecord(ruleRecord);
+
+    }
+
+    /**
+     * creates a rule, which listens for the received SMSes and send back a response
+     */
+    public void testSmsEventRule(){
+        if (mRuleManager.loadAllRules().size() != 0) {
+            return;
+        }
+
+         /*
+         * Create the conditions
+         */
+        // ToDo: to be handled an event without conditions and without building the condition tree
+        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        mConditionManager.saveCondition(cTrue);
+
+        // create dependencies between conditions
+        // Build the condition tree
+        RuleConditionTree.Builder builder = new ConditionTree.Builder();
+        builder.add(cTrue, new RuleCondition[] { cTrue, cTrue }, ConditionTree.Operator.OR);
+        RuleConditionTree root = mConditionManager.buildConditionTree(builder);
+
+        /*
+         * Create actions
+         */
+
+        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
+        // ToDo: when the Trigger button was pushed more than one time, the fields in SendSmsActionPlugin will be null. ?
+//        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
+//        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
+
+        mActionManager.saveActions(aSms);
+
+        // Create a rule with these actions and conditions
+        RuleRecord ruleRecord = new RuleRecord();
+
+        // set the event
+        ruleRecord.setRuleName("Respond to Sms Rule");
+        ruleRecord.setEventCode(Event.Type.RULE_EVENT_SMS);
+        ruleRecord.setRuleConditionTree(root);
+        ruleRecord.addRuleActions(aSms);
+        mRuleManager.saveRuleRecord(ruleRecord);
+    }
+
 
     public void dispatchNumberEvent() {
         testSimpleArithmetricRule();
@@ -211,12 +308,8 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
         RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI);
 
-        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
-        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
-        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
 
-
-        mActionManager.saveActions(aFib, aMultiply, aSms);
+        mActionManager.saveActions(aFib, aMultiply);
 
         // Create a rule with these actions and conditions
         RuleRecord ruleRecord = new RuleRecord();
@@ -225,7 +318,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         ruleRecord.setRuleName("Sample Rule");
         ruleRecord.setEventCode(event.getType());
         ruleRecord.setRuleConditionTree(root);
-        ruleRecord.addRuleActions(aFib, aMultiply, aSms);
+        ruleRecord.addRuleActions(aFib, aMultiply);
         mRuleManager.saveRuleRecord(ruleRecord);
     }
 

@@ -33,6 +33,8 @@ public abstract class Action implements GreenDaoEntity{
         public static final int ARITHMETRIC_ACTION_FIBONACCI = 202;
 
         public static final int SEND_SMS_ACTION = 301;
+
+        public static final int REJECT_CALL_ACTION = 401;
     }
 
     // ------------------------------------------------------------------------
