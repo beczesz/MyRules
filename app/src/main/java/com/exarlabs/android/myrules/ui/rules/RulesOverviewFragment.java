@@ -99,6 +99,7 @@ public class RulesOverviewFragment extends BaseFragment {
     public EventPluginManager mEventPluginManager;
 
     private ArrayAdapter<String> mAdapter;
+    private List<RuleRecord> mRuleRecords;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -111,8 +112,6 @@ public class RulesOverviewFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
-
-
     }
 
     @Nullable
@@ -133,6 +132,9 @@ public class RulesOverviewFragment extends BaseFragment {
 
         mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
         mRulesListView.setAdapter(mAdapter);
+        mRulesListView.setOnItemClickListener(
+                        (parent, view1, position, id) -> mNavigationManager.startRuleDetailsFragment(mRuleRecords.get(position).getId()));
+
 
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());
@@ -140,9 +142,14 @@ public class RulesOverviewFragment extends BaseFragment {
         }
 
         mAddRuleButton.playShowAnimation();
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         updateUI();
-
-
     }
 
     /**
@@ -154,14 +161,12 @@ public class RulesOverviewFragment extends BaseFragment {
         updateRuleEngineStatusBar(RulesEngineService.isRunning());
 
         mAdapter.clear();
-        List<RuleRecord> rules = mRuleManager.loadAllRules();
+        mRuleRecords = mRuleManager.loadAllRules();
         List<String> ruleNames = new ArrayList<>();
-        Observable.from(rules).map(rule -> rule.getRuleName()).subscribe(ruleName -> ruleNames.add(ruleName));
+        Observable.from(mRuleRecords).map(rule -> rule.getRuleName()).subscribe(ruleName -> ruleNames.add(ruleName));
 
         mAdapter.addAll(ruleNames);
         mAdapter.notifyDataSetChanged();
-
-        updateRuleEngineStatusBar(!RulesEngineService.isRunning());
     }
 
 

@@ -140,10 +140,6 @@ public class DrawerManager {
                         .withIconColorRes(R.color.menu_item_1).withSelectedIconColorRes(R.color.menu_item_1));
 
         items.add(new PrimaryDrawerItem()
-                        .withName(MenuItem.MY_EVENTS.mLabel).withIcon(Octicons.Icon.oct_graph)
-                        .withIconColorRes(R.color.menu_item_2).withSelectedIconColorRes(R.color.menu_item_2));
-
-        items.add(new PrimaryDrawerItem()
                         .withName(MenuItem.MY_CONDITIONS.mLabel).withIcon(FontAwesome.Icon.faw_sign_out)
                         .withIconColorRes(R.color.menu_item_3).withSelectedIconColorRes(R.color.menu_item_3));
 
@@ -197,10 +193,6 @@ public class DrawerManager {
                 switch (item) {
                     case MY_RULES:
                         mNavigationManager.startRulesOverview();
-                        break;
-
-                    case MY_EVENTS:
-                        mNavigationManager.startEventOverview();
                         break;
 
                     case MY_CONDITIONS:

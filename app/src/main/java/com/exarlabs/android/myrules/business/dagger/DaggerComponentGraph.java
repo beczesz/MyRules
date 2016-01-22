@@ -1,10 +1,11 @@
 package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
+import com.exarlabs.android.myrules.business.RulesEngineService;
+import com.exarlabs.android.myrules.business.action.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.business.RulesEngineService;
 import com.exarlabs.android.myrules.business.event.plugins.call.CallEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
 import com.exarlabs.android.myrules.ui.BaseActivity;
@@ -14,12 +15,13 @@ import com.exarlabs.android.myrules.ui.actions.ActionsAddActionFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
-import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
+import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 
@@ -46,8 +48,6 @@ public interface DaggerComponentGraph {
 
     void inject(ConditionsOverviewFragment conditionsOverviewFragment);
 
-    void inject(EventsOverviewFragment eventsOverviewFragment);
-
     void inject(ActionsOverviewFragment actionsOverviewFragment);
 
     void inject(HistoryListFragment historyListFragment);
@@ -73,4 +73,10 @@ public interface DaggerComponentGraph {
     void inject(CallEventHandlerPlugin callEventHandlerPlugin);
 
     void inject(ConditionPluginFragment conditionPluginFragment);
+
+    void inject(RuleDetailsFragment ruleDetailsFragment);
+
+    void inject(ConditionTreeFragment conditionTreeFragment);
+
+    void inject(ActionCardsFragment actionCardsFragment);
 }

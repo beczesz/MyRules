@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.exarlabs.android.myrules.business.action.Action;
 import com.exarlabs.android.myrules.business.action.ActionManager;
+import com.exarlabs.android.myrules.business.action.ActionPluginFactory;
 import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.condition.Condition;
@@ -157,11 +158,9 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     public void triggerEvent(EventHandlerPlugin event) {
         if (event.getClass().equals(NumberEventHandlerPlugin.class)) {
             dispatchNumberEvent();
-        }
-        else if(event.getClass().equals(SmsEventHandlerPlugin.class)){
+        } else if (event.getClass().equals(SmsEventHandlerPlugin.class)) {
             testSmsEventRule();
-        }
-        else if(event.getClass().equals(CallEventHandlerPlugin.class)){
+        } else if (event.getClass().equals(CallEventHandlerPlugin.class)) {
             testCallEventRule();
         }
     }
@@ -169,7 +168,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     /**
      * we create a rule which listens for the incoming calls, rejects it, and sends back an sms
      */
-    public void testCallEventRule(){
+    public void testCallEventRule() {
         if (mRuleManager.loadAllRules().size() != 0) {
             return;
         }
@@ -213,7 +212,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     /**
      * creates a rule, which listens for the received SMSes and send back a response
      */
-    public void testSmsEventRule(){
+    public void testSmsEventRule() {
         if (mRuleManager.loadAllRules().size() != 0) {
             return;
         }
@@ -308,8 +307,10 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
         RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI);
 
+        RuleAction aMultiply10 = generateNewAction(Action.Type.ARITHMETRIC_ACTION_MULTIPLY);
+        ((MultiplyActionPlugin) aMultiply10.getActionPlugin()).setValue(10);
 
-        mActionManager.saveActions(aFib, aMultiply);
+        mActionManager.saveActions(aMultiply, aFib, aMultiply10);
 
         // Create a rule with these actions and conditions
         RuleRecord ruleRecord = new RuleRecord();
@@ -318,7 +319,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         ruleRecord.setRuleName("Sample Rule");
         ruleRecord.setEventCode(event.getType());
         ruleRecord.setRuleConditionTree(root);
-        ruleRecord.addRuleActions(aFib, aMultiply);
+        ruleRecord.addRuleActions(aMultiply, aFib, aMultiply10);
         mRuleManager.saveRuleRecord(ruleRecord);
     }
 
@@ -333,6 +334,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     private RuleAction generateNewAction(int type) {
         RuleAction ruleAction = new RuleAction();
         ruleAction.setType(type);
+        ruleAction.setActionName(ActionPluginFactory.create(type).getClass().getSimpleName());
         return ruleAction;
     }
 

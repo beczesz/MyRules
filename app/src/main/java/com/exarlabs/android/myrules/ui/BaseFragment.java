@@ -46,7 +46,6 @@ public class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         TypefaceHelper.typeface(view);
-
         initActionBar(true, getString(R.string.app_name));
 
 

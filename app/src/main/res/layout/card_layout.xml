@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/card"
+              android:gravity="center"
+              android:orientation="horizontal"
+    >
+
+    <com.mikepenz.iconics.view.IconicsTextView
+        android:id="@+id/drag_handle"
+        style="@style/Icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_start_rules_engine_icon"
+        tools:text="B"/>
+
+    <LinearLayout
+        android:id="@+id/card_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/container_min_height"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/card_title"
+            style="@style/Header2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Condition Title"/>
+
+        <TextView
+            style="@style/Paragraph"
+            android:id="@+id/card_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Condition Descritpion"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

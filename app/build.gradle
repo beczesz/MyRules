@@ -130,19 +130,23 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
+
     //Database
     compile 'de.greenrobot:greendao:2.0.0'
+
     // Tools - Dependency Injection
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.google.dagger:dagger-compiler:2.0.1'
     compile 'com.google.dagger:dagger:2.0.1'
     provided 'javax.annotation:jsr250-api:1.0'
+
     //Rx
     compile 'io.reactivex:rxandroid:1.0.1'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.0.16'
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
+
     // UI libs
     compile 'com.norbsoft.typefacehelper:library:0.9.0'
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
@@ -157,6 +161,10 @@ dependencies {
     compile 'com.github.shell-software:fab:1.1.2'
     // expandable layout
     compile 'com.github.aakira:expandable-layout:1.4.1@aar'
+    compile 'com.jmedeisis:draglinearlayout:1.1.0'
+
+
     // Development / Analytics
     compile 'com.facebook.stetho:stetho:1.2.0'
+
 }

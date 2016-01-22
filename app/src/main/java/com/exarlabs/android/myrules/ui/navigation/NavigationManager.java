@@ -12,8 +12,8 @@ import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
-import com.exarlabs.android.myrules.ui.events.EventsOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
+import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 
@@ -143,11 +143,6 @@ public class NavigationManager {
         open(fragment);
     }
 
-    // MY EVENTS
-    public void startEventOverview() {
-        Fragment fragment = EventsOverviewFragment.newInstance();
-        openAsRoot(fragment);
-    }
 
     // MY ACTIONS
     public void startActionsOverview() {
@@ -175,6 +170,11 @@ public class NavigationManager {
 
     public void startConditionsDetails(Long id, int type) {
         Fragment fragment = ConditionDetailsFragment.newInstance(id, type);
+        open(fragment);
+    }
+
+    public void startRuleDetailsFragment(long ruleId) {
+        Fragment fragment = RuleDetailsFragment.newInstance(ruleId);
         open(fragment);
     }
 

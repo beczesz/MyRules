@@ -7,7 +7,7 @@
                 android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/actions_container"
+        android:id="@+id/actions_card_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

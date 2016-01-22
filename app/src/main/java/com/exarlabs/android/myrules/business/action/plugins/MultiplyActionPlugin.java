@@ -60,6 +60,10 @@ public class MultiplyActionPlugin extends ActionPlugin {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Multiply with " + mValue;
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

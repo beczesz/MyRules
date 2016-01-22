@@ -10,7 +10,7 @@ import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
  * A ConditionPlugin is an implementation of the behaviour of a RuleCondition.
  * Is is initialized with a list of Propoerties, and this plugin, can modify, delete add new propoerties.
  * Based on these properties is can evaluate itself at any time.
- * <p/>
+ * <p>
  * Created by becze on 12/18/2015.
  */
 public abstract class ConditionPlugin {
@@ -67,9 +67,7 @@ public abstract class ConditionPlugin {
     }
 
 
-
     /**
-     *
      * @param key
      * @return returns true if we have the given propery with the given key
      */
@@ -87,10 +85,11 @@ public abstract class ConditionPlugin {
 
     /**
      * Retruns the propery with the given key
+     *
      * @param key
      * @return
      */
-    public RuleConditionProperty getProperty (String key) {
+    public RuleConditionProperty getProperty(String key) {
 
         if (mProperties != null) {
             for (RuleConditionProperty property : mProperties) {
@@ -105,6 +104,7 @@ public abstract class ConditionPlugin {
 
     /**
      * Adds/updates the property with the given key/value.
+     *
      * @param key
      * @param value
      */
@@ -120,6 +120,12 @@ public abstract class ConditionPlugin {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
+
 
     // ------------------------------------------------------------------------
     //  GETTERS / SETTERS

@@ -65,7 +65,8 @@ public abstract class EventHandlerPlugin {
      */
     protected void dispatchEvent(Event event) {
         if (mSubscriber != null && isEnabled) {
-            new Thread(TAG) {
+            // TODO implement our own thread pool
+            new Thread("Thread for: " + this.getClass().getSimpleName()) {
                 @Override
                 public void run() {
                     mSubscriber.onNext(event);

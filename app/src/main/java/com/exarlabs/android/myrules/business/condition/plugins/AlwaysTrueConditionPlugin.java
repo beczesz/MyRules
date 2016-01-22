@@ -36,6 +36,12 @@ public class AlwaysTrueConditionPlugin extends ConditionPlugin {
     public boolean evaluate(Event event) {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Always returns True";
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

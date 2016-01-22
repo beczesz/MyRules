@@ -199,7 +199,7 @@ public class RulesEngineService extends Service {
     private void executeRule(Event event, RuleRecord ruleRecord) {
         Log.w("BSZ", "Observed on thread: " + Thread.currentThread().getName());
 
-        // TODO make it sequential
+        // TODO make it parallel
         List<RuleAction> ruleActions = ruleRecord.getRuleActions();
         for (RuleAction ruleAction : ruleActions) {
             ruleAction.run(event);

@@ -57,10 +57,7 @@ public class RuleEventManager {
      * Initialize the event manager.
      */
     public void init() {
-        //@formatter:off
-        mEventObservable = Observable.from(mPlugins)
-                            .flatMap(plugin -> plugin.getEventObservable());
-        //@formatter:on
+        mEventObservable = Observable.from(mPlugins).flatMap(plugin -> plugin.getEventObservable());
     }
 
 

@@ -66,6 +66,11 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Check if number equals with" + mValue;
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

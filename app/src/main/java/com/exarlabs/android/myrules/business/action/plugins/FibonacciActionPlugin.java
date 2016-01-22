@@ -60,6 +60,11 @@ public class FibonacciActionPlugin extends ActionPlugin {
         else return fib(n - 1) + fib(n - 2);
     }
 
+    @Override
+    public String toString() {
+        return "Calculates Fibonacci";
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

@@ -23,4 +23,8 @@
     <dimen name="padding_xxlarge">30dip</dimen>
     <dimen name="padding_xxxlarge">50dip</dimen>
 
+    <!-- Containers-->
+    <dimen name="container_min_height">90dip</dimen>
+    <dimen name="floating_action_button_negative_margin">-50dip</dimen>
+
 </resources>

@@ -1,8 +1,5 @@
 <resources>
 
-    <style name="TextView">
-        <item name="android:textColor">@color/text_primary</item>
-    </style>
 
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
@@ -16,10 +13,36 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <!-- Text styles -->
+    <style name="TextView">
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
 
     <style name="Header1" parent="TextView">
         <item name="android:textSize">@dimen/text_size_xlarge</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/padding_small</item>
+    </style>
+
+    <style name="Header2" parent="TextView">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/padding_small</item>
+    </style>
+
+    <style name="Header3" parent="TextView">
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/padding_small</item>
+    </style>
+
+    <style name="Paragraph" parent="TextView">
+        <item name="android:padding">@dimen/padding_small</item>
+    </style>
+
+
+    <style name="Icons" parent="TextView">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:padding">@dimen/text_size_normal</item>
     </style>
 
 </resources>
