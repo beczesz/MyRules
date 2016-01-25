@@ -36,7 +36,6 @@ public class DrawerManager {
 
     public enum MenuItem {
         MY_RULES("My Rules"),
-        MY_EVENTS("My Events"),
         MY_CONDITIONS("My Conditions"),
         MY_ACTIONS("My Actions"),
         HISTORY("History"),
