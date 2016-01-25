@@ -1,10 +1,16 @@
 package com.exarlabs.android.myrules.business.action;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
+import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
 
 /**
  * The plugin manager keeps track of al the plugins written and their actual state.
@@ -36,11 +42,23 @@ public class ActionPluginManager {
 
 
     public ActionPluginManager() {
-        mPluginMap = new HashMap<>();
+        mPluginMap = new LinkedHashMap<>();
 
         // Add the plugins
-        mPluginMap.put(FibonacciActionPlugin.class, new FibonacciActionPlugin());
+        mPluginMap.put(FibonacciActionPlugin.class,  ActionPluginFactory.create(Action.Type.ARITHMETRIC_ACTION_FIBONACCI));
+        mPluginMap.put(MultiplyActionPlugin.class,   ActionPluginFactory.create(Action.Type.ARITHMETRIC_ACTION_MULTIPLY));
+        mPluginMap.put(RejectCallActionPlugin.class, ActionPluginFactory.create(Action.Type.REJECT_CALL_ACTION));
+        mPluginMap.put(SendSmsActionPlugin.class,    ActionPluginFactory.create(Action.Type.SEND_SMS_ACTION));
+
     }
+
+    // ------------------------------------------------------------------------
+    // METHODS
+    // ------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------
+    // GETTERS / SETTTERS
+    // ------------------------------------------------------------------------
 
     /**
      * @return the list of plugins
@@ -59,11 +77,34 @@ public class ActionPluginManager {
         return mPluginMap.get(key);
     }
 
-    // ------------------------------------------------------------------------
-    // METHODS
-    // ------------------------------------------------------------------------
+    /**
+     * Returns the plugin type from the given position in the map
+     *
+     * @param position
+     * @return
+     */
+    public int getTypeByPosition(int position){
+        List<ActionPlugin> plugins = new ArrayList<>(mPluginMap.values());
+        return plugins.get(position).getType();
+    }
 
-    // ------------------------------------------------------------------------
-    // GETTERS / SETTTERS
-    // ------------------------------------------------------------------------
+    /**
+     * Returns the position in the map
+     *
+     * @param type
+     * @return
+     */
+    public int getPositionInMap(int type){
+        Class className = ActionPluginFactory.create(type).getClass();
+        Iterator iterator = mPluginMap.keySet().iterator();
+
+        int i = 0;
+        while(iterator.hasNext()) {
+            if (iterator.next().equals(className))
+                return i;
+            i++;
+        }
+
+        return i;
+    }
 }

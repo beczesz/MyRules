@@ -55,7 +55,8 @@ public class SendSmsActionPlugin extends ActionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public SendSmsActionPlugin(){
+    public SendSmsActionPlugin(int type){
+        super(type);
         DaggerManager.component().inject(this);
     }
 

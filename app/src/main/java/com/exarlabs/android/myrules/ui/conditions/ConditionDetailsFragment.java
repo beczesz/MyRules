@@ -112,7 +112,6 @@ public class ConditionDetailsFragment extends BaseFragment {
         mConditionPluginFragment = ConditionPluginFragmentFactory.create(conditionType);
         mConditionPluginFragment.init(mRuleCondition);
 
-
     }
 
     @Nullable

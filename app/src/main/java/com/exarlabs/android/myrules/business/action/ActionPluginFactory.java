@@ -33,16 +33,16 @@ public class ActionPluginFactory {
         switch (pluginType) {
             default:
             case Action.Type.ARITHMETRIC_ACTION_FIBONACCI:
-                return new FibonacciActionPlugin();
+                return new FibonacciActionPlugin(pluginType);
 
             case Action.Type.ARITHMETRIC_ACTION_MULTIPLY:
-                return new MultiplyActionPlugin();
+                return new MultiplyActionPlugin(pluginType);
 
             case Action.Type.SEND_SMS_ACTION:
-                return new SendSmsActionPlugin();
+                return new SendSmsActionPlugin(pluginType);
 
             case Action.Type.REJECT_CALL_ACTION:
-                return new RejectCallActionPlugin();
+                return new RejectCallActionPlugin(pluginType);
         }
     }
 

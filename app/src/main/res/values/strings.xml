@@ -35,7 +35,10 @@
     <string name="lbl_conditions">Conditions</string>
     <string name="lbl_actions">Actions</string>
     <string name="lbl_no_condition_added">No conditions added</string>
+    <string name="lbl_hint_number_equal">Type the number</string>
     <string name="operator_or">O\nR</string>
     <string name="operator_and">A\nN\nD</string>
     <string name="action_sequence">S\nE\nQ</string>
+
+    <string name="select_an_action">Select an Action...</string>
 </resources>

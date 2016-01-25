@@ -12,8 +12,15 @@
         android:hint="@string/action_name"
         android:imeOptions="actionDone"/>
 
+    <Spinner
+        android:id="@+id/spinner_select_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText_action_name"/>
 
-   <include layout="@layout/save_cancel_button_group"/>
+
+   <include
+       layout="@layout/save_cancel_button_group"/>
 
 
     <TextView
