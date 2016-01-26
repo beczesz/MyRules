@@ -49,6 +49,7 @@ public class MultiplyActionPlugin extends ActionPlugin {
     @Override
     public void initialize(List<RuleActionProperty> properties) {
         super.initialize(properties);
+
         mValue = Double.parseDouble(getProperty(KEY_VALUE).getValue());
     }
 

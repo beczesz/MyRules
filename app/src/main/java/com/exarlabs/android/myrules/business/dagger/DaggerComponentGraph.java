@@ -11,8 +11,10 @@ import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPl
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
-import com.exarlabs.android.myrules.ui.actions.ActionsAddActionFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
@@ -56,8 +58,6 @@ public interface DaggerComponentGraph {
 
     void inject(RulesAddRuleFragment rulesAddRuleFragment);
 
-    void inject(ActionsAddActionFragment actionsAddActionFragment);
-
     void inject(ConditionsAddConditionFragment conditionsAddConditionFragment);
 
     void inject(DebugOverviewFragment debugOverviewFragment);
@@ -79,4 +79,10 @@ public interface DaggerComponentGraph {
     void inject(ConditionTreeFragment conditionTreeFragment);
 
     void inject(ActionCardsFragment actionCardsFragment);
+
+    void inject(ActionDetailsFragment actionDetailsFragment);
+
+    void inject(DefaultActionPluginFragment defaultActionPluginFragment);
+
+    void inject(MultiplyActionPluginFragment multiplyActionPluginFragment);
 }

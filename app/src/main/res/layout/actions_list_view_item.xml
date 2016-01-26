@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text=""
-            android:textSize="25sp"/>
+            android:textSize="22sp"/>
 
         <Button
             android:id="@+id/button_edit_action"
@@ -39,11 +39,11 @@
         app:ael_orientation="vertical">
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/item_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="25sp"/>
+            android:textSize="18sp"/>
 
     </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 

@@ -13,19 +13,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.exarlabs.android.myrules.business.action.ActionManager;
 import com.exarlabs.android.myrules.business.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.action.ActionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.devel.DevelManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.BaseFragment;
-import com.exarlabs.android.myrules.ui.BuildConfig;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 
@@ -34,10 +33,10 @@ import butterknife.OnClick;
 import rx.Observable;
 
 /**
- * Lists all the rules which are defined by the user.
- * Created by becze on 11/25/2015.
+ * Displays the detials of a condition
+ * Created by becze on 1/21/2016.
  */
-public class ActionsAddActionFragment extends BaseFragment {
+public class ActionDetailsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -47,40 +46,43 @@ public class ActionsAddActionFragment extends BaseFragment {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = ActionsAddActionFragment.class.getSimpleName();
+    private static final String KEY_ACTION_ID = "ACTION_ID";
 
-    private static final String KEY_RULE_ACTION_ID = "RULE_ACTION_ID";
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
     /**
-     * @return newInstance of SampleFragment
+     *
+     * @param actionID
+     * @return new instance of ActionDetailsFragment
+     *
      */
-    public static ActionsAddActionFragment newInstance(Long id) {
+    public static ActionDetailsFragment newInstance(long actionID) {
         Bundle args = new Bundle();
-        ActionsAddActionFragment fragment = new ActionsAddActionFragment();
-        if(id != null) {
-            args.putLong(KEY_RULE_ACTION_ID, id);
-            fragment.setArguments(args);
+
+        if (actionID != -1) {
+            args.putLong(KEY_ACTION_ID, actionID);
         }
+
+        ActionDetailsFragment fragment = new ActionDetailsFragment();
+        fragment.setArguments(args);
         return fragment;
     }
 
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-    @Bind(R.id.build_info)
-    public TextView mDevelInfo;
+    private View mRootView;
 
     @Bind(R.id.editText_action_name)
     public EditText mActionName;
 
     @Bind(R.id.spinner_select_action)
-    public Spinner mActionSpinner;
+    public Spinner mActionTypeSpinner;
 
-    @Inject
-    public DevelManager mDevelManager;
+    @Bind(R.id.action_plugin_fragment_container)
+    public FrameLayout mActionPluginFragmentContainer;
 
     @Inject
     public ActionManager mActionManager;
@@ -91,33 +93,48 @@ public class ActionsAddActionFragment extends BaseFragment {
     @Inject
     public NavigationManager mNavigationManager;
 
-    private View mRootView;
-    private Long mId = null;
-
+    private RuleAction mRuleAction;
+    private Long mActionId;
+    private ActionPluginFragment mActionPluginFragment;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
+    public ActionDetailsFragment() {
+    }
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
-        Bundle args = getArguments();
-        if(args != null){
-            mId = (Long) getArguments().get(KEY_RULE_ACTION_ID);
+
+        // get out the condition id or type
+        mActionId = getArguments().containsKey(KEY_ACTION_ID) ? (long) getArguments().get(KEY_ACTION_ID) : -1;
+
+        // Get the action if we have a valid id
+        if (mActionId != -1) {
+            mRuleAction = mActionManager.loadAction(mActionId);
+            mRuleAction.build();
         }
 
+        if (mRuleAction == null) {
+            mRuleAction = new RuleAction();
+//            mRuleAction.setType(actionType);
+//            mActionManager.saveAction(mRuleAction);
+//            mRuleAction.build();
+
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.actions_add_action, null);
+            mRootView = inflater.inflate(R.layout.action_details_layout, null);
         }
         return mRootView;
     }
@@ -129,66 +146,58 @@ public class ActionsAddActionFragment extends BaseFragment {
 
         initActionBar(true, getString(R.string.my_actions));
 
-        if (BuildConfig.DEBUG) {
-            mDevelInfo.setText(mDevelManager.getBuildDescription());
-            mDevelInfo.setVisibility(View.VISIBLE);
-        }
-
         Collection<ActionPlugin> plugins = mActionPluginManager.getPlugins();
         List<CharSequence> pluginsName = new ArrayList<>();
 
         // only add if adding a new action
-        if (mId == null){
+        if (mActionId == -1){
             pluginsName.add(getString(R.string.select_an_action));
         }
 
+        // fills the drop down list with the plugins
         Observable.from(plugins)
                         .map(plugin -> plugin.getClass().getSimpleName())
                         .subscribe(name -> pluginsName.add(name));
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, pluginsName);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mActionSpinner.setAdapter(adapter);
+        mActionTypeSpinner.setAdapter(adapter);
+        mActionTypeSpinner.setOnItemSelectedListener(this);
 
-        // In edit mode:
-        if(mId != null){
-            RuleAction ruleAction = mActionManager.loadAction(mId);
-            mActionName.setText(ruleAction.getActionName());
+        // In edit mode: init the name field and the spinner
+        int actionType = mRuleAction.getType();
+        if(mActionId != -1){
+            mActionName.setText(mRuleAction.getActionName());
 
-            int type = ruleAction.getType();
-            int selected = mActionPluginManager.getPositionInMap(type);
-
-            mActionSpinner.setSelection(selected);
+            int selected = mActionPluginManager.getPositionInMap(actionType);
+            mActionTypeSpinner.setSelection(selected);
         }
+
+        inflateLayout(actionType);
     }
 
     @OnClick(R.id.button_save)
     public void saveNewAction(){
 
         // ADD NEW
-        if(mId == null) {
-            if(mActionSpinner.getSelectedItemPosition() == 0)
+        if(mActionId == -1) {
+            if(mActionTypeSpinner.getSelectedItemPosition() == 0)
+                // TODO: notify the user that must select an action type
                 return;
 
-            RuleAction entity = new RuleAction();
             String name = mActionName.getText().toString();
-            int actionTypeNo = mActionSpinner.getSelectedItemPosition() - 1;
+            int actionTypeNo = mActionTypeSpinner.getSelectedItemPosition() - 1;
             int actionType = mActionPluginManager.getTypeByPosition(actionTypeNo);
 
-            entity.setActionName(name);
-            entity.setType(actionType);
-            mActionManager.insert(entity);
+            mActionPluginFragment.saveChanges(name, actionType);
 
-        // IN EDIT MODE
+            // IN EDIT MODE
         }else{
-            RuleAction entity = mActionManager.loadAction(mId);
             String name = mActionName.getText().toString();
-            int actionTypeNo = mActionSpinner.getSelectedItemPosition();
+            int actionTypeNo = mActionTypeSpinner.getSelectedItemPosition();
             int actionType = mActionPluginManager.getTypeByPosition(actionTypeNo);
 
-            entity.setActionName(name);
-            entity.setType(actionType);
-            mActionManager.update(entity);
+            mActionPluginFragment.saveChanges(name, actionType);
         }
         goBack();
     }
@@ -199,12 +208,43 @@ public class ActionsAddActionFragment extends BaseFragment {
     }
 
     private void goBack(){
+        // hide the keyboard
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
         mNavigationManager.navigateBack(getActivity());
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // in edit mode doesn't exists the first row (Select an action...)
+        if(mActionId == -1) {
+            position--;
+        }
+
+        if (position >= 0) {
+            int actionType = mActionPluginManager.getTypeByPosition(position);
+
+            inflateLayout(actionType);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private void inflateLayout(int actionType){
+        mActionPluginFragment = ActionPluginFragmentFactory.create(actionType);
+        mActionPluginFragment.init(mRuleAction);
+
+        // add the fragment to the container.
+        getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.action_plugin_fragment_container, mActionPluginFragment)
+                        .commit();
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
