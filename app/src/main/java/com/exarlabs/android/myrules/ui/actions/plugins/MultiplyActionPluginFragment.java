@@ -112,20 +112,23 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
         if (mAction != null && mAction.getActionPlugin() instanceof MultiplyActionPlugin) {
             mAction.setActionName(name);
             mAction.setType(actionType);
-            mActionManager.update(mAction);
 
-            MultiplyActionPlugin plugin = (MultiplyActionPlugin) mAction.getActionPlugin();
-            plugin.setValue(Double.parseDouble(mNumber.getText().toString()));
+            double value = Double.parseDouble(mNumber.getText().toString());
+            ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
+            mActionManager.saveAction(mAction);
+
             mAction.rebuild();
         }else{
             // else creates a new one
+            // TODO: delete the existing if it is another type of action
             mAction = new RuleAction();
             mAction.setActionName(name);
             mAction.setType(actionType);
-            mActionManager.insert(mAction);
 
-            MultiplyActionPlugin plugin = (MultiplyActionPlugin) mAction.getActionPlugin();
-            plugin.setValue(Double.parseDouble(mNumber.getText().toString()));
+            double value = Double.parseDouble(mNumber.getText().toString());
+            ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
+
+            mActionManager.saveAction(mAction);
         }
     }
 
