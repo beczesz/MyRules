@@ -84,13 +84,18 @@ public class DefaultActionPluginFragment extends ActionPluginFragment {
 
     }
 
+    /**
+     * Saves the changed data when the Save button was pressed
+     * @param name
+     */
     @Override
-    protected void saveChanges(String name, int actionType) {
+    protected void saveChanges(String name) {
+        if(mAction.getId() != null) {
+            mAction.reGenerateActionPlugin();
+        }
         mAction.setActionName(name);
-        mAction.setType(actionType);
 
         mActionManager.saveAction(mAction);
-        mAction.rebuild();
     }
 
 // ------------------------------------------------------------------------

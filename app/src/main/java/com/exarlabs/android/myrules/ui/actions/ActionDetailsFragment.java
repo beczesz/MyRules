@@ -121,12 +121,9 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
             mRuleAction.build();
         }
 
+        // if we have no action, we will create a new one
         if (mRuleAction == null) {
             mRuleAction = new RuleAction();
-//            mRuleAction.setType(actionType);
-//            mActionManager.saveAction(mRuleAction);
-//            mRuleAction.build();
-
         }
     }
 
@@ -176,37 +173,36 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
         inflateLayout(actionType);
     }
 
+    /**
+     * Clicked on Save button
+     *
+     */
     @OnClick(R.id.button_save)
     public void saveNewAction(){
 
-        // ADD NEW
-        if(mActionId == -1) {
-            if(mActionTypeSpinner.getSelectedItemPosition() == 0)
+        if(mActionId == -1 && mActionTypeSpinner.getSelectedItemPosition() == 0) {
                 // TODO: notify the user that must select an action type
                 return;
-
-            String name = mActionName.getText().toString();
-            int actionTypeNo = mActionTypeSpinner.getSelectedItemPosition() - 1;
-            int actionType = mActionPluginManager.getTypeByPosition(actionTypeNo);
-
-            mActionPluginFragment.saveChanges(name, actionType);
-
-            // IN EDIT MODE
-        }else{
-            String name = mActionName.getText().toString();
-            int actionTypeNo = mActionTypeSpinner.getSelectedItemPosition();
-            int actionType = mActionPluginManager.getTypeByPosition(actionTypeNo);
-
-            mActionPluginFragment.saveChanges(name, actionType);
         }
+        String name = mActionName.getText().toString();
+        mActionPluginFragment.saveChanges(name);
+
         goBack();
     }
 
+    /**
+     * Clicked on Cancel button
+     *
+     */
     @OnClick(R.id.button_cancel)
     public void cancelNewAction(){
         goBack();
     }
 
+    /**
+     * Hides the keyboard, and navigates back
+     *
+     */
     private void goBack(){
         // hide the keyboard
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -215,6 +211,14 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
         mNavigationManager.navigateBack(getActivity());
     }
 
+    /**
+     * This method will be called when the selected item changed in the spinner
+     *
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // in edit mode doesn't exists the first row (Select an action...)
@@ -234,8 +238,14 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
 
     }
 
+    /**
+     * Initializes the ActionPluginFragment with the selected type, and inflates the corresponding layout
+     *
+     * @param actionType
+     */
     private void inflateLayout(int actionType){
         mActionPluginFragment = ActionPluginFragmentFactory.create(actionType);
+        mRuleAction.setType(actionType);
         mActionPluginFragment.init(mRuleAction);
 
         // add the fragment to the container.

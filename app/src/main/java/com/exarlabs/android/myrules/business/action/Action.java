@@ -97,6 +97,11 @@ public abstract class Action implements GreenDaoEntity{
         build();
     }
 
+    public void reGenerateActionPlugin(){
+        mActionPlugin = null;
+        getActionPlugin();
+    }
+
     @Override
     public String toString() {
         return isAttached() ? getActionPlugin().toString() : "Unsaved " + this ;

@@ -92,9 +92,9 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
     protected void init(RuleAction action) {
         mAction = action;
         /*
-         * Check if the action has the right plugin type
+         * Check if the action has the right plugin type, and we are in edit mode
          */
-        if (action.getActionPlugin() instanceof MultiplyActionPlugin) {
+        if(action.getId() != null && action.getActionPlugin() instanceof MultiplyActionPlugin) {
             mMultiplyActionPlugin = (MultiplyActionPlugin) action.getActionPlugin();
         }
 
@@ -106,30 +106,21 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
             mNumber.setText((int) mMultiplyActionPlugin.getValue() + "");
     }
 
+    /**
+     * Saves the changed data when the Save button was pressed
+     * @param name
+     */
     @Override
-    protected void saveChanges(String name, int actionType) {
-        // updates if it is an existing action
-        if (mAction != null && mAction.getActionPlugin() instanceof MultiplyActionPlugin) {
-            mAction.setActionName(name);
-            mAction.setType(actionType);
+    protected void saveChanges(String name) {
+        mAction.setActionName(name);
 
-            double value = Double.parseDouble(mNumber.getText().toString());
-            ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
-            mActionManager.saveAction(mAction);
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if(mAction.getId() != null)
+            mAction.reGenerateActionPlugin();
 
-            mAction.rebuild();
-        }else{
-            // else creates a new one
-            // TODO: delete the existing if it is another type of action
-            mAction = new RuleAction();
-            mAction.setActionName(name);
-            mAction.setType(actionType);
-
-            double value = Double.parseDouble(mNumber.getText().toString());
-            ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
-
-            mActionManager.saveAction(mAction);
-        }
+        double value = Double.parseDouble(mNumber.getText().toString());
+        ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
+        mActionManager.saveAction(mAction);
     }
 
 // ------------------------------------------------------------------------

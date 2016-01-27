@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import android.util.Log;
-
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleActionDao;
@@ -93,6 +91,7 @@ public class ActionManager {
     public void saveAction(RuleAction ruleAction) {
         // Save the ruleAction and it's properties
         mRuleActionDao.insertOrReplace(ruleAction);
+        mRuleActionPropertiesDao.deleteInTx(ruleAction.getProperties());
         ruleAction.getProperties().clear();
         List<RuleActionProperty> properties = ruleAction.getActionPlugin().getProperties();
         ruleAction.getProperties().addAll(properties);
@@ -103,9 +102,7 @@ public class ActionManager {
         }
         mRuleActionPropertiesDao.insertOrReplaceInTx(properties);
 
-        if (!ruleAction.isBuilt()) {
-            ruleAction.build();
-        }
+        ruleAction.rebuild();
     }
 
     /**
@@ -156,6 +153,22 @@ public class ActionManager {
     public void saveActionsLinks(RuleRecord ruleRecord, RuleActionLink... actions) {
         saveActionLinks(ruleRecord, Arrays.asList(actions));
     }
+
+    public void deleteAction(RuleAction ruleAction){
+        List<RuleActionProperty> properties = ruleAction.getProperties();
+
+        // delete the properties
+        mRuleActionPropertiesDao.deleteInTx(properties);
+        // and the action
+        mRuleActionDao.delete(ruleAction);
+    }
+
+    public void deleteActionProperties(RuleAction ruleAction){
+        List<RuleActionProperty> properties = ruleAction.getProperties();
+        // delete the properties
+        mRuleActionPropertiesDao.deleteInTx(properties);
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
