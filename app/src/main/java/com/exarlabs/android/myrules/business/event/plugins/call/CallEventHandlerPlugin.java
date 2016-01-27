@@ -46,6 +46,10 @@ public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnInco
     // ------------------------------------------------------------------------
 
 
+    public CallEventHandlerPlugin() {
+        super(Event.Type.RULE_EVENT_CALL);
+    }
+
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
@@ -71,6 +75,7 @@ public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnInco
         dispatchEvent(event);
         Log.w(TAG, "Call from: " + caller);
     }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

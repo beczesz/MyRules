@@ -45,7 +45,7 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     // ------------------------------------------------------------------------
 
     public SmsEventHandlerPlugin(){
-
+        super(Event.Type.RULE_EVENT_SMS);
     }
     // ------------------------------------------------------------------------
     // METHODS

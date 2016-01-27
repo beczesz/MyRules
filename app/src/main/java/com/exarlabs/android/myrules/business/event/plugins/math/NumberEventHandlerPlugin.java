@@ -31,7 +31,7 @@ public class NumberEventHandlerPlugin extends EventHandlerPlugin {
     // ------------------------------------------------------------------------
 
     public NumberEventHandlerPlugin() {
-        super();
+        super(Event.Type.RULE_EVENT_NUMBER);
     }
 
 

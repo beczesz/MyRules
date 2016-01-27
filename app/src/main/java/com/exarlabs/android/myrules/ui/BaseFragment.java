@@ -40,6 +40,10 @@ public class BaseFragment extends Fragment {
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -64,11 +68,23 @@ public class BaseFragment extends Fragment {
      * @param showHomeButton
      * @param title
      */
-    protected void initActionBar(boolean showHomeButton, String title) {
+    public void initActionBar(boolean showHomeButton, String title) {
         if (getActivity() != null && getActivity() instanceof BaseActivity ) {
             ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
             supportActionBar.setHomeButtonEnabled(showHomeButton);
             supportActionBar.setTitle(title);
+        }
+    }
+
+    /**
+     * Enables the home indicator
+     * @param isEnabled
+     */
+    public void setHomeAsUpEnabled(boolean isEnabled) {
+
+        if (getActivity() != null && getActivity() instanceof BaseActivity ) {
+            ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
+            supportActionBar.setHomeButtonEnabled(isEnabled);
         }
     }
 

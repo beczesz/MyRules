@@ -38,7 +38,6 @@ public class DrawerManager {
         MY_RULES("My Rules"),
         MY_CONDITIONS("My Conditions"),
         MY_ACTIONS("My Actions"),
-        HISTORY("History"),
         DEBUG("Debug");
 
         private String mLabel;
@@ -146,10 +145,6 @@ public class DrawerManager {
                         .withName(MenuItem.MY_ACTIONS.mLabel).withIcon(FontAwesome.Icon.faw_sign_out)
                         .withIconColorRes(R.color.menu_item_4).withSelectedIconColorRes(R.color.menu_item_4));
 
-        items.add(new PrimaryDrawerItem()
-                        .withName(MenuItem.HISTORY.mLabel).withIcon(FontAwesome.Icon.faw_sign_out)
-                        .withIconColorRes(R.color.menu_item_5).withSelectedIconColorRes(R.color.menu_item_5));
-
         if(BuildConfig.DEBUG){
             items.add(new PrimaryDrawerItem()
                         .withName(MenuItem.DEBUG.mLabel).withIcon(FontAwesome.Icon.faw_bug)
@@ -202,10 +197,6 @@ public class DrawerManager {
                         mNavigationManager.startActionsOverview();
                         break;
 
-                    case HISTORY:
-                        mNavigationManager.startHistoryOverview();
-                        break;
-
                     case DEBUG:
                         mNavigationManager.startDebugOverview();
                         break;
@@ -232,9 +223,25 @@ public class DrawerManager {
         }
     }
 
-    private void hideDrawer() {
+
+    /**
+     * Enables/disbales the drawer the drawer
+     *
+     * @param isEnabled
+     */
+    public void enableDrawer(boolean isEnabled) {
         if (mDrawer != null) {
-            mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            mDrawer.getDrawerLayout().setDrawerLockMode(isEnabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
+
+    /**
+     * Enable / disable the drawer indicator
+     * @param isEnabled
+     */
+    public void enableActionBarDrawerToggle(boolean isEnabled) {
+        if (mDrawer != null) {
+            mDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(isEnabled);
         }
     }
 

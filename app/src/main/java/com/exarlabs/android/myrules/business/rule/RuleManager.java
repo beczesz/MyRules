@@ -70,7 +70,11 @@ public class RuleManager {
      * @return
      */
     public List<RuleRecord> getRules(int eventCode, int status) {
-        return mRuleRecordDao.loadAll();
+        //@formatter:off
+        return mRuleRecordDao.queryBuilder()
+                        .where(RuleRecordDao.Properties.EventCode.eq(eventCode), RuleRecordDao.Properties.State.eq(status))
+                        .list();
+        //@formatter:on
     }
 
     public long insert(RuleRecord entity) {

@@ -40,6 +40,6 @@
     <string name="operator_or">O\nR</string>
     <string name="operator_and">A\nN\nD</string>
     <string name="action_sequence">S\nE\nQ</string>
-
+    <string name="message_rule_name_mandatory">You must give a name for this rule.</string>
     <string name="select_an_action">Select an Action...</string>
 </resources>

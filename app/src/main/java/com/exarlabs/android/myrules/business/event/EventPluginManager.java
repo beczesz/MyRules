@@ -1,7 +1,7 @@
 package com.exarlabs.android.myrules.business.event;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.exarlabs.android.myrules.business.event.plugins.call.CallEventHandlerPlugin;
@@ -37,7 +37,7 @@ public class EventPluginManager {
 
 
     public EventPluginManager() {
-        mPluginMap = new HashMap<>();
+        mPluginMap = new LinkedHashMap<>();
 
         // Add the plugins
         mPluginMap.put(NumberEventHandlerPlugin.class, new NumberEventHandlerPlugin());
@@ -49,8 +49,8 @@ public class EventPluginManager {
     /**
      * @return the list of plugins
      */
-    public Collection<EventHandlerPlugin> getPlugins() {
-        return mPluginMap.values();
+    public ArrayList<EventHandlerPlugin> getPlugins() {
+        return new ArrayList<>(mPluginMap.values());
     }
 
     /**
