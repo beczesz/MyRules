@@ -33,11 +33,18 @@ public abstract class EventHandlerPlugin {
 
     private boolean isEnabled = false;
 
+    /**
+     * The type of the plugin
+     */
+    private int mType;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public EventHandlerPlugin() {
+    public EventHandlerPlugin(int type) {
+        mType = type;
+
         // Initialize the plugin on creation
         init();
 
@@ -104,5 +111,9 @@ public abstract class EventHandlerPlugin {
 
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public int getType() {
+        return mType;
     }
 }

@@ -35,6 +35,7 @@ import com.exarlabs.android.myrules.business.event.plugins.call.CallEventHandler
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
 import com.exarlabs.android.myrules.business.event.plugins.math.NumberEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.Rule;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
@@ -161,7 +162,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         } else if (event.getClass().equals(SmsEventHandlerPlugin.class)) {
             testSmsEventRule();
         } else if (event.getClass().equals(CallEventHandlerPlugin.class)) {
-            testCallEventRule();
+            dispatchCallEvent();
         }
     }
 
@@ -259,6 +260,12 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         eventHandlerPlugin.dispatchNumber(7);
     }
 
+    public void dispatchCallEvent() {
+        testSimpleArithmetricRule();
+        CallEventHandlerPlugin eventHandlerPlugin = (CallEventHandlerPlugin) mEventPluginManager.get(CallEventHandlerPlugin.class);
+        eventHandlerPlugin.getCall("Attila");
+    }
+
     /**
      * We create a rule which responds to Number events and with some conditions it calculates fibonacci and multiplications.
      */
@@ -318,6 +325,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         // set the event
         ruleRecord.setRuleName("Sample Rule");
         ruleRecord.setEventCode(event.getType());
+        ruleRecord.setState(Rule.RuleState.STATE_ACTIVE);
         ruleRecord.setRuleConditionTree(root);
         ruleRecord.addRuleActions(aMultiply, aFib, aMultiply10);
         mRuleManager.saveRuleRecord(ruleRecord);

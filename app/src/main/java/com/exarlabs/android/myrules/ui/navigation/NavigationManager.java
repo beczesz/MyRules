@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.ui.navigation;
 
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -27,6 +28,19 @@ public class NavigationManager {
     // TYPES
     // ------------------------------------------------------------------------
 
+    /**
+     * Listener interface for navigation events.
+     */
+    public interface NavigationListener {
+
+        /**
+         * Callback on backstack changed.
+         *
+         * @param fragment
+         */
+        void onBackstackChanged();
+    }
+
     // ------------------------------------------------------------------------
     // STATIC FIELDS
     // ------------------------------------------------------------------------
@@ -40,6 +54,7 @@ public class NavigationManager {
     // ------------------------------------------------------------------------
 
     private FragmentManager mFragmentManager;
+    private NavigationListener mNavigationListener;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -57,6 +72,11 @@ public class NavigationManager {
      */
     public void init(FragmentManager fragmentManager) {
         mFragmentManager = fragmentManager;
+        mFragmentManager.addOnBackStackChangedListener(() -> {
+            if (mNavigationListener != null) {
+                mNavigationListener.onBackstackChanged();
+            }
+        });
     }
 
     /**
@@ -76,6 +96,7 @@ public class NavigationManager {
                             .addToBackStack(fragment.getClass().getSimpleName())
                             .commit();
             //@formatter:on
+
         }
     }
 
@@ -180,7 +201,25 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
+
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    /**
+     * @return true if the current fragment displayed is a root fragment
+     */
+    public boolean isRootFragmentVisible() {
+        return mFragmentManager.getBackStackEntryCount() <= 1;
+    }
+
+
+    public NavigationListener getNavigationListener() {
+        return mNavigationListener;
+    }
+
+    public void setNavigationListener(NavigationListener navigationListener) {
+        mNavigationListener = navigationListener;
+    }
 }

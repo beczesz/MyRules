@@ -19,7 +19,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 /**
  * Main activity which holds the container for the fragment navigation.
  */
-public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemClickListener {
+public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemClickListener, NavigationManager.NavigationListener {
 
 
     // ------------------------------------------------------------------------
@@ -58,14 +58,14 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
         setContentView(R.layout.activity_main);
 
         // start rulesEngine service
-        if(!RulesEngineService.isRunning())
-            startService(new Intent(this, RulesEngineService.class));
+        if (!RulesEngineService.isRunning()) startService(new Intent(this, RulesEngineService.class));
 
         // Inject members
         DaggerManager.component().inject(this);
 
         // Initialize the NavigationManager with this activity's FragmentManager
         mNavigationManager.init(getSupportFragmentManager());
+        mNavigationManager.setNavigationListener(this);
 
         // start as the first screen the rules overview
         mNavigationManager.startRulesOverview();
@@ -111,10 +111,9 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
      */
     protected void showExitDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(R.string.exit_message)
-                        .setCancelable(false)
-                        .setPositiveButton(android.R.string.yes, (dialog, id) -> {finish();})
-                        .setNegativeButton(android.R.string.cancel, null);
+        alertDialogBuilder.setMessage(R.string.exit_message).setCancelable(false).setPositiveButton(android.R.string.yes, (dialog, id) -> {
+            finish();
+        }).setNegativeButton(android.R.string.cancel, null);
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
@@ -122,6 +121,15 @@ public class MainActivity extends BaseActivity implements Drawer.OnDrawerItemCli
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
+
+
+    @Override
+    public void onBackstackChanged() {
+        // check if we display a root fragment and enable drawer only on root fragments
+        boolean rootFragment = mNavigationManager.isRootFragmentVisible();
+        mDrawerManager.enableDrawer(rootFragment);
+        mDrawerManager.enableActionBarDrawerToggle(rootFragment);
     }
 
     // ------------------------------------------------------------------------

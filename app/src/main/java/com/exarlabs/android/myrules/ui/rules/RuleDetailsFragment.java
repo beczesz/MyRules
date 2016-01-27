@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -18,12 +20,14 @@ import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.action.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
+import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -84,6 +88,9 @@ public class RuleDetailsFragment extends BaseFragment {
 
     @Inject
     public EventPluginManager mEventPluginManager;
+
+    @Inject
+    public NavigationManager mNavigationManager;
 
     private RuleRecord mRuleRecord;
 
@@ -151,13 +158,28 @@ public class RuleDetailsFragment extends BaseFragment {
     }
 
     private void setUpEvents() {
+        // Initialize the event spinenr
+        ArrayList<EventHandlerPlugin> plugins = mEventPluginManager.getPlugins();
+
+        //@formatter:off
         // Get the list of event plugins.
         List<String> eventPluginNames = new ArrayList<>();
-        Observable.from(mEventPluginManager.getPlugins()).map(plugins -> plugins.getClass().getSimpleName()).subscribe(
-                        conditionName -> eventPluginNames.add(conditionName));
+        Observable.from(plugins)
+                        .map(plugin -> plugin.getClass().getSimpleName())
+                        .subscribe(conditionName -> eventPluginNames.add(conditionName));
+        //@formatter:on
 
         // setup the spinner
         mEventsSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, eventPluginNames));
+
+        for (int i = 0; i < plugins.size(); i++) {
+            EventHandlerPlugin plugin = plugins.get(i);
+            if (plugin.getType() == mRuleRecord.getEventCode()) {
+                mEventsSpinner.setSelection(i);
+                break;
+            }
+        }
+
     }
 
     @OnClick(R.id.fab_add_condition)
@@ -168,5 +190,51 @@ public class RuleDetailsFragment extends BaseFragment {
     @OnClick(R.id.fab_add_action)
     public void showAdActionFragment() {
         Toast.makeText(getActivity(), "Select action fragment", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.button_save)
+    public void saveRule() {
+        if (validateRule()) {
+            updateRule();
+            mRuleManager.saveRuleRecord(mRuleRecord);
+            goBack();
+        }
+    }
+
+    /**
+     * Updates the rule record.
+     */
+    private void updateRule() {
+        // update the rule names
+        mRuleRecord.setRuleName(mRuleName.getText().toString().trim());
+
+        // Update the event type
+        int selectedItemPosition = mEventsSpinner.getSelectedItemPosition();
+        EventHandlerPlugin plugin = mEventPluginManager.getPlugins().get(selectedItemPosition);
+        mRuleRecord.setEventCode(plugin.getType());
+    }
+
+    /**
+     * Validates the rule record
+     *
+     * @return
+     */
+    private boolean validateRule() {
+        if (mRuleName.getText().length() == 0) {
+            mRuleName.setError(getActivity().getString(R.string.message_rule_name_mandatory));
+            return false;
+        }
+        return true;
+    }
+
+    @OnClick(R.id.button_cancel)
+    public void cancelRule() {
+        goBack();
+    }
+
+    private void goBack() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        mNavigationManager.navigateBack(getActivity());
     }
 }

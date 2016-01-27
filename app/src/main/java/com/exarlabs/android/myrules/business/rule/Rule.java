@@ -21,6 +21,20 @@ public abstract class Rule implements GreenDaoEntity {
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
+    /**
+     * Possible states of rules
+     * Created by becze on 1/11/2016.
+     */
+    public static class RuleState {
+
+        // ------------------------------------------------------------------------
+        // STATIC FIELDS
+        // ------------------------------------------------------------------------
+
+        public static final int STATE_ACTIVE = 1000;
+        public static final int STATE_INACTIVE = 1100;
+        public static final int STATE_DELETED = 1200;
+    }
 
     // ------------------------------------------------------------------------
     // STATIC FIELDS
@@ -152,6 +166,7 @@ public abstract class Rule implements GreenDaoEntity {
     public void setIsBuilt(boolean isBuilt) {
         this.isBuilt = isBuilt;
     }
+
 
 
 }

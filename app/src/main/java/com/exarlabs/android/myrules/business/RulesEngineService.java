@@ -17,8 +17,8 @@ import android.util.Pair;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.event.Event;
 import com.exarlabs.android.myrules.business.event.RuleEventManager;
+import com.exarlabs.android.myrules.business.rule.Rule;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.business.rule.RuleState;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
@@ -155,7 +155,7 @@ public class RulesEngineService extends Service {
                             // Log the events and prepare a bundle with the list of rules which are responding to
                             // the given event
                             logEventDispatched(event);
-                            return new Pair<>(event, mRuleManager.getRules(event.getType(), RuleState.STATE_ACTIVE));
+                            return new Pair<>(event, mRuleManager.getRules(event.getType(), Rule.RuleState.STATE_ACTIVE));
                         })
                         .flatMap(pair -> Observable.from(pair.second).map(record -> new Pair<>(pair.first, (RuleRecord) record)))
                         .filter(eventRulePair -> {
