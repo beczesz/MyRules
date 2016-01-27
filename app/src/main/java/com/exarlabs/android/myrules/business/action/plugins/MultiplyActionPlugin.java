@@ -40,12 +40,16 @@ public class MultiplyActionPlugin extends ActionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
+    public MultiplyActionPlugin(int type){
+        super(type);
+    }
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
     @Override
     public void initialize(List<RuleActionProperty> properties) {
         super.initialize(properties);
+
         mValue = Double.parseDouble(getProperty(KEY_VALUE).getValue());
     }
 

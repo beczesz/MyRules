@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.exarlabs.android.myrules.ui.R;
-import com.exarlabs.android.myrules.ui.actions.ActionsAddActionFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
@@ -132,6 +132,12 @@ public class NavigationManager {
         open(fragment);
     }
 
+    public void startRuleDetailsFragment(long ruleId) {
+        Fragment fragment = RuleDetailsFragment.newInstance(ruleId);
+        open(fragment);
+    }
+
+
     // MY CONDITIONS
     public void startConditionsOverview() {
         Fragment fragment = ConditionsOverviewFragment.newInstance();
@@ -143,6 +149,11 @@ public class NavigationManager {
         open(fragment);
     }
 
+    public void startConditionsDetails(Long id, int type) {
+        Fragment fragment = ConditionDetailsFragment.newInstance(id, type);
+        open(fragment);
+    }
+
 
     // MY ACTIONS
     public void startActionsOverview() {
@@ -150,10 +161,11 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
-    public void startAddActionFragment(Long id) {
-        Fragment fragment = ActionsAddActionFragment.newInstance(id);
+    public void startActionDetails(Long id) {
+        Fragment fragment = ActionDetailsFragment.newInstance(id);
         open(fragment);
     }
+
 
     // HISTORY
     public void startHistoryOverview() {
@@ -166,16 +178,6 @@ public class NavigationManager {
     public void startDebugOverview() {
         Fragment fragment = DebugOverviewFragment.newInstance();
         openAsRoot(fragment);
-    }
-
-    public void startConditionsDetails(Long id, int type) {
-        Fragment fragment = ConditionDetailsFragment.newInstance(id, type);
-        open(fragment);
-    }
-
-    public void startRuleDetailsFragment(long ruleId) {
-        Fragment fragment = RuleDetailsFragment.newInstance(ruleId);
-        open(fragment);
     }
 
     // ------------------------------------------------------------------------

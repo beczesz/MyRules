@@ -119,7 +119,6 @@ public class ActionsOverviewFragment extends BaseFragment implements OnActionEdi
 
         mAddActionButton.playShowAnimation();
         updateUI();
-
     }
 
     /**
@@ -134,17 +133,17 @@ public class ActionsOverviewFragment extends BaseFragment implements OnActionEdi
 
 
     @OnClick(R.id.fab_add_action)
-    public void showAddActionFragment(){
-        showAddActionFragment(null);
+    public void showActionDetailsFragment(){
+        showActionDetailsFragment((long)-1);
     }
 
-    public void showAddActionFragment(Long id){
-        mNavigationManager.startAddActionFragment(id);
+    public void showActionDetailsFragment(Long id){
+        mNavigationManager.startActionDetails(id);
     }
 
     @Override
     public void onActionEdit(Long actionId) {
-        showAddActionFragment(actionId);
+        showActionDetailsFragment(actionId);
     }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

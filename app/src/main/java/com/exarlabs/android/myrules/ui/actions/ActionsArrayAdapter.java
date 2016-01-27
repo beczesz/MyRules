@@ -42,8 +42,8 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         @Bind(R.id.button_edit_action)
         public Button editAction;
 
-        @Bind(R.id.item_name)
-        public TextView itemName;
+        @Bind(R.id.item_details)
+        public TextView itemDetails;
     }
     // ------------------------------------------------------------------------
     // TYPES
@@ -115,7 +115,9 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         // make the list items expandable
         ((View) holder.headerText.getParent().getParent()).setOnClickListener(this);
 
-        holder.itemName.setText(action.getId() + "");
+        // TODO: T.B.D. - details, text
+        holder.itemDetails.setText("Type No.: " + action.getType() + "\nClass: " + action.getActionPlugin().getClass().getSimpleName());
+
         holder.editAction.setTag(action.getId());
         holder.editAction.setOnClickListener(this);
 

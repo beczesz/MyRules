@@ -1,16 +1,20 @@
-package com.exarlabs.android.myrules.business.action.plugins;
+package com.exarlabs.android.myrules.ui.actions;
 
-import android.util.Log;
+import android.os.Bundle;
+import android.view.View;
 
-import com.exarlabs.android.myrules.business.action.ActionPlugin;
-import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.business.event.plugins.math.NumberEvent;
+import com.exarlabs.android.myrules.model.dao.RuleAction;
+import com.exarlabs.android.myrules.ui.BaseFragment;
 
 /**
- * Example action plugin which calculates a Fibonacci number
- * Created by becze on 1/11/2016.
+ * ActionPluginFragment is  the UI implementation of an ActionPlugin.
+ * It has the responsability to
+ *    - render the UI
+ *    - initialize the UI with an exiting action
+ *    - save the plugin data to an action
+ * Created by atiyka on 1/26/2016.
  */
-public class FibonacciActionPlugin extends ActionPlugin {
+public abstract class ActionPluginFragment extends BaseFragment {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -20,7 +24,6 @@ public class FibonacciActionPlugin extends ActionPlugin {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = FibonacciActionPlugin.class.getSimpleName();
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -28,50 +31,39 @@ public class FibonacciActionPlugin extends ActionPlugin {
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-    private long mResult;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public FibonacciActionPlugin(int type){
-        super(type);
-    }
+
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    @Override
-    public boolean run(Event event) {
-        if (event instanceof NumberEvent) {
-            int value = ((NumberEvent) event).getValue();
-            mResult = fib(value);
-            Log.w(TAG, "Fib of: " + value + " is " + mResult);
-        }
-        return true;
-    }
-
+    /**
+     * Initilizes the fragment with an action.
+     * @param action
+     */
+    protected abstract void init(RuleAction action);
 
     /**
-     * Naiva implementation of fibonacci
-     *
-     * @param n
-     * @return
+     * Refreshes the UI with the plugin data. This is called after onViewCreated
      */
-    public long fib(int n) {
-        if (n <= 1) return n;
-        else return fib(n - 1) + fib(n - 2);
-    }
+    protected abstract void refreshUI();
+
+    /**
+     * Saves the changes into the action
+     */
+    protected abstract void saveChanges();
 
     @Override
-    public String toString() {
-        return "Calculates Fibonacci";
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        refreshUI();
     }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
-
-    public long getResult() {
-        return mResult;
-    }
 }

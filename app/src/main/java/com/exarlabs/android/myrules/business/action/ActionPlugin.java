@@ -25,6 +25,7 @@ public abstract class ActionPlugin {
 
     private static final String TAG = ActionPlugin.class.getSimpleName();
 
+    private int mType;
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -40,8 +41,9 @@ public abstract class ActionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public ActionPlugin() {
+    public ActionPlugin(int type) {
         mProperties = new ArrayList<>();
+        this.mType = type;
     }
 
 
@@ -139,5 +141,9 @@ public abstract class ActionPlugin {
      */
     public List<RuleActionProperty> getProperties() {
         return mProperties;
+    }
+
+    public int getType() {
+        return mType;
     }
 }

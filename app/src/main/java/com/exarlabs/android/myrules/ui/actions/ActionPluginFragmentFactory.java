@@ -1,15 +1,14 @@
-package com.exarlabs.android.myrules.business.action;
+package com.exarlabs.android.myrules.ui.actions;
 
-import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
+import com.exarlabs.android.myrules.business.action.Action;
+import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
 
 /**
- * Factory pattern implementation for the action plugins.
+ * Factory pattern implementation for the condition plugin fragments.
  * Created by becze on 12/18/2015.
  */
-public class ActionPluginFactory {
+public class ActionPluginFragmentFactory {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -24,25 +23,19 @@ public class ActionPluginFactory {
     // ------------------------------------------------------------------------
 
     /**
-     * Creator for the action plugins.
+     * Creator for the condition plugins frgaments.
      *
      * @param pluginType
-     * @return a new action plugin, if no plugin found a default AlwaysTrueConditionPlugin is created.
+     * @return a new condition plugin fragment, if no plugin found a default AlwaysTrueConditionPlugin is created.
      */
-    public static ActionPlugin create(int pluginType) {
+    public static ActionPluginFragment create(int pluginType) {
         switch (pluginType) {
             default:
-            case Action.Type.ARITHMETRIC_ACTION_FIBONACCI:
-                return new FibonacciActionPlugin(pluginType);
+                return DefaultActionPluginFragment.newInstance();
 
             case Action.Type.ARITHMETRIC_ACTION_MULTIPLY:
-                return new MultiplyActionPlugin(pluginType);
+                return MultiplyActionPluginFragment.newInstance();
 
-            case Action.Type.SEND_SMS_ACTION:
-                return new SendSmsActionPlugin(pluginType);
-
-            case Action.Type.REJECT_CALL_ACTION:
-                return new RejectCallActionPlugin(pluginType);
         }
     }
 
