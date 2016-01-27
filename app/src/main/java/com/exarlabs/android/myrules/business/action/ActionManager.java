@@ -154,6 +154,11 @@ public class ActionManager {
         saveActionLinks(ruleRecord, Arrays.asList(actions));
     }
 
+    /**
+     * Deletes an action
+     * 
+     * @param ruleAction
+     */
     public void deleteAction(RuleAction ruleAction){
         List<RuleActionProperty> properties = ruleAction.getProperties();
 
@@ -161,12 +166,6 @@ public class ActionManager {
         mRuleActionPropertiesDao.deleteInTx(properties);
         // and the action
         mRuleActionDao.delete(ruleAction);
-    }
-
-    public void deleteActionProperties(RuleAction ruleAction){
-        List<RuleActionProperty> properties = ruleAction.getProperties();
-        // delete the properties
-        mRuleActionPropertiesDao.deleteInTx(properties);
     }
 
     // ------------------------------------------------------------------------

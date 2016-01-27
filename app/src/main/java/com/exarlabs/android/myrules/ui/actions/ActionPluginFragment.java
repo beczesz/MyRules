@@ -54,7 +54,7 @@ public abstract class ActionPluginFragment extends BaseFragment {
     /**
      * Saves the changes into the action
      */
-    protected abstract void saveChanges(String name);
+    protected abstract void saveChanges();
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

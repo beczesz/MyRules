@@ -179,13 +179,14 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
      */
     @OnClick(R.id.button_save)
     public void saveNewAction(){
-
         if(mActionId == -1 && mActionTypeSpinner.getSelectedItemPosition() == 0) {
                 // TODO: notify the user that must select an action type
                 return;
         }
         String name = mActionName.getText().toString();
-        mActionPluginFragment.saveChanges(name);
+        mRuleAction.setActionName(name);
+        mActionPluginFragment.saveChanges();
+        mActionManager.saveAction(mRuleAction);
 
         goBack();
     }

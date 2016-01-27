@@ -108,11 +108,9 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
 
     /**
      * Saves the changed data when the Save button was pressed
-     * @param name
      */
     @Override
-    protected void saveChanges(String name) {
-        mAction.setActionName(name);
+    protected void saveChanges() {
 
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
         if(mAction.getId() != null)
@@ -120,7 +118,7 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
 
         double value = Double.parseDouble(mNumber.getText().toString());
         ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
-        mActionManager.saveAction(mAction);
+
     }
 
 // ------------------------------------------------------------------------
