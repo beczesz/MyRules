@@ -19,10 +19,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.action.ActionCardsFragment;
+import com.exarlabs.android.myrules.business.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
+import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
@@ -87,6 +90,9 @@ public class RuleDetailsFragment extends BaseFragment {
     public RuleManager mRuleManager;
 
     @Inject
+    public ConditionManager mConditionManager;
+
+    @Inject
     public EventPluginManager mEventPluginManager;
 
     @Inject
@@ -94,6 +100,8 @@ public class RuleDetailsFragment extends BaseFragment {
 
     private RuleRecord mRuleRecord;
 
+    private ActionCardsFragment mActionCardsFragment;
+    private ConditionTreeFragment mConditionTreeFragment;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -131,13 +139,13 @@ public class RuleDetailsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Load the condition display fragment
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container,
-                        ConditionTreeFragment.newInstance(mRuleRecord.getRuleConditionTreeId())).commit();
+        mConditionTreeFragment = ConditionTreeFragment.newInstance(mRuleRecord.getRuleConditionTreeId());
+        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
 
         // Load the condition display fragment
-        ActionCardsFragment actionCardsFragment = ActionCardsFragment.newInstance();
-        actionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, actionCardsFragment).commit();
+        mActionCardsFragment = ActionCardsFragment.newInstance();
+        mActionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
+        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, mActionCardsFragment).commit();
 
     }
 
@@ -196,7 +204,6 @@ public class RuleDetailsFragment extends BaseFragment {
     public void saveRule() {
         if (validateRule()) {
             updateRule();
-            mRuleManager.saveRuleRecord(mRuleRecord);
             goBack();
         }
     }
@@ -212,6 +219,15 @@ public class RuleDetailsFragment extends BaseFragment {
         int selectedItemPosition = mEventsSpinner.getSelectedItemPosition();
         EventHandlerPlugin plugin = mEventPluginManager.getPlugins().get(selectedItemPosition);
         mRuleRecord.setEventCode(plugin.getType());
+
+        // Update the conditions
+        ConditionTree.Builder builder = mConditionTreeFragment.generateCurrentConditionTree();
+        RuleConditionTree ruleConditionTree = mConditionManager.rebuildConditionTree(mRuleRecord.getRuleConditionTree(), builder);
+        mRuleRecord.setRuleConditionTree(ruleConditionTree);
+
+
+        // Save the rule record
+        mRuleManager.saveRuleRecord(mRuleRecord);
     }
 
     /**

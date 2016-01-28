@@ -143,11 +143,11 @@ public class ConditionManager {
      * Builds the condition tree by inserting the RuleConditionTree into the database
      * Note:  the inertion is done on the caller thread.
      */
-    public void insertConditionTree(RuleConditionTree root) {
-        insertConditionTree(null, root);
+    public void insertOrReplaceConditionTree(RuleConditionTree root) {
+        insertOrReplaceConditionTree(null, root);
     }
 
-    private void insertConditionTree(RuleConditionTree parent, RuleConditionTree root) {
+    private void insertOrReplaceConditionTree(RuleConditionTree parent, RuleConditionTree root) {
 
         // Insert the root
         if (parent != null) {
@@ -163,7 +163,7 @@ public class ConditionManager {
         List<RuleConditionTree> children = root.getTempChildConditions();
         if (children != null) {
             for (RuleConditionTree child : children) {
-                insertConditionTree(root, child);
+                insertOrReplaceConditionTree(root, child);
             }
         }
     }
@@ -179,7 +179,7 @@ public class ConditionManager {
     public RuleConditionTree rebuildConditionTree(RuleConditionTree oldTree, RuleConditionTree.Builder newCodnitionTree) {
         RuleConditionTree newRoot = newCodnitionTree.build();
         removeConditionTree(oldTree);
-        insertConditionTree(newRoot);
+        insertOrReplaceConditionTree(newRoot);
         return newRoot;
     }
 
@@ -191,8 +191,20 @@ public class ConditionManager {
      */
     public RuleConditionTree buildConditionTree(RuleConditionTree.Builder newCodnitionTree) {
         RuleConditionTree newRoot = newCodnitionTree.build();
-        insertConditionTree(newRoot);
+        insertOrReplaceConditionTree(newRoot);
         return newRoot;
     }
 
+    /**
+     * It generates a default condition and saves it into the database.
+     * It is required by condition tree roots, to be attached
+     *
+     * @return
+     */
+    public RuleCondition getDefaultCondition() {
+        RuleCondition c = new RuleCondition();
+        c.setType(Condition.Type.DEBUG_ALWAYS_TRUE);
+        saveCondition(c);
+        return c;
+    }
 }

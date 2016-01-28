@@ -91,7 +91,7 @@ public class RuleManager {
         long id = mRuleRecordDao.insertOrReplace(ruleRecord);
 
         // save update the conditions
-        mConditionManager.insertConditionTree(ruleRecord.getRuleConditionTree());
+        mConditionManager.insertOrReplaceConditionTree(ruleRecord.getRuleConditionTree());
 
         // if there were any temporary actions save them
         ruleRecord.addTempraryRuleActions();

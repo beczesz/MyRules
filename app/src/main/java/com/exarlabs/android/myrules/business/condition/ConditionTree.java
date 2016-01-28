@@ -27,6 +27,7 @@ public abstract class ConditionTree {
     /**
      * Condition tree builder.
      * Note: all the RuleConditions must be attached when you add a new one.
+     * TODO: change the builder such that no default condition generation should be necessary
      */
     public static class Builder {
 
@@ -46,7 +47,8 @@ public abstract class ConditionTree {
          */
         public Builder add(RuleCondition subTreeRoot, List<RuleCondition> children, int operator) {
 
-            if (subTreeRoot == null || children == null) {
+            // Either subTreeRoot or children should be specified.
+            if (subTreeRoot == null && children == null) {
                 return this;
             }
             if (mRoot == null) {
@@ -54,7 +56,7 @@ public abstract class ConditionTree {
                 mRoot.setRuleCondition(subTreeRoot);
             }
             // find the subTreeRoot in our tree
-            RuleConditionTree subTree = getRuleContionTree(mRoot, subTreeRoot);
+            RuleConditionTree subTree = getRuleConditionTree(mRoot, subTreeRoot);
             if (subTree != null) {
                 subTree.setOperator(operator);
                 buildTempChildren(subTree, children);
@@ -94,7 +96,7 @@ public abstract class ConditionTree {
          * @param subTreeRoot
          * @return
          */
-        private RuleConditionTree getRuleContionTree(RuleConditionTree currentRoot, RuleCondition subTreeRoot) {
+        private RuleConditionTree getRuleConditionTree(RuleConditionTree currentRoot, RuleCondition subTreeRoot) {
 
             if (currentRoot.getRuleCondition() == subTreeRoot) {
                 return currentRoot;
@@ -102,7 +104,7 @@ public abstract class ConditionTree {
                 List<RuleConditionTree> childConditions = currentRoot.getTempChildConditions();
                 if (childConditions != null) {
                     for (RuleConditionTree childConditionTree : childConditions) {
-                        RuleConditionTree ruleContionTree = getRuleContionTree(childConditionTree, subTreeRoot);
+                        RuleConditionTree ruleContionTree = getRuleConditionTree(childConditionTree, subTreeRoot);
                         if (ruleContionTree != null) {
                             return ruleContionTree;
                         }
@@ -159,6 +161,8 @@ public abstract class ConditionTree {
 
     /**
      * This is a temporary field used for building the condition trees, when they are not yet attached.
+     * Green Dao can only retrieve child conditions if the parent is attached so, when we are building a new
+     * condition tree, we have to use some temporary storage.
      */
     private List<RuleConditionTree> mTempChildConditions;
 
@@ -218,14 +222,14 @@ public abstract class ConditionTree {
 
         // evaluate this condition
         // The initial value is based on the type of the operator
-        boolean isConditionHolds = false;
+        boolean isConditionHold = false;
         switch (getOperator()) {
             case Operator.AND:
-                isConditionHolds = true;
+                isConditionHold = true;
                 break;
 
             case Operator.OR:
-                isConditionHolds = false;
+                isConditionHold = false;
                 break;
         }
 
@@ -237,20 +241,20 @@ public abstract class ConditionTree {
             for (ConditionTree condition : childConditions) {
                 switch (operator) {
                     case Operator.AND:
-                        isConditionHolds = isConditionHolds && condition.evaluate(event);
+                        isConditionHold = isConditionHold && condition.evaluate(event);
                         break;
 
                     case Operator.OR:
-                        isConditionHolds = isConditionHolds || condition.evaluate(event);
+                        isConditionHold = isConditionHold || condition.evaluate(event);
                         break;
                 }
             }
         } else {
             // If we are on the leaf then we evaluate the condition.
-            isConditionHolds = getRuleCondition().evaluate(event);
+            isConditionHold = getRuleCondition().evaluate(event);
         }
 
-        return isConditionHolds;
+        return isConditionHold;
     }
 
     // ------------------------------------------------------------------------
