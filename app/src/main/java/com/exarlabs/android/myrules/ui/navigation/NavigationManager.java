@@ -2,7 +2,6 @@ package com.exarlabs.android.myrules.ui.navigation;
 
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -10,7 +9,6 @@ import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
-import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
