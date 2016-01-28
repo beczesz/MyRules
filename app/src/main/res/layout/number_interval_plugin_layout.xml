@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/lbl_hint_interv_start"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
 
         <EditText
 
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/lbl_hint_interv_end"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
 
     </LinearLayout>
 

@@ -18,7 +18,6 @@ import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragm
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPlugin;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
-import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
@@ -63,15 +62,11 @@ public interface DaggerComponentGraph {
 
     void inject(RulesAddRuleFragment rulesAddRuleFragment);
 
-    void inject(ConditionsAddConditionFragment conditionsAddConditionFragment);
-
     void inject(DebugOverviewFragment debugOverviewFragment);
 
     void inject(SendSmsActionPlugin sendSmsActionPlugin);
 
     void inject(RejectCallActionPlugin rejectCallActionPlugin);
-
-    void inject(ConditionDetailsFragment conditionDetailsFragment);
 
     void inject(SmsEventHandlerPlugin smsEventHandlerPlugin);
     
@@ -100,4 +95,6 @@ public interface DaggerComponentGraph {
     void inject(SendSMSToGroupActionPlugin sendSMSToGroupActionPlugin);
 
     void inject(ContactsSectorFragment contactsSectorFragment);
+
+    void inject(ConditionDetailsFragment conditionDetailsFragment);
 }

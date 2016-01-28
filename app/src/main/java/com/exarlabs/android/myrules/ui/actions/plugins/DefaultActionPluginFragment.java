@@ -1,14 +1,11 @@
 package com.exarlabs.android.myrules.ui.actions.plugins;
 
-import javax.inject.Inject;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.exarlabs.android.myrules.business.action.ActionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.R;
@@ -49,8 +46,6 @@ public class DefaultActionPluginFragment extends ActionPluginFragment {
 
     private RuleAction mAction;
 
-    @Inject
-    public ActionManager mActionManager;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------

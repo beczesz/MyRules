@@ -86,26 +86,32 @@ public class IntervalConditionPluginFragment extends ConditionPluginFragment {
 
         mCondition = condition;
         /*
-         * Check if the condition has the right mPlugin type
+         * Check if the condition has the right mPlugin type, and we are in edit mode
          */
-        if (condition.getConditionPlugin() instanceof IsNumberInIntervalConditionPlugin) {
+        if (condition.getId() != null && condition.getConditionPlugin() instanceof IsNumberInIntervalConditionPlugin) {
             mPlugin = (IsNumberInIntervalConditionPlugin) condition.getConditionPlugin();
         }
     }
 
     @Override
     protected void refreshUI() {
-        mIntervalStart.setText((int) mPlugin.getMin() + "");
-        mIntervalEnd.setText((int) mPlugin.getMax() + "");
+        if(mPlugin != null) {
+            mIntervalStart.setText((int) mPlugin.getMin() + "");
+            mIntervalEnd.setText((int) mPlugin.getMax() + "");
+        }
     }
 
     @Override
     protected void saveChanges() {
-        if (mCondition != null && mCondition.getConditionPlugin() instanceof IsNumberInIntervalConditionPlugin) {
-            IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) mCondition.getConditionPlugin();
-            plugin.setMin(Double.parseDouble(mIntervalStart.getText().toString()));
-            plugin.setMax(Double.parseDouble(mIntervalEnd.getText().toString()));
-        }
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if(mCondition.getId() != null)
+            mCondition.reGenerateConditionPlugin();
+
+        IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) mCondition.getConditionPlugin();
+        double min = Double.parseDouble(mIntervalStart.getText().toString());
+        double max = Double.parseDouble(mIntervalEnd.getText().toString());
+        plugin.setMin(min);
+        plugin.setMax(max);
     }
 
 // ------------------------------------------------------------------------

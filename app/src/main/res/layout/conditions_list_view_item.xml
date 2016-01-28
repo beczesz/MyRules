@@ -19,7 +19,7 @@
             android:textSize="22sp"/>
 
         <Button
-            android:id="@+id/button_edit_action"
+            android:id="@+id/button_edit_condition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

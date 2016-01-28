@@ -155,7 +155,7 @@ public class ActionManager {
     }
 
     /**
-     * Deletes an action
+     * Deletes an action and all of it's properties
      * 
      * @param ruleAction
      */

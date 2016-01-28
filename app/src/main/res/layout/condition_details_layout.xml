@@ -15,6 +15,12 @@
             android:layout_height="wrap_content"
             android:hint="@string/lbl_enter_a_name"/>
 
+        <Spinner
+            android:id="@+id/spinner_select_condition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/condition_name"/>
+
         <FrameLayout
             android:id="@+id/condition_plugin_fragment_container"
             android:layout_width="match_parent"

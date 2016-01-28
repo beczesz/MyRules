@@ -22,6 +22,7 @@ public class IsNumberPrimeConditionPlugin extends ConditionPlugin {
 
     private static final String TAG = IsNumberPrimeConditionPlugin.class.getSimpleName();
 
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -33,6 +34,9 @@ public class IsNumberPrimeConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+    public IsNumberPrimeConditionPlugin(int pluginType) {
+        super(pluginType);
+    }
 
     // ------------------------------------------------------------------------
     // METHODS

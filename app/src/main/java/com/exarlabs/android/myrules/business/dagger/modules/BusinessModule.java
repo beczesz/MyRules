@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 import com.exarlabs.android.myrules.business.action.ActionManager;
 import com.exarlabs.android.myrules.business.action.ActionPluginManager;
 import com.exarlabs.android.myrules.business.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.event.RuleEventManager;
@@ -32,6 +33,12 @@ public class BusinessModule {
     @Singleton
     protected ActionPluginManager providesActionPluginManager() {
         return new ActionPluginManager();
+    }
+
+    @Provides
+    @Singleton
+    protected ConditionPluginManager providesConditionPluginManager() {
+        return new ConditionPluginManager();
     }
 
     @Inject

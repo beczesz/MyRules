@@ -37,9 +37,13 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     private double mValue;
 
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+    public IsNumberEqualConditionPlugin(int pluginType) {
+        super(pluginType);
+    }
 
     // ------------------------------------------------------------------------
     // METHODS

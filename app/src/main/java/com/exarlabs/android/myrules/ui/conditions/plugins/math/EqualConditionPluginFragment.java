@@ -83,24 +83,27 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
 
         mCondition = condition;
         /*
-         * Check if the condition has the right mPlugin type
+         * Check if the condition has the right mPlugin type, and we are in edit mode
          */
-        if (condition.getConditionPlugin() instanceof IsNumberEqualConditionPlugin) {
+        if (condition.getId() != null && condition.getConditionPlugin() instanceof IsNumberEqualConditionPlugin) {
             mPlugin = (IsNumberEqualConditionPlugin) condition.getConditionPlugin();
         }
     }
 
     @Override
     protected void refreshUI() {
-        mNumberEqual.setText((int) mPlugin.getValue() + "");
+        if(mPlugin != null)
+            mNumberEqual.setText((int) mPlugin.getValue() + "");
     }
 
     @Override
     protected void saveChanges() {
-        if (mCondition != null && mCondition.getConditionPlugin() instanceof IsNumberEqualConditionPlugin) {
-            IsNumberEqualConditionPlugin plugin = (IsNumberEqualConditionPlugin) mCondition.getConditionPlugin();
-            plugin.setValue(Double.parseDouble(mNumberEqual.getText().toString()));
-        }
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if(mCondition.getId() != null)
+            mCondition.reGenerateConditionPlugin();
+
+        double value = Double.parseDouble(mNumberEqual.getText().toString());
+        ((IsNumberEqualConditionPlugin) mCondition.getConditionPlugin()).setValue(value);
     }
 
 // ------------------------------------------------------------------------

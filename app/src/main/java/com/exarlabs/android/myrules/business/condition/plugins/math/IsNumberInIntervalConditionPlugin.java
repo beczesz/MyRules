@@ -38,9 +38,13 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     private double mMin, mMax;
 
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+    public IsNumberInIntervalConditionPlugin(int pluginType) {
+        super(pluginType);
+    }
 
     // ------------------------------------------------------------------------
     // METHODS
