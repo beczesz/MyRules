@@ -166,13 +166,8 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
-    public void startAddConditionFragment() {
-        Fragment fragment = ConditionsAddConditionFragment.newInstance();
-        open(fragment);
-    }
-
-    public void startConditionsDetails(Long id, int type) {
-        Fragment fragment = ConditionDetailsFragment.newInstance(id, type);
+    public void startConditionsDetails(Long id) {
+        Fragment fragment = ConditionDetailsFragment.newInstance(id);
         open(fragment);
     }
 

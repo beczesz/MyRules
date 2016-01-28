@@ -1,16 +1,27 @@
 package com.exarlabs.android.myrules.ui.conditions;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 
 import com.exarlabs.android.myrules.business.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
@@ -19,12 +30,13 @@ import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import rx.Observable;
 
 /**
- * Displays the detials of a condition
+ * Displays the details of a condition
  * Created by becze on 1/21/2016.
  */
-public class ConditionDetailsFragment extends BaseFragment {
+public class ConditionDetailsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -35,16 +47,14 @@ public class ConditionDetailsFragment extends BaseFragment {
     // ------------------------------------------------------------------------
 
     private static final String KEY_CONDITION_ID = "CONDITION_ID";
-    private static final String KEY_CONDITION_TYPE = "CONDITION_TYPE";
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
 
-    public static ConditionDetailsFragment newInstance(long conditionID, int conditionType) {
+    public static ConditionDetailsFragment newInstance(long conditionID) {
         Bundle args = new Bundle();
 
-        args.putInt(KEY_CONDITION_TYPE, conditionType);
         if (conditionID != -1) {
             args.putLong(KEY_CONDITION_ID, conditionID);
         }
@@ -52,10 +62,6 @@ public class ConditionDetailsFragment extends BaseFragment {
         ConditionDetailsFragment fragment = new ConditionDetailsFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public static ConditionDetailsFragment newInstance(int conditionType) {
-        return newInstance(-1, conditionType);
     }
 
     // ------------------------------------------------------------------------
@@ -66,6 +72,9 @@ public class ConditionDetailsFragment extends BaseFragment {
     @Bind(R.id.condition_name)
     public EditText mConditionName;
 
+    @Bind(R.id.spinner_select_condition)
+    public Spinner mConditionTypeSpinner;
+
     @Bind(R.id.condition_plugin_fragment_container)
     public FrameLayout mConditionPluginFragmentContainer;
 
@@ -73,9 +82,13 @@ public class ConditionDetailsFragment extends BaseFragment {
     public ConditionManager mConditionManager;
 
     @Inject
+    public ConditionPluginManager mConditionPluginManager;
+
+    @Inject
     public NavigationManager mNavigationManager;
 
     private RuleCondition mRuleCondition;
+    private Long mConditionId;
     private ConditionPluginFragment mConditionPluginFragment;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -95,22 +108,17 @@ public class ConditionDetailsFragment extends BaseFragment {
         DaggerManager.component().inject(this);
 
         // get out the condition id or type
-        long conditionId = getArguments().containsKey(KEY_CONDITION_ID) ? (long) getArguments().get(KEY_CONDITION_ID) : -1;
-        int conditionType = getArguments().containsKey(KEY_CONDITION_TYPE) ? (int) getArguments().get(KEY_CONDITION_TYPE) : -1;
+        mConditionId = getArguments().containsKey(KEY_CONDITION_ID) ? (long) getArguments().get(KEY_CONDITION_ID) : -1;
 
         // Get the condition if we have a valid id
-        if (conditionId != -1) {
-            mRuleCondition = mConditionManager.loadCondition(conditionId);
+        if (mConditionId != -1) {
+            mRuleCondition = mConditionManager.loadCondition(mConditionId);
             mRuleCondition.build();
         }
 
         if (mRuleCondition == null) {
             mRuleCondition = new RuleCondition();
         }
-
-        // Load the plugin fragment based on the condition type
-        mConditionPluginFragment = ConditionPluginFragmentFactory.create(conditionType);
-        mConditionPluginFragment.init(mRuleCondition);
 
     }
 
@@ -128,28 +136,122 @@ public class ConditionDetailsFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // add the fragment to the container.
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_plugin_fragment_container, mConditionPluginFragment).commit();
+        initActionBar(true, getString(R.string.my_conditions));
 
-        // Initialize with the name of the condition
-        mConditionName.setText(mRuleCondition.getConditionName());
+        Collection<ConditionPlugin> plugins = mConditionPluginManager.getPlugins();
+        List<CharSequence> pluginsName = new ArrayList<>();
+
+        // only add if adding a new condition
+        if (mConditionId == -1){
+            pluginsName.add(getString(R.string.select_a_condition));
+        }
+
+        // fills the drop down list with the plugins
+        Observable.from(plugins)
+                        .map(plugin -> plugin.getClass().getSimpleName())
+                        .subscribe(name -> pluginsName.add(name));
+
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, pluginsName);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mConditionTypeSpinner.setAdapter(adapter);
+        mConditionTypeSpinner.setOnItemSelectedListener(this);
+
+        // In edit mode: init the name field and the select the corresponding item in spinner
+        int conditionType = mRuleCondition.getType();
+        if(mConditionId != -1){
+            mConditionName.setText(mRuleCondition.getConditionName());
+
+            int selected = mConditionPluginManager.getPositionInMap(conditionType);
+            mConditionTypeSpinner.setSelection(selected);
+        }
+
+        inflateLayout(conditionType);
+
     }
 
+    /**
+     * Clicked on Save button
+     *
+     */
     @OnClick(R.id.button_save)
-    public void save() {
+    public void saveNewCondition(){
+        if(mConditionId == -1 && mConditionTypeSpinner.getSelectedItemPosition() == 0) {
+            // TODO: notify the user that must select an condition type
+            return;
+        }
+        String name = mConditionName.getText().toString();
+        mRuleCondition.setConditionName(name);
         mConditionPluginFragment.saveChanges();
-        mRuleCondition.setConditionName(mConditionName.getText().toString());
         mConditionManager.saveCondition(mRuleCondition);
-        mNavigationManager.navigateBack(getActivity());
+
+        goBack();
     }
 
+    /**
+     * Clicked on Cancel button
+     *
+     */
     @OnClick(R.id.button_cancel)
-    public void cancel() {
+    public void cancelNewCondition(){
+        goBack();
+    }
+
+    /**
+     * Hides the keyboard, and navigates back
+     *
+     */
+    private void goBack(){
+        // hide the keyboard
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
         mNavigationManager.navigateBack(getActivity());
     }
 
+    /**
+     * This method will be called when the selected item changed in the spinner
+     *
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // in edit mode doesn't exists the first row (Select a condition...)
+        if(mConditionId == -1) {
+            position--;
+        }
 
+        if (position >= 0) {
+            int conditionType = mConditionPluginManager.getTypeByPosition(position);
 
+            inflateLayout(conditionType);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    /**
+     * Initializes the ConditionPluginFragment with the selected type, and inflates the corresponding layout
+     *
+     * @param conditionType
+     */
+    private void inflateLayout(int conditionType){
+        mConditionPluginFragment = ConditionPluginFragmentFactory.create(conditionType);
+        mRuleCondition.setType(conditionType);
+        mConditionPluginFragment.init(mRuleCondition);
+
+        // add the fragment to the container.
+        getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.condition_plugin_fragment_container, mConditionPluginFragment)
+                        .commit();
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

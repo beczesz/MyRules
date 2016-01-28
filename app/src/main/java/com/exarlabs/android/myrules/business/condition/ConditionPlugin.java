@@ -33,13 +33,15 @@ public abstract class ConditionPlugin {
     // ------------------------------------------------------------------------
     // List of properties
     private List<RuleConditionProperty> mProperties;
+    private int mPluginType;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public ConditionPlugin() {
+    public ConditionPlugin(int pluginType) {
         mProperties = new ArrayList<>();
+        mPluginType = pluginType;
     }
 
 
@@ -138,5 +140,9 @@ public abstract class ConditionPlugin {
      */
     public List<RuleConditionProperty> getProperties() {
         return mProperties;
+    }
+
+    public int getPluginType() {
+        return mPluginType;
     }
 }

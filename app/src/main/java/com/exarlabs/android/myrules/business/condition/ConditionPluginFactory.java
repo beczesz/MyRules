@@ -35,23 +35,23 @@ public class ConditionPluginFactory {
         switch (pluginType) {
             default:
             case Condition.Type.DEBUG_ALWAYS_TRUE:
-                return new AlwaysTrueConditionPlugin();
+                return new AlwaysTrueConditionPlugin(pluginType);
 
             case Condition.Type.DEBUG_ALWAYS_FALSE:
-                return new AlwaysFalseConditionPlugin();
+                return new AlwaysFalseConditionPlugin(pluginType);
 
             case Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL:
-                return new IsNumberEqualConditionPlugin();
+                return new IsNumberEqualConditionPlugin(pluginType);
 
             case Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL:
-                return new IsNumberInIntervalConditionPlugin();
+                return new IsNumberInIntervalConditionPlugin(pluginType);
 
             case Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME:
-                return new IsNumberPrimeConditionPlugin();
+                return new IsNumberPrimeConditionPlugin(pluginType);
 
             // Contacts
             case Condition.Type.CONTACT_IS_IN_GROUP:
-                return new ContactIsInGroupConditionPlugin();
+                return new ContactIsInGroupConditionPlugin(pluginType);
         }
     }
 

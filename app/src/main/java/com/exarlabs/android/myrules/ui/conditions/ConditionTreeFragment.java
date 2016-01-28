@@ -174,7 +174,7 @@ public class ConditionTreeFragment extends BaseFragment {
 
             // setup the link to the condition editor
             viewHolder.mCardBody.setOnClickListener(
-                            v -> mNavigationManager.startConditionsDetails(childRuleCondition.getId(), childRuleCondition.getType()));
+                            v -> mNavigationManager.startConditionsDetails(childRuleCondition.getId()));
 
             // add the current card
             mConditionsContainer.addDragView(card, viewHolder.mDragHandle);

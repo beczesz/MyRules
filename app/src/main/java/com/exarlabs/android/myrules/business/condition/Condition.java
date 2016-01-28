@@ -86,6 +86,23 @@ public abstract class Condition {
     }
 
     /**
+     * Rebuilds the action
+     */
+    public void rebuild(){
+        isBuilt = false;
+        mConditionPlugin = null;
+        build();
+    }
+
+    /**
+     * Regenerates the action plugin
+     */
+    public void reGenerateConditionPlugin(){
+        mConditionPlugin = null;
+        getConditionPlugin();
+    }
+
+    /**
      * Evaluates the condition and recursively all of the child-conditions based on the event.
      *
      * @param event

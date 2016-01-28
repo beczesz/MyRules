@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.ui.actions;
+package com.exarlabs.android.myrules.ui.conditions;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.model.dao.RuleAction;
-import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
+import com.exarlabs.android.myrules.model.dao.RuleCondition;
+import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 import com.exarlabs.android.myrules.ui.R;
 import com.github.aakira.expandablelayout.ExpandableLayout;
 
@@ -21,17 +21,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * It's a special array adapter for list view items showing the actions
- * Created by atiyka on 2016.01.15..
+ * It's a special array adapter for list view items showing the conditions in the ConditionOverviewFragment
+ * Created by atiyka on 2016.01.28..
  */
-public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements View.OnClickListener {
+public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implements View.OnClickListener {
     // ------------------------------------------------------------------------
     // STATIC CLASSES
     // ------------------------------------------------------------------------
 
-    static class ActionHolder
+    static class ConditionViewHolder
     {
-        public ActionHolder(View view) {
+        public ConditionViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
@@ -41,8 +41,8 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         @Bind(R.id.expandable_layout)
         public ExpandableLayout expandableLayout;
 
-        @Bind(R.id.button_edit_action)
-        public Button editAction;
+        @Bind(R.id.button_edit_condition)
+        public Button editCondition;
 
         @Bind(R.id.item_details)
         public TextView itemDetails;
@@ -67,10 +67,10 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private OnActionEditListener mActionEditListener;
+    private OnConditionEditListener mConditionEditListener;
 
     private Context mContext;
-    private Collection<? extends RuleAction> mRuleActions;
+    private Collection<? extends RuleCondition> mRuleConditions;
 
 
     // ------------------------------------------------------------------------
@@ -80,8 +80,8 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public ActionsArrayAdapter(Context context) {
-        super(context, R.layout.actions_list_view_item);
+    public ConditionsArrayAdapter(Context context) {
+        super(context, R.layout.conditions_list_view_item);
         mContext = context;
     }
 
@@ -89,8 +89,8 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
     // METHODS
     // ------------------------------------------------------------------------
 
-    public void setOnActionEditListener(OnActionEditListener listener){
-        mActionEditListener = listener;
+    public void setOnConditionEditListener(OnConditionEditListener listener){
+        mConditionEditListener = listener;
     }
 
     @Override
@@ -100,49 +100,51 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            root = inflater.inflate(R.layout.actions_list_view_item, parent, false);
+            root = inflater.inflate(R.layout.conditions_list_view_item, parent, false);
 
-            root.setTag(new ActionHolder(root));
+            root.setTag(new ConditionViewHolder(root));
         }
         else
         {
             root = convertView;
         }
 
-        ActionHolder holder = (ActionHolder) root.getTag();
+        ConditionViewHolder holder = (ConditionViewHolder) root.getTag();
 
-        RuleAction action = (RuleAction) mRuleActions.toArray()[position];
+        RuleCondition condition = (RuleCondition) mRuleConditions.toArray()[position];
 
-        holder.headerText.setText(action.getActionName());
+        holder.headerText.setText(condition.getConditionName());
         // make the list items expandable
         ((View) holder.headerText.getParent().getParent()).setOnClickListener(this);
 
         // TODO: T.B.D. - details, text
-        String details = "Type No.: " + action.getType() + "\nClass: " + action.getActionPlugin().getClass().getSimpleName();
-        List<RuleActionProperty> properties = action.getProperties();
-        for (RuleActionProperty property : properties) {
+        String details = "Type No.: " + condition.getType() + "\n" +
+                         "Class: " + condition.getConditionPlugin().getClass().getSimpleName();
+
+        List<RuleConditionProperty> properties = condition.getProperties();
+        for (RuleConditionProperty property : properties) {
             details += "\n" + property.getKey() + " = " + property.getValue();
         }
 
         holder.itemDetails.setText(details);
 
-        holder.editAction.setTag(action.getId());
-        holder.editAction.setOnClickListener(this);
+        holder.editCondition.setTag(condition.getId());
+        holder.editCondition.setOnClickListener(this);
 
         return root;
     }
 
     @Override
-    public void addAll(Collection<? extends RuleAction> collection) {
+    public void addAll(Collection<? extends RuleCondition> collection) {
         super.addAll(collection);
-        mRuleActions = collection;
+        mRuleConditions = collection;
     }
 
     @Override
     public void onClick(View view) {
-        // clicked on a RelativeLayout -> expand the list item
+        // clicked on a RelativeLayout -> expand or collapse the list item
         if(view.getClass().equals(RelativeLayout.class)){
-            ActionHolder holder = new ActionHolder(view);
+            ConditionViewHolder holder = new ConditionViewHolder(view);
             if (holder.expandableLayout.isExpanded()) holder.expandableLayout.collapse();
             else holder.expandableLayout.expand();
 
@@ -150,8 +152,8 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         } else {
             Button button = (Button) view;
             Long id = (Long) button.getTag();
-            if(mActionEditListener != null)
-                mActionEditListener.onActionEdit(id);
+            if(mConditionEditListener != null)
+                mConditionEditListener.onConditionEdit(id);
         }
     }
 

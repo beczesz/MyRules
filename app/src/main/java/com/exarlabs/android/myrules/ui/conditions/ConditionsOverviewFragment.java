@@ -1,6 +1,5 @@
 package com.exarlabs.android.myrules.ui.conditions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,14 +24,12 @@ import com.software.shell.fab.ActionButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
-import rx.Observable;
 
 /**
  * Provides an overview to the user of all the conditions.
  * Created by becze on 11/25/2015.
  */
-public class ConditionsOverviewFragment extends BaseFragment {
+public class ConditionsOverviewFragment extends BaseFragment implements OnConditionEditListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -79,8 +75,8 @@ public class ConditionsOverviewFragment extends BaseFragment {
     @Inject
     public NavigationManager mNavigationManager;
 
-    private ArrayAdapter<String> mAdapter;
-    private List<RuleCondition> mRuleConditions;
+    private ConditionsArrayAdapter mAdapter;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -111,9 +107,10 @@ public class ConditionsOverviewFragment extends BaseFragment {
 
         initActionBar(true, getString(R.string.my_conditions));
 
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
-        mConditionsListView.setAdapter(mAdapter);
+        mAdapter = new ConditionsArrayAdapter(getContext());
+        mAdapter.setOnConditionEditListener(this);
 
+        mConditionsListView.setAdapter(mAdapter);
 
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());
@@ -122,7 +119,6 @@ public class ConditionsOverviewFragment extends BaseFragment {
 
         mAddConditionButton.playShowAnimation();
         updateUI();
-
     }
 
     /**
@@ -130,25 +126,23 @@ public class ConditionsOverviewFragment extends BaseFragment {
      */
     private void updateUI() {
         mAdapter.clear();
-        mRuleConditions = mConditionManager.loadAllConditions();
-        List<String> conditionNames = new ArrayList<>();
-        Observable.from(mRuleConditions)
-                        .map(condition -> condition.getConditionName())
-                        .subscribe(conditionName -> conditionNames.add(conditionName));
-
-        mAdapter.addAll(conditionNames);
+        List<RuleCondition> conditions = mConditionManager.loadAllConditions();
+        mAdapter.addAll(conditions);
         mAdapter.notifyDataSetChanged();
     }
 
-    @OnClick(R.id.fab_add_condition)
-    public void showAddConditionFragment(){
-        mNavigationManager.startAddConditionFragment();
+    @Override
+    public void onConditionEdit(Long conditionId) {
+        showConditionDetailsFragment(conditionId);
     }
 
-    @OnItemClick(R.id.listView_conditions)
-    public void onConditionClicked(int position) {
-        RuleCondition ruleCondition = mRuleConditions.get(position);
-        mNavigationManager.startConditionsDetails(ruleCondition.getId(), ruleCondition.getType());
+    @OnClick(R.id.fab_add_condition)
+    public void showConditionDetailsFragment(){
+        showConditionDetailsFragment((long) -1);
+    }
+
+    public void showConditionDetailsFragment(long id){
+        mNavigationManager.startConditionsDetails(id);
     }
 
     // ------------------------------------------------------------------------

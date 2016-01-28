@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.business.action;
+package com.exarlabs.android.myrules.business.condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,16 +7,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.exarlabs.android.myrules.business.action.plugins.FibonacciActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.AlwaysFalseConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.AlwaysTrueConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.math.IsNumberEqualConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.math.IsNumberInIntervalConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.math.IsNumberPrimeConditionPlugin;
 
 /**
  * The plugin manager keeps track of al the plugins written and their actual state.
  * Created by atiyka on 1/19/2016.
  */
-public class ActionPluginManager {
+public class ConditionPluginManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -34,21 +35,22 @@ public class ActionPluginManager {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private Map<Class<? extends ActionPlugin>, ActionPlugin> mPluginMap;
+    private Map<Class<? extends ConditionPlugin>, ConditionPlugin> mPluginMap;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
 
-    public ActionPluginManager() {
+    public ConditionPluginManager() {
         mPluginMap = new LinkedHashMap<>();
 
         // Add the plugins
-        mPluginMap.put(FibonacciActionPlugin.class,  ActionPluginFactory.create(Action.Type.ARITHMETRIC_ACTION_FIBONACCI));
-        mPluginMap.put(MultiplyActionPlugin.class,   ActionPluginFactory.create(Action.Type.ARITHMETRIC_ACTION_MULTIPLY));
-        mPluginMap.put(RejectCallActionPlugin.class, ActionPluginFactory.create(Action.Type.REJECT_CALL_ACTION));
-        mPluginMap.put(SendSmsActionPlugin.class,    ActionPluginFactory.create(Action.Type.SEND_SMS_ACTION));
+        mPluginMap.put(AlwaysTrueConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.DEBUG_ALWAYS_TRUE));
+        mPluginMap.put(AlwaysFalseConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.DEBUG_ALWAYS_FALSE));
+        mPluginMap.put(IsNumberEqualConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL));
+        mPluginMap.put(IsNumberInIntervalConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL));
+        mPluginMap.put(IsNumberPrimeConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME));
 
     }
 
@@ -63,7 +65,7 @@ public class ActionPluginManager {
     /**
      * @return the list of plugins
      */
-    public Collection<ActionPlugin> getPlugins() {
+    public Collection<ConditionPlugin> getPlugins() {
         return mPluginMap.values();
     }
 
@@ -73,7 +75,7 @@ public class ActionPluginManager {
      * @param key
      * @return
      */
-    public ActionPlugin get(Class<? extends ActionPlugin> key) {
+    public ConditionPlugin get(Class<? extends ConditionPlugin> key) {
         return mPluginMap.get(key);
     }
 
@@ -84,8 +86,8 @@ public class ActionPluginManager {
      * @return
      */
     public int getTypeByPosition(int position){
-        List<ActionPlugin> plugins = new ArrayList<>(mPluginMap.values());
-        return plugins.get(position).getType();
+        List<ConditionPlugin> plugins = new ArrayList<>(mPluginMap.values());
+        return plugins.get(position).getPluginType();
     }
 
     /**
@@ -95,7 +97,7 @@ public class ActionPluginManager {
      * @return
      */
     public int getPositionInMap(int type){
-        Class className = ActionPluginFactory.create(type).getClass();
+        Class className = ConditionPluginFactory.create(type).getClass();
         Iterator iterator = mPluginMap.keySet().iterator();
 
         int i = 0;

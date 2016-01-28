@@ -83,7 +83,7 @@ public abstract class Action implements GreenDaoEntity{
     }
 
     /**
-     * Builds the condition if it is not yet built.
+     * Builds the action if it is not yet built.
      */
     public void build() {
         if (!isBuilt) {
@@ -92,12 +92,18 @@ public abstract class Action implements GreenDaoEntity{
         }
     }
 
+    /**
+     * Rebuilds the action
+     */
     public void rebuild(){
         isBuilt = false;
         mActionPlugin = null;
         build();
     }
 
+    /**
+     * Regenerates the action plugin
+     */
     public void reGenerateActionPlugin(){
         mActionPlugin = null;
         getActionPlugin();

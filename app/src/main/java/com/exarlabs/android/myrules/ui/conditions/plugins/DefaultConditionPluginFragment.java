@@ -70,7 +70,7 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void init(RuleCondition condition) {
-
+        mCondition = condition;
     }
 
     @Override
@@ -80,6 +80,10 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void saveChanges() {
+        if(mCondition.getId() != null) {
+            mCondition.reGenerateConditionPlugin();
+        }
+
     }
 
 // ------------------------------------------------------------------------

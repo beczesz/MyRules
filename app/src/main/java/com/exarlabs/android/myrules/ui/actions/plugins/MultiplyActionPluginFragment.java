@@ -1,7 +1,5 @@
 package com.exarlabs.android.myrules.ui.actions.plugins;
 
-import javax.inject.Inject;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.exarlabs.android.myrules.business.action.ActionManager;
 import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
@@ -59,15 +56,9 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
     private RuleAction mAction;
     private MultiplyActionPlugin mMultiplyActionPlugin;
 
-    @Inject
-    public ActionManager mActionManager;
-
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public MultiplyActionPluginFragment(){
-        DaggerManager.component().inject(this);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS
@@ -111,7 +102,6 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
      */
     @Override
     protected void saveChanges() {
-
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
         if(mAction.getId() != null)
             mAction.reGenerateActionPlugin();
