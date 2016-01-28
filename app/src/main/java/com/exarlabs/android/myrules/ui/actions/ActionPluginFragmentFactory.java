@@ -3,6 +3,7 @@ package com.exarlabs.android.myrules.ui.actions;
 import com.exarlabs.android.myrules.business.action.Action;
 import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPlugin;
 
 /**
  * Factory pattern implementation for the condition plugin fragments.
@@ -35,6 +36,9 @@ public class ActionPluginFragmentFactory {
 
             case Action.Type.ARITHMETRIC_ACTION_MULTIPLY:
                 return MultiplyActionPluginFragment.newInstance();
+
+            case Action.Type.SEND_SMS_ACTION:
+                return SendSMSToGroupActionPlugin.newInstance();
 
         }
     }

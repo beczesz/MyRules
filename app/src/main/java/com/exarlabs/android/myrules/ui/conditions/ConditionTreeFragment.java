@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.ui.conditions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import android.content.Context;
@@ -158,9 +161,13 @@ public class ConditionTreeFragment extends BaseFragment {
 
         // TODO change it to a drag and drop list view
         for (RuleConditionTree child : mRuleConditionTree.getChildConditions()) {
+
+            // Inflate the card and add the child as a tag
+            View card = inflater.inflate(R.layout.card_layout, null);
+            card.setTag(child);
+
             // get the child condition
             RuleCondition childRuleCondition = child.getRuleCondition();
-            View card = inflater.inflate(R.layout.card_layout, null);
             ConditionCardViewHolder viewHolder = new ConditionCardViewHolder(card);
             viewHolder.mConditionTitle.setText(childRuleCondition.getConditionName());
             viewHolder.mConditionDescription.setText(childRuleCondition.getConditionPlugin().toString());
@@ -175,6 +182,22 @@ public class ConditionTreeFragment extends BaseFragment {
 
 
         mDefaultMessageTextView.setVisibility(mConditionsContainer.getChildCount() > 0 ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     * @return the current state of the condition tree.
+     */
+    public RuleConditionTree.Builder generateCurrentConditionTree() {
+        List<RuleCondition> conditions = new ArrayList<>();
+
+        for (int i = 0; i < mConditionsContainer.getChildCount(); i++) {
+            View conditionCard = mConditionsContainer.getChildAt(i);
+            conditions.add(((RuleConditionTree) conditionCard.getTag()).getRuleCondition());
+        }
+
+        RuleConditionTree.Builder builder = new ConditionTree.Builder();
+        builder.add(mConditionManager.getDefaultCondition(), conditions, mSelectedOperator);
+        return builder;
     }
 
     private void updateOperator() {

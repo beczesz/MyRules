@@ -2,8 +2,9 @@ package com.exarlabs.android.myrules.ui.conditions;
 
 import com.exarlabs.android.myrules.business.condition.Condition;
 import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
-import com.exarlabs.android.myrules.ui.conditions.plugins.EqualConditionPluginFragment;
-import com.exarlabs.android.myrules.ui.conditions.plugins.IntervalConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
 
 /**
  * Factory pattern implementation for the condition plugin fragments.
@@ -39,6 +40,10 @@ public class ConditionPluginFragmentFactory {
 
             case Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL:
                 return EqualConditionPluginFragment.newInstance();
+
+            // Contacts
+            case Condition.Type.CONTACT_IS_IN_GROUP:
+                return ContactIsInGroupConditionPluginFragment.newInstance();
 
         }
     }

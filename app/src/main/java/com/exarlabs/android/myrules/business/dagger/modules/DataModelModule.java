@@ -1,8 +1,12 @@
 package com.exarlabs.android.myrules.business.dagger.modules;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import android.content.Context;
+
 import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.business.provider.PhoneContactManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,6 +28,12 @@ public class DataModelModule {
         return new DaoManager();
     }
 
+    @Inject
+    @Provides
+    @Singleton
+    protected PhoneContactManager providePhoneContactManager(Context context) {
+        return new PhoneContactManager(context);
+    }
 
 
 }

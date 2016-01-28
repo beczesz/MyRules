@@ -26,9 +26,15 @@ public abstract class Condition {
         // Debug condition types
         public static final int DEBUG_ALWAYS_TRUE = 100;
         public static final int DEBUG_ALWAYS_FALSE = 101;
+
+        // Arithmetric conditions
         public static final int ARITHMETRIC_IS_NUMBER_EQUAL = 201;
         public static final int ARITHMETRIC_IS_NUMBER_IN_INTERVAL = 202;
         public static final int ARITHMETRIC_IS_NUMBER_PRIME = 203;
+
+
+        // Contacts conditions
+        public static final int CONTACT_IS_IN_GROUP = 301;
     }
 
 

@@ -15,17 +15,22 @@ import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPlugin;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
-import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsAddConditionFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
+import com.exarlabs.android.myrules.ui.util.contact.ContactsSectorFragment;
 
 /**
  * Here are listed all the loations where injection is needed.
@@ -72,8 +77,6 @@ public interface DaggerComponentGraph {
     
     void inject(CallEventHandlerPlugin callEventHandlerPlugin);
 
-    void inject(ConditionPluginFragment conditionPluginFragment);
-
     void inject(RuleDetailsFragment ruleDetailsFragment);
 
     void inject(ConditionTreeFragment conditionTreeFragment);
@@ -85,4 +88,16 @@ public interface DaggerComponentGraph {
     void inject(DefaultActionPluginFragment defaultActionPluginFragment);
 
     void inject(MultiplyActionPluginFragment multiplyActionPluginFragment);
+
+    void inject(ContactIsInGroupConditionPluginFragment contactIsInGroupConditionPluginFragment);
+
+    void inject(DefaultConditionPluginFragment defaultConditionPluginFragment);
+
+    void inject(EqualConditionPluginFragment equalConditionPluginFragment);
+
+    void inject(IntervalConditionPluginFragment intervalConditionPluginFragment);
+
+    void inject(SendSMSToGroupActionPlugin sendSMSToGroupActionPlugin);
+
+    void inject(ContactsSectorFragment contactsSectorFragment);
 }

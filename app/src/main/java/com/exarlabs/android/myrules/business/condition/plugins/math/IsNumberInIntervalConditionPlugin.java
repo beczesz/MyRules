@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.business.condition.plugins;
+package com.exarlabs.android.myrules.business.condition.plugins.math;
 
 import java.util.List;
 
