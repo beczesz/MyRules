@@ -17,6 +17,7 @@ import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
+import com.exarlabs.android.myrules.ui.util.contact.ContactsSectorFragment;
 
 /**
  * Helper class to ease the navigation between screens.
@@ -184,6 +185,12 @@ public class NavigationManager {
 
     public void startActionDetails(Long id) {
         Fragment fragment = ActionDetailsFragment.newInstance(id);
+        open(fragment);
+    }
+
+    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener) {
+        ContactsSectorFragment fragment = ContactsSectorFragment.newInstance();
+        fragment.setContactsSelectorListener(listener);
         open(fragment);
     }
 

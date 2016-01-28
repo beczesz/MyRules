@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.ui.conditions.plugins;
+package com.exarlabs.android.myrules.ui.conditions.plugins.math;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.exarlabs.android.myrules.business.condition.plugins.IsNumberEqualConditionPlugin;
+import com.exarlabs.android.myrules.business.condition.plugins.math.IsNumberInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
@@ -20,7 +20,7 @@ import butterknife.Bind;
  * Fragment which let's the user to configure an IntervalConditionPlugin
  * Created by becze on 1/21/2016.
  */
-public class EqualConditionPluginFragment extends ConditionPluginFragment {
+public class IntervalConditionPluginFragment extends ConditionPluginFragment {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -39,8 +39,8 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
     /**
      * @return newInstance of IntervalConditionPluginFragment
      */
-    public static EqualConditionPluginFragment newInstance() {
-        return new EqualConditionPluginFragment();
+    public static IntervalConditionPluginFragment newInstance() {
+        return new IntervalConditionPluginFragment();
     }
 
     // ------------------------------------------------------------------------
@@ -48,11 +48,14 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    @Bind(R.id.number_equal)
-    public EditText mNumberEqual;
+    @Bind(R.id.interval_start)
+    public EditText mIntervalStart;
+
+    @Bind(R.id.interval_end)
+    public EditText mIntervalEnd;
 
     private RuleCondition mCondition;
-    private IsNumberEqualConditionPlugin mPlugin;
+    private IsNumberInIntervalConditionPlugin mPlugin;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -71,7 +74,7 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.number_equal_plugin_layout, null);
+            mRootView = inflater.inflate(R.layout.number_interval_plugin_layout, null);
         }
         return mRootView;
     }
@@ -85,21 +88,23 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
         /*
          * Check if the condition has the right mPlugin type
          */
-        if (condition.getConditionPlugin() instanceof IsNumberEqualConditionPlugin) {
-            mPlugin = (IsNumberEqualConditionPlugin) condition.getConditionPlugin();
+        if (condition.getConditionPlugin() instanceof IsNumberInIntervalConditionPlugin) {
+            mPlugin = (IsNumberInIntervalConditionPlugin) condition.getConditionPlugin();
         }
     }
 
     @Override
     protected void refreshUI() {
-        mNumberEqual.setText((int) mPlugin.getValue() + "");
+        mIntervalStart.setText((int) mPlugin.getMin() + "");
+        mIntervalEnd.setText((int) mPlugin.getMax() + "");
     }
 
     @Override
     protected void saveChanges() {
-        if (mCondition != null && mCondition.getConditionPlugin() instanceof IsNumberEqualConditionPlugin) {
-            IsNumberEqualConditionPlugin plugin = (IsNumberEqualConditionPlugin) mCondition.getConditionPlugin();
-            plugin.setValue(Double.parseDouble(mNumberEqual.getText().toString()));
+        if (mCondition != null && mCondition.getConditionPlugin() instanceof IsNumberInIntervalConditionPlugin) {
+            IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) mCondition.getConditionPlugin();
+            plugin.setMin(Double.parseDouble(mIntervalStart.getText().toString()));
+            plugin.setMax(Double.parseDouble(mIntervalEnd.getText().toString()));
         }
     }
 
