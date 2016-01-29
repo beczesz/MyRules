@@ -157,6 +157,18 @@ public class NavigationManager {
         open(fragment);
     }
 
+    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener) {
+        ContactsSectorFragment fragment = ContactsSectorFragment.newInstance();
+        fragment.setContactsSelectorListener(listener);
+        open(fragment);
+    }
+
+    public void startConditionSelectorFragment(ConditionSectorFragment.ConditionSelectorListener listener) {
+        ContactsSectorFragment fragment = ConditionSectorFragment.newInstance();
+        fragment.setConditionSelectorListener(listener);
+        open(fragment);
+    }
+
 
     // MY CONDITIONS
     public void startConditionsOverview() {
@@ -178,12 +190,6 @@ public class NavigationManager {
 
     public void startActionDetails(Long id) {
         Fragment fragment = ActionDetailsFragment.newInstance(id);
-        open(fragment);
-    }
-
-    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener) {
-        ContactsSectorFragment fragment = ContactsSectorFragment.newInstance();
-        fragment.setContactsSelectorListener(listener);
         open(fragment);
     }
 

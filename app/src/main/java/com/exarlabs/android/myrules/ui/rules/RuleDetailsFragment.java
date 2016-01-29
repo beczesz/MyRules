@@ -192,7 +192,16 @@ public class RuleDetailsFragment extends BaseFragment {
 
     @OnClick(R.id.fab_add_condition)
     public void showAddConditionFragment() {
-        Toast.makeText(getActivity(), "Select condition fragment", Toast.LENGTH_SHORT).show();
+
+        mConditionTreeFragment.addConditionToContainer(mConditionManager.loadCondition((long)1));
+        mNavigationManager.startConditionsSelectorFragment(conditions -> {
+            for (: conditions) {
+
+            }
+
+            Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+        });
+
     }
 
     @OnClick(R.id.fab_add_action)
