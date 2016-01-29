@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.ui.R;
 
 import butterknife.Bind;

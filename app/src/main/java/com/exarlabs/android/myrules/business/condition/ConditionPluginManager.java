@@ -7,11 +7,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.exarlabs.android.myrules.business.condition.plugins.AlwaysFalseConditionPlugin;
-import com.exarlabs.android.myrules.business.condition.plugins.AlwaysTrueConditionPlugin;
-import com.exarlabs.android.myrules.business.condition.plugins.math.IsNumberEqualConditionPlugin;
-import com.exarlabs.android.myrules.business.condition.plugins.math.IsNumberInIntervalConditionPlugin;
-import com.exarlabs.android.myrules.business.condition.plugins.math.IsNumberPrimeConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.Condition;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginFactory;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.AlwaysFalseConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.AlwaysTrueConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberPrimeConditionPlugin;
 
 /**
  * The plugin manager keeps track of al the plugins written and their actual state.

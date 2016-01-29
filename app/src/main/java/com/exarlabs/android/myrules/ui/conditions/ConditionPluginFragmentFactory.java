@@ -1,6 +1,6 @@
 package com.exarlabs.android.myrules.ui.conditions;
 
-import com.exarlabs.android.myrules.business.condition.Condition;
+import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;

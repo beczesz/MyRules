@@ -3,13 +3,13 @@ package com.exarlabs.android.myrules.business.dagger.modules;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.exarlabs.android.myrules.business.action.ActionManager;
-import com.exarlabs.android.myrules.business.action.ActionPluginManager;
-import com.exarlabs.android.myrules.business.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionPluginManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.business.event.EventPluginManager;
-import com.exarlabs.android.myrules.business.event.RuleEventManager;
+import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
+import com.exarlabs.android.myrules.business.rule.event.RuleEventManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 
 import dagger.Module;

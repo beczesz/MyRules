@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.exarlabs.android.myrules.business.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.ActionManager;
+import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.R;

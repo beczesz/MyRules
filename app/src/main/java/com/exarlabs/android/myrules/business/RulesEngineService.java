@@ -15,10 +15,10 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.event.Event;
-import com.exarlabs.android.myrules.business.event.RuleEventManager;
 import com.exarlabs.android.myrules.business.rule.Rule;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
+import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.business.rule.event.RuleEventManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
@@ -26,7 +26,6 @@ import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.R;
 
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -167,29 +166,11 @@ public class RulesEngineService extends Service {
                         })
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(getRuleResolveSubscriber());
+                        .doOnError(throwable -> throwable.printStackTrace())
+                        .subscribe(eventRulePair -> executeRule(eventRulePair.first, eventRulePair.second));
         //@formatter:on
     }
 
-
-    private Observer<? super Pair<Event, RuleRecord>> getRuleResolveSubscriber() {
-        return new Observer<Pair<Event, RuleRecord>>() {
-            @Override
-            public void onCompleted() {
-                // This should be never called.
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onNext(Pair<Event, RuleRecord> eventRulePair) {
-                executeRule(eventRulePair.first, eventRulePair.second);
-            }
-        };
-    }
 
     /**
      * Exectutes the rules ruleRecord

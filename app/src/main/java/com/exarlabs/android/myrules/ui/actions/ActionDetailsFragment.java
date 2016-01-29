@@ -19,9 +19,9 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.exarlabs.android.myrules.business.action.ActionManager;
-import com.exarlabs.android.myrules.business.action.ActionPlugin;
-import com.exarlabs.android.myrules.business.action.ActionPluginManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.ActionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.BaseFragment;

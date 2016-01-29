@@ -1,6 +1,6 @@
 package com.exarlabs.android.myrules.ui.actions;
 
-import com.exarlabs.android.myrules.business.action.Action;
+import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPlugin;

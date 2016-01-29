@@ -19,10 +19,10 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.exarlabs.android.myrules.business.condition.ConditionManager;
-import com.exarlabs.android.myrules.business.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;

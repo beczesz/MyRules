@@ -1,6 +1,6 @@
 package com.exarlabs.android.myrules.ui.debug;
 
-import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 
 /**
  * Is the listener for the button clicks on trigger event button

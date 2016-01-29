@@ -18,12 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.exarlabs.android.myrules.business.action.ActionCardsFragment;
-import com.exarlabs.android.myrules.business.condition.ConditionManager;
-import com.exarlabs.android.myrules.business.condition.ConditionTree;
+import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.event.EventHandlerPlugin;
-import com.exarlabs.android.myrules.business.event.EventPluginManager;
+import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;

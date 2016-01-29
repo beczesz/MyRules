@@ -2,12 +2,12 @@ package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
 import com.exarlabs.android.myrules.business.RulesEngineService;
-import com.exarlabs.android.myrules.business.action.ActionCardsFragment;
-import com.exarlabs.android.myrules.business.action.plugins.RejectCallActionPlugin;
-import com.exarlabs.android.myrules.business.action.plugins.SendSmsActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
+import com.exarlabs.android.myrules.business.rule.action.plugins.RejectCallActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
-import com.exarlabs.android.myrules.business.event.plugins.call.CallEventHandlerPlugin;
-import com.exarlabs.android.myrules.business.event.plugins.sms.SmsEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.event.plugins.call.CallEventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.event.plugins.sms.SmsEventHandlerPlugin;
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;

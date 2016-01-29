@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.exarlabs.android.myrules.business.action.ActionManager;
-import com.exarlabs.android.myrules.business.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
