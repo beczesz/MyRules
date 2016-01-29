@@ -9,6 +9,7 @@ import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
@@ -163,9 +164,9 @@ public class NavigationManager {
         open(fragment);
     }
 
-    public void startConditionSelectorFragment(ConditionSectorFragment.ConditionSelectorListener listener) {
-        ContactsSectorFragment fragment = ConditionSectorFragment.newInstance();
-        fragment.setConditionSelectorListener(listener);
+    public void startConditionsSelectorFragment(ConditionsSectorFragment.ConditionsSelectorListener listener) {
+        ConditionsSectorFragment fragment = ConditionsSectorFragment.newInstance();
+        fragment.setConditionsSelectorListener(listener);
         open(fragment);
     }
 

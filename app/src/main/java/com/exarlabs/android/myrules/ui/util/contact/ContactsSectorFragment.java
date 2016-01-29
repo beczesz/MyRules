@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.exarlabs.android.myrules.business.MyRulesConstants;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.provider.PhoneContactManager;
 import com.exarlabs.android.myrules.model.contact.ContactRow;
@@ -32,17 +33,16 @@ import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Lets the uer to select some contacts. When the user is finished it notifies back the
+ * Lets the user to select some contacts. When the user is finished it notifies back the
  * originator fragment.
+ *
  */
 public class ContactsSectorFragment extends BaseFragment {
     // ------------------------------------------------------------------------
@@ -206,24 +206,9 @@ public class ContactsSectorFragment extends BaseFragment {
 
         //@formatter:off
         RxTextView.textChangeEvents(mContactsFilterEditText)
-                        .debounce(1000, TimeUnit.MILLISECONDS)
+                        .debounce(MyRulesConstants.DELAY_BEFORE_PROCESSING, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<TextViewTextChangeEvent>() {
-
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
-                                 mContactAdapter.getFilter().filter(textViewTextChangeEvent.text().toString());
-                            }});
+                        .subscribe(textChangedEvent -> mContactAdapter.getFilter().filter(textChangedEvent.text().toString()));
         //@formatter:on
 
     }

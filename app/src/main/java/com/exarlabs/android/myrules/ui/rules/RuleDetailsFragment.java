@@ -18,13 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
-import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
-import com.exarlabs.android.myrules.business.rule.RuleManager;
+import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
@@ -139,13 +140,17 @@ public class RuleDetailsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Load the condition display fragment
-        mConditionTreeFragment = ConditionTreeFragment.newInstance(mRuleRecord.getRuleConditionTreeId());
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
+        if(mConditionTreeFragment == null) {
+            mConditionTreeFragment = ConditionTreeFragment.newInstance(mRuleRecord.getRuleConditionTreeId());
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
+        }
 
         // Load the condition display fragment
-        mActionCardsFragment = ActionCardsFragment.newInstance();
-        mActionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, mActionCardsFragment).commit();
+        if(mActionCardsFragment == null) {
+            mActionCardsFragment = ActionCardsFragment.newInstance();
+            mActionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, mActionCardsFragment).commit();
+        }
 
     }
 
@@ -192,16 +197,11 @@ public class RuleDetailsFragment extends BaseFragment {
 
     @OnClick(R.id.fab_add_condition)
     public void showAddConditionFragment() {
-
-        mConditionTreeFragment.addConditionToContainer(mConditionManager.loadCondition((long)1));
         mNavigationManager.startConditionsSelectorFragment(conditions -> {
-            for (: conditions) {
-
+            for (RuleCondition condition : conditions) {
+                mConditionTreeFragment.addConditionToContainer(condition);
             }
-
-            Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
         });
-
     }
 
     @OnClick(R.id.fab_add_action)

@@ -46,4 +46,6 @@
     <string name="lbl_complete_selection">Complete selection</string>
     <string name="select_a_condition">Select a Condition...</string>
     <string name="lbl_edit_item">{faw-pencil}</string>
+    <string name="lbl_search_condition">Search a condition...</string>
+    <string name="condition_selected">Selected conditions:</string>
 </resources>
