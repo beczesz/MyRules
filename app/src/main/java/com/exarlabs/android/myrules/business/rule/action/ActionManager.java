@@ -145,6 +145,13 @@ public class ActionManager {
      * @param ruleActionLinks
      */
     public void saveActionLinks(RuleRecord ruleRecord, List<RuleActionLink> ruleActionLinks) {
+        // Deletes first the old action links
+        mRuleActionLinkDao.queryBuilder()
+                        .where(RuleActionLinkDao.Properties.RuleRecordId.eq(ruleRecord.getId()))
+                        .buildDelete()
+                        .executeDeleteWithoutDetachingEntities();
+
+        // And saves the new action links
         for (RuleActionLink ruleAction : ruleActionLinks) {
             saveActionLink(ruleRecord, ruleAction);
         }

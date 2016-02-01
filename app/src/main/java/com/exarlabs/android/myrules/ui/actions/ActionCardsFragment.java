@@ -1,5 +1,6 @@
-package com.exarlabs.android.myrules.business.rule.action;
+package com.exarlabs.android.myrules.ui.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,20 +11,23 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.jmedeisis.draglinearlayout.DragLinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Displays one level of hierarchy in a condition tree.
+ * Displays the rule's actions
+ *
  * Created by becze on 1/22/2016.
  */
 public class ActionCardsFragment extends BaseFragment {
@@ -45,6 +49,12 @@ public class ActionCardsFragment extends BaseFragment {
 
         @Bind(R.id.card_description)
         public TextView mDescription;
+
+        @Bind(R.id.card_body)
+        public LinearLayout mCardBody;
+
+        @Bind(R.id.delete_card)
+        public TextView mDeleteCard;
     }
 
     // ------------------------------------------------------------------------
@@ -80,8 +90,12 @@ public class ActionCardsFragment extends BaseFragment {
     @Inject
     public ConditionManager mConditionManager;
 
-    private List<RuleAction> mRuleActions;
+    @Inject
+    public NavigationManager mNavigationManager;
 
+
+    private List<RuleAction> mRuleActions;
+    private LayoutInflater mInflater;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -95,6 +109,8 @@ public class ActionCardsFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
+        mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     @Nullable
@@ -104,6 +120,12 @@ public class ActionCardsFragment extends BaseFragment {
             mRootView = inflater.inflate(R.layout.card_group_layout, null);
         }
         return mRootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mDefaultMessageTextView.setText(R.string.lbl_no_action_added);
     }
 
     @Override
@@ -132,25 +154,48 @@ public class ActionCardsFragment extends BaseFragment {
             return;
         }
 
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // Remove all the cards
         mActionsContainer.removeAllViews();
 
-        // TODO change it to a drag and drop list view
         for (RuleAction child : mRuleActions) {
-            // get the child condition
-            View card = inflater.inflate(R.layout.card_layout, null);
-            ActionCardViewHolder viewHolder = new ActionCardViewHolder(card);
-            viewHolder.mTitle.setText(child.getActionName());
-            viewHolder.mDescription.setText(child.getActionPlugin().toString());
-
-            // add the current card
-            mActionsContainer.addDragView(card, viewHolder.mDragHandle);
+            addActionToTheContainer(child);
         }
+    }
+
+    public void addActionToTheContainer(RuleAction ruleAction){
+        // create the card view
+        View card = mInflater.inflate(R.layout.card_layout, null);
+        card.setTag(ruleAction);
+
+        ActionCardViewHolder viewHolder = new ActionCardViewHolder(card);
+        viewHolder.mTitle.setText(ruleAction.getActionName());
+        viewHolder.mDescription.setText(ruleAction.getActionPlugin().toString());
+
+        // setup the link to the action editor
+        viewHolder.mCardBody.setOnClickListener(v -> mNavigationManager.startActionDetails(ruleAction.getId()));
+        viewHolder.mDeleteCard.setOnClickListener(l -> mActionsContainer.removeDragView(card));
+
+        // add the current card
+        mActionsContainer.addDragView(card, viewHolder.mDragHandle);
 
         mDefaultMessageTextView.setVisibility(mActionsContainer.getChildCount() > 0 ? View.GONE : View.VISIBLE);
     }
+
+    /**
+     * @return the current state of the action list
+     */
+    public List<RuleAction> getCurrentActionsList() {
+        List<RuleAction> actions = new ArrayList<>();
+
+        for (int i = 0; i < mActionsContainer.getChildCount(); i++) {
+            View actionCard = mActionsContainer.getChildAt(i);
+            actions.add((RuleAction) actionCard.getTag());
+        }
+
+        return actions;
+    }
+
 
     private void updateOperator() {
         // set the background color

@@ -2,7 +2,7 @@ package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
 import com.exarlabs.android.myrules.business.RulesEngineService;
-import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.action.plugins.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
@@ -13,6 +13,7 @@ import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionsSectorFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPluginFragment;
@@ -28,7 +29,6 @@ import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
-import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 import com.exarlabs.android.myrules.ui.util.contact.ContactsSectorFragment;
 
@@ -60,8 +60,6 @@ public interface DaggerComponentGraph {
     void inject(HistoryListFragment historyListFragment);
 
     void inject(RulesEngineService ruleService);
-
-    void inject(RulesAddRuleFragment rulesAddRuleFragment);
 
     void inject(DebugOverviewFragment debugOverviewFragment);
 
@@ -100,4 +98,6 @@ public interface DaggerComponentGraph {
     void inject(ConditionDetailsFragment conditionDetailsFragment);
 
     void inject(ConditionsSectorFragment conditionsSectorFragment);
+
+    void inject(ActionsSectorFragment actionsSectorFragment);
 }

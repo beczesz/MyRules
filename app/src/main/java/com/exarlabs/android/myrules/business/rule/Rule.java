@@ -130,8 +130,6 @@ public abstract class Rule implements GreenDaoEntity {
                 ruleActionLinks.add(ruleActionLink);
             }
         }
-
-
     }
 
     public void addRuleActions(RuleAction... actions) {

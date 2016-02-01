@@ -54,6 +54,9 @@ public class ConditionTreeFragment extends BaseFragment {
 
         @Bind(R.id.card_body)
         public LinearLayout mCardBody;
+
+        @Bind(R.id.delete_card)
+        public TextView mDeleteCard;
     }
 
     // ------------------------------------------------------------------------
@@ -145,10 +148,10 @@ public class ConditionTreeFragment extends BaseFragment {
      * Regenerate the list of conditions.
      */
     private void updateUI() {
-
         // update the operator
         updateOperator();
-        updateConditions();
+        if(mRuleConditionTree.getId() != null)
+            updateConditions();
     }
 
     /**
@@ -162,7 +165,6 @@ public class ConditionTreeFragment extends BaseFragment {
             addConditionToContainer(child.getRuleCondition());
         }
 
-        mDefaultMessageTextView.setVisibility(mConditionsContainer.getChildCount() > 0 ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -182,9 +184,12 @@ public class ConditionTreeFragment extends BaseFragment {
 
         // setup the link to the condition editor
         viewHolder.mCardBody.setOnClickListener(v -> mNavigationManager.startConditionsDetails(ruleCondition.getId()));
+        viewHolder.mDeleteCard.setOnClickListener(l -> mConditionsContainer.removeDragView(card));
 
         // add the current card
         mConditionsContainer.addDragView(card, viewHolder.mDragHandle);
+
+        mDefaultMessageTextView.setVisibility(mConditionsContainer.getChildCount() > 0 ? View.GONE : View.VISIBLE);
     }
 
     /**

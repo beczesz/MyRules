@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/card"
-              android:gravity="center"
-              android:orientation="horizontal"
-    >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card"
+                android:gravity="center"
+                android:orientation="horizontal">
 
     <com.mikepenz.iconics.view.IconicsTextView
         android:id="@+id/drag_handle"
@@ -20,9 +19,9 @@
         android:id="@+id/card_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/drag_handle"
         android:minHeight="@dimen/container_min_height"
         android:orientation="vertical">
-
 
         <TextView
             android:id="@+id/card_title"
@@ -32,14 +31,21 @@
             tools:text="Condition Title"/>
 
         <TextView
-            style="@style/Paragraph"
             android:id="@+id/card_description"
+            style="@style/Paragraph"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Condition Descritpion"/>
-
+            tools:text="Condition Description"/>
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/delete_card"
+        style="@style/Icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="@string/lbl_delete_item"/>
 
-</LinearLayout>
+</RelativeLayout>
