@@ -2,6 +2,8 @@ package com.exarlabs.android.myrules.business.rule.action.plugins;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -98,8 +100,10 @@ public class RejectCallActionPlugin extends ActionPlugin {
     }
 
     @Override
-    public String[] getRequiredPermissions() {
-        return new String[] { Manifest.permission.MODIFY_PHONE_STATE};
+    public Set<String> getRequiredPermissions() {
+        HashSet<String> permissions = new HashSet<>();
+        permissions.add(Manifest.permission.MODIFY_PHONE_STATE);
+        return permissions;
     }
 
     // ------------------------------------------------------------------------

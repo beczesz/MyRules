@@ -1,12 +1,14 @@
 package com.exarlabs.android.myrules.business.rule;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
-import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
 
@@ -104,6 +106,24 @@ public class RuleManager {
 
     public RuleRecord load(Long key) {
         return mRuleRecordDao.load(key);
+    }
+
+    /**
+     * Returns all the defined perimissions needed to run this rule.
+     *
+     * @param ruleRecord
+     * @return
+     */
+    public Set<String> getPermissions(RuleRecord ruleRecord) {
+        Set<String> requiredPermissions = new HashSet<>();
+
+        // Add the required permissions by the conditions tree
+        requiredPermissions.addAll(mConditionManager.getPermissions(ruleRecord.getRuleConditionTree()));
+
+        // add the required permission by the actions
+        requiredPermissions.addAll(mActionManager.getPermissions(ruleRecord.getRuleActions()));
+
+        return requiredPermissions;
     }
 
     // ------------------------------------------------------------------------

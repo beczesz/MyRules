@@ -1,7 +1,9 @@
 package com.exarlabs.android.myrules.business.rule.action;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -156,10 +158,10 @@ public class ActionManager {
 
     /**
      * Deletes an action and all of it's properties
-     * 
+     *
      * @param ruleAction
      */
-    public void deleteAction(RuleAction ruleAction){
+    public void deleteAction(RuleAction ruleAction) {
         List<RuleActionProperty> properties = ruleAction.getProperties();
 
         // delete the properties
@@ -168,6 +170,24 @@ public class ActionManager {
         mRuleActionDao.delete(ruleAction);
     }
 
+    /**
+     * Returns all the defined perimissions needed to run these rule actions.
+     *
+     * @return
+     */
+    public Set<String> getPermissions(RuleAction... ruleActions) {
+        return getPermissions(Arrays.asList(ruleActions));
+    }
+
+    public Set<String> getPermissions(List<RuleAction> ruleActions) {
+        Set<String> requiredPermissions = new HashSet<>();
+
+        for (RuleAction ruleAction : ruleActions) {
+            requiredPermissions.addAll(ruleAction.getActionPlugin().getRequiredPermissions());
+        }
+
+        return requiredPermissions;
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

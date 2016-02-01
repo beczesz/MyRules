@@ -4,11 +4,11 @@ apply from: 'versioning.gradle'
 apply plugin: 'com.android.application' //or apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
 
-
 // This is needed for the dagger
 buildscript {
     repositories {
         jcenter()
+
         mavenCentral()
     }
 
@@ -18,17 +18,12 @@ buildscript {
     }
 }
 
-
 // Required because retrolambda is on maven central
 repositories {
     mavenCentral()
+    maven { url "http://dl.bintray.com/tbruyelle/tbruyelle" }
 }
 
-
-// Required because retrolambda is on maven central
-repositories {
-    mavenCentral()
-}
 
 
 /**
@@ -146,6 +141,8 @@ dependencies {
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.0.16'
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
+    // Rx - permissions
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.5.1@aar'
 
     // UI libs
     compile 'com.norbsoft.typefacehelper:library:0.9.0'
@@ -162,7 +159,6 @@ dependencies {
     // expandable layout
     compile 'com.github.aakira:expandable-layout:1.4.1@aar'
     compile 'com.jmedeisis:draglinearlayout:1.1.0'
-
 
     // Development / Analytics
     compile 'com.facebook.stetho:stetho:1.2.0'

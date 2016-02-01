@@ -1,6 +1,7 @@
 package com.exarlabs.android.myrules.business.rule;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * A plugin contains business logic specific for the component.
@@ -13,7 +14,7 @@ public interface RuleComponentPlugin {
     /**
      * @return the array of permission needed by this plugin.
      */
-    String[] getRequiredPermissions();
+    Set<String> getRequiredPermissions();
 
     /**
      * Initializes the plugin with the list of properties

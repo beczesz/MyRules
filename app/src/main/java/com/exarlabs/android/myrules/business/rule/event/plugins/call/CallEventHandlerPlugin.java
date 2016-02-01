@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.event.plugins.call;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import android.Manifest;
@@ -78,8 +81,11 @@ public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnInco
     }
 
     @Override
-    public String[] getRequiredPermissions() {
-        return new String[] { Manifest.permission.READ_PHONE_STATE};
+    public Set<String> getRequiredPermissions() {
+        HashSet<String> permissions = new HashSet<>();
+        permissions.add(Manifest.permission.READ_PHONE_STATE);
+        return permissions;
+
     }
 
 

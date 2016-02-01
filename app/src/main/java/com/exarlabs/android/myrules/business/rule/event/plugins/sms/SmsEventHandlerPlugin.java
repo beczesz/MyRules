@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.event.plugins.sms;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import android.Manifest;
@@ -79,8 +82,10 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     }
 
     @Override
-    public String[] getRequiredPermissions() {
-        return new String[] { Manifest.permission.RECEIVE_SMS };
+    public Set<String> getRequiredPermissions() {
+        HashSet<String> permissions = new HashSet<>();
+        permissions.add(Manifest.permission.RECEIVE_SMS);
+        return permissions;
     }
 
     // ------------------------------------------------------------------------

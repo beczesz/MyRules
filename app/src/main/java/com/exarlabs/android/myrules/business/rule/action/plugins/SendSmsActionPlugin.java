@@ -1,6 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.action.plugins;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -55,7 +57,7 @@ public class SendSmsActionPlugin extends ActionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public SendSmsActionPlugin(int type){
+    public SendSmsActionPlugin(int type) {
         super(type);
         DaggerManager.component().inject(this);
     }
@@ -67,25 +69,23 @@ public class SendSmsActionPlugin extends ActionPlugin {
     @Override
     public void initialize(List<? extends RuleComponentProperty> properties) {
         super.initialize(properties);
-        if(getProperty(KEY_PHONE_NUMBER) != null)
-            mPhoneNumber = getProperty(KEY_PHONE_NUMBER).getValue();
+        if (getProperty(KEY_PHONE_NUMBER) != null) mPhoneNumber = getProperty(KEY_PHONE_NUMBER).getValue();
 
-        if(getProperty(KEY_MESSAGE) != null)
-            mMessage = getProperty(KEY_MESSAGE).getValue();
+        if (getProperty(KEY_MESSAGE) != null) mMessage = getProperty(KEY_MESSAGE).getValue();
     }
 
     @Override
     public boolean run(Event event) {
         // reply to sender
-        if(event.getType() == Event.Type.RULE_EVENT_SMS) {
+        if (event.getType() == Event.Type.RULE_EVENT_SMS) {
             SmsEvent smsEvent = (SmsEvent) event;
             sendSMS(smsEvent.getSender(), "I have got! :)");
 
-        }else if(event.getType() == Event.Type.RULE_EVENT_CALL){
+        } else if (event.getType() == Event.Type.RULE_EVENT_CALL) {
             CallEvent callEvent = (CallEvent) event;
             sendSMS(callEvent.getCaller(), mMessage);
 
-        }else if(mPhoneNumber == null){
+        } else if (mPhoneNumber == null) {
             Log.w(TAG, "The phone number is null");
             return false;
         }
@@ -96,11 +96,11 @@ public class SendSmsActionPlugin extends ActionPlugin {
 
     /**
      * Sends an SMS to the given phone number, with the specified value
+     *
      * @param phoneNumber
      * @param message
      */
-    public void sendSMS(String phoneNumber, String message)
-    {
+    public void sendSMS(String phoneNumber, String message) {
         String SENT = "SMS_SENT";
         String DELIVERED = "SMS_DELIVERED";
 
@@ -136,11 +136,10 @@ public class SendSmsActionPlugin extends ActionPlugin {
         }, new IntentFilter(SENT));
 
         // when the SMS has been delivered
-        mContext.registerReceiver(new BroadcastReceiver(){
+        mContext.registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode())
-                {
+                switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         Log.w(TAG, "SMS delivered");
                         break;
@@ -156,8 +155,10 @@ public class SendSmsActionPlugin extends ActionPlugin {
     }
 
     @Override
-    public String[] getRequiredPermissions() {
-        return new String[] { android.Manifest.permission.SEND_SMS};
+    public Set<String> getRequiredPermissions() {
+        HashSet<String> permissions = new HashSet<>();
+        permissions.add(android.Manifest.permission.SEND_SMS);
+        return permissions;
     }
 
     // ------------------------------------------------------------------------
@@ -167,6 +168,7 @@ public class SendSmsActionPlugin extends ActionPlugin {
     public String getPhoneNumber() {
         return mPhoneNumber;
     }
+
     public String getMessage() {
         return mMessage;
     }
@@ -175,6 +177,7 @@ public class SendSmsActionPlugin extends ActionPlugin {
         saveProperty(KEY_PHONE_NUMBER, phoneNumber);
         this.mPhoneNumber = phoneNumber;
     }
+
     public void setMessage(String message) {
         saveProperty(KEY_MESSAGE, message);
         this.mMessage = message;

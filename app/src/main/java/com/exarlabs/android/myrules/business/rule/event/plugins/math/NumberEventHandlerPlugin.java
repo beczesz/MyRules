@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.event.plugins.math;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.EventFactory;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
@@ -57,8 +60,9 @@ public class NumberEventHandlerPlugin extends EventHandlerPlugin {
     }
 
     @Override
-    public String[] getRequiredPermissions() {
-        return new String[] {};
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
+
     }
 
 

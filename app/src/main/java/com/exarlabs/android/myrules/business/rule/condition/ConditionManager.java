@@ -1,6 +1,11 @@
 package com.exarlabs.android.myrules.business.rule.condition;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -206,5 +211,29 @@ public class ConditionManager {
         c.setType(Condition.Type.DEBUG_ALWAYS_TRUE);
         saveCondition(c);
         return c;
+    }
+
+    /**
+     * Returns all the defined perimissions needed to run this rule.
+     *
+     * @param ruleRecord
+     * @return
+     */
+    public Set<String> getPermissions(RuleConditionTree ruleConditionTree) {
+        Set<String> requiredPermissions = new HashSet<>();
+
+        // Make sure that the condition is built
+        if (!ruleConditionTree.isBuilt()) {
+            ruleConditionTree.build();
+        }
+
+        // Add the current condition's permission
+        requiredPermissions.addAll(ruleConditionTree.getRuleCondition().getConditionPlugin().getRequiredPermissions());
+
+        for (RuleConditionTree conditionTree : ruleConditionTree.getChildConditions()) {
+            requiredPermissions.addAll(getPermissions(conditionTree));
+        }
+
+        return requiredPermissions;
     }
 }

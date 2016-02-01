@@ -1,6 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.condition.plugins.math;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.util.Log;
 
@@ -76,8 +78,8 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
     }
 
     @Override
-    public String[] getRequiredPermissions() {
-        return new String[0];
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
     }
 
     // ------------------------------------------------------------------------
