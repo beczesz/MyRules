@@ -2,7 +2,11 @@ package com.exarlabs.android.myrules.business.rule.condition;
 
 import java.util.List;
 
+import com.exarlabs.android.myrules.business.rule.Buildable;
+import com.exarlabs.android.myrules.business.rule.Evaluable;
+import com.exarlabs.android.myrules.business.rule.RuleComponent;
 import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
@@ -13,7 +17,7 @@ import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
  * </p>
  * Created by becze on 12/18/2015.
  */
-public abstract class Condition {
+public abstract class Condition implements GreenDaoEntity, RuleComponent, Evaluable, Buildable{
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -64,12 +68,6 @@ public abstract class Condition {
     // ------------------------------------------------------------------------
 
     /**
-     * @return the type of the condition
-     */
-    public abstract int getType();
-
-    /**
-     *
      * @return the list of properties for this condition
      */
     public abstract List<RuleConditionProperty> getProperties();
@@ -88,7 +86,7 @@ public abstract class Condition {
     /**
      * Rebuilds the action
      */
-    public void rebuild(){
+    public void rebuild() {
         isBuilt = false;
         mConditionPlugin = null;
         build();
@@ -97,7 +95,7 @@ public abstract class Condition {
     /**
      * Regenerates the action plugin
      */
-    public void reGenerateConditionPlugin(){
+    public void reGenerateConditionPlugin() {
         mConditionPlugin = null;
         getConditionPlugin();
     }

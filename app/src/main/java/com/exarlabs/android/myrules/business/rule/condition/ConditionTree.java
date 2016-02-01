@@ -6,7 +6,10 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.exarlabs.android.myrules.business.rule.Buildable;
+import com.exarlabs.android.myrules.business.rule.Evaluable;
 import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 
@@ -18,7 +21,7 @@ import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
  * </p>
  * Created by becze on 12/18/2015.
  */
-public abstract class ConditionTree {
+public abstract class ConditionTree implements GreenDaoEntity, Evaluable, Buildable{
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -195,17 +198,23 @@ public abstract class ConditionTree {
     public void build() {
         if (!isBuilt) {
             // Build the condition where this tree points to
-            getRuleCondition().build();
+            getRuleCondition().rebuild();
 
             List<? extends ConditionTree> conditionTrees = getChildConditions();
             if (conditionTrees != null) {
                 for (ConditionTree condition : conditionTrees) {
-                    condition.build();
+                    condition.rebuild();
                 }
             }
 
             isBuilt = true;
         }
+    }
+
+    @Override
+    public void rebuild() {
+        isBuilt = false;
+        build();
     }
 
     /**

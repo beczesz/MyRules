@@ -64,6 +64,11 @@ public class IsNumberPrimeConditionPlugin extends ConditionPlugin {
         return true;
     }
 
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] {};
+    }
+
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

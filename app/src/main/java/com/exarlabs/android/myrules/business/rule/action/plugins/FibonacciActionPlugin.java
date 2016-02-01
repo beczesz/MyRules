@@ -67,6 +67,11 @@ public class FibonacciActionPlugin extends ActionPlugin {
         return "Calculates Fibonacci";
     }
 
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] {};
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

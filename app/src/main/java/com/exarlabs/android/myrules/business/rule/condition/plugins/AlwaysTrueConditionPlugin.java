@@ -45,6 +45,11 @@ public class AlwaysTrueConditionPlugin extends ConditionPlugin {
         return "Always returns True";
     }
 
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] {};
+    }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

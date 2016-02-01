@@ -4,10 +4,10 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEvent;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
  * Example implementation where this plugin can decide if a number is between two given number
@@ -52,9 +52,8 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
 
 
     @Override
-    public void initialize(List<RuleConditionProperty> properties) {
+    public void initialize(List<? extends RuleComponentProperty> properties) {
         super.initialize(properties);
-
 
         mMin = Double.parseDouble(getProperty(KEY_INTERVAL_MIN).getValue());
         mMax = Double.parseDouble(getProperty(KEY_INTERVAL_MAX).getValue());
@@ -71,6 +70,11 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
 
         // Always return true if we can not process this event
         return true;
+    }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] {};
     }
 
     // ------------------------------------------------------------------------

@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.business.rule.event.plugins.sms;
 
 import javax.inject.Inject;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
@@ -13,10 +14,10 @@ import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 
 /**
  * The plugin converts the received SMS to an SmsEvent
- *
+ * <p>
  * Created by atiyka on 1/21/2016.
  */
-public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsReceivedListener{
+public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsReceivedListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -44,9 +45,10 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public SmsEventHandlerPlugin(){
+    public SmsEventHandlerPlugin() {
         super(Event.Type.RULE_EVENT_SMS);
     }
+
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
@@ -74,6 +76,11 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
 
         Log.w(TAG, "SMS from: " + sender);
         Log.w(TAG, "SMS text: " + message);
+    }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] { Manifest.permission.RECEIVE_SMS };
     }
 
     // ------------------------------------------------------------------------

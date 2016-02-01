@@ -35,7 +35,6 @@ public class NumberEventHandlerPlugin extends EventHandlerPlugin {
     }
 
 
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
@@ -55,6 +54,11 @@ public class NumberEventHandlerPlugin extends EventHandlerPlugin {
         NumberEvent event = (NumberEvent) EventFactory.create(Event.Type.RULE_EVENT_NUMBER);
         event.setValue(i);
         dispatchEvent(event);
+    }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] {};
     }
 
 

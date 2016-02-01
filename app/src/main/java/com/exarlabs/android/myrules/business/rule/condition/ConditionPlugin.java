@@ -3,7 +3,9 @@ package com.exarlabs.android.myrules.business.rule.condition;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.business.rule.Evaluable;
+import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
+import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
@@ -13,7 +15,7 @@ import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
  * <p>
  * Created by becze on 12/18/2015.
  */
-public abstract class ConditionPlugin {
+public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin {
 
 
     // ------------------------------------------------------------------------
@@ -49,21 +51,14 @@ public abstract class ConditionPlugin {
     // METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * Evaluates the condition based on the event wether it is true or false.
-     *
-     * @param event
-     * @return the result of the evaluation. True if the condition holds and false otherwise
-     */
-    public abstract boolean evaluate(Event event);
 
     /**
      * Initializes the plugin with the saved properties
      *
      * @param properties
      */
-    public void initialize(List<RuleConditionProperty> properties) {
-        for (RuleConditionProperty property : properties) {
+    public void initialize(List<? extends RuleComponentProperty> properties) {
+        for (RuleComponentProperty property : properties) {
             saveProperty(property.getKey(), property.getValue());
         }
     }

@@ -2,21 +2,19 @@ package com.exarlabs.android.myrules.business.rule.action.plugins;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import javax.inject.Inject;
 
+import android.Manifest;
 import android.content.Context;
 import android.media.AudioManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
-import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.rule.event.Event;
-import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
-
 import com.android.internal.telephony.ITelephony;
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
+import com.exarlabs.android.myrules.business.rule.event.Event;
 
 /**
  * Action plugin which rejects a call
@@ -58,10 +56,6 @@ public class RejectCallActionPlugin extends ActionPlugin {
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
-    @Override
-    public void initialize(List<RuleActionProperty> properties) {
-        super.initialize(properties);
-    }
 
     @Override
     public boolean run(Event event) {
@@ -101,6 +95,11 @@ public class RejectCallActionPlugin extends ActionPlugin {
         }
 
         audioManager.setRingerMode(ringerMode);
+    }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] { Manifest.permission.MODIFY_PHONE_STATE};
     }
 
     // ------------------------------------------------------------------------

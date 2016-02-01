@@ -1,7 +1,5 @@
 package com.exarlabs.android.myrules.business;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import android.app.PendingIntent;
@@ -20,7 +18,6 @@ import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.RuleEventManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
-import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.R;
@@ -159,33 +156,15 @@ public class RulesEngineService extends Service {
                         .flatMap(pair -> Observable.from(pair.second).map(record -> new Pair<>(pair.first, (RuleRecord) record)))
                         .filter(eventRulePair -> {
                             // Evaluate each rules and
-                            RuleConditionTree ruleConditionTree = eventRulePair.second.getRuleConditionTree();
-                            boolean result = ruleConditionTree != null ? ruleConditionTree.evaluate(eventRulePair.first) : false;
+                            boolean result = eventRulePair.second.evaluate(eventRulePair.first);
                             logEventEvaluated(eventRulePair.first, eventRulePair.second, result);
                             return  result;
                         })
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnError(throwable -> throwable.printStackTrace())
-                        .subscribe(eventRulePair -> executeRule(eventRulePair.first, eventRulePair.second));
+                        .subscribe(eventRulePair -> eventRulePair.second.run(eventRulePair.first));
         //@formatter:on
-    }
-
-
-    /**
-     * Exectutes the rules ruleRecord
-     *
-     * @param ruleRecord
-     */
-    private void executeRule(Event event, RuleRecord ruleRecord) {
-        Log.w("BSZ", "Observed on thread: " + Thread.currentThread().getName());
-
-        // TODO make it parallel
-        List<RuleAction> ruleActions = ruleRecord.getRuleActions();
-        for (RuleAction ruleAction : ruleActions) {
-            ruleAction.run(event);
-            logActionRun(event, ruleRecord, ruleAction);
-        }
     }
 
 

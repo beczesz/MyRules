@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.business.rule.event.plugins.call;
 
 import javax.inject.Inject;
 
+import android.Manifest;
 import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -74,6 +75,11 @@ public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnInco
 
         dispatchEvent(event);
         Log.w(TAG, "Call from: " + caller);
+    }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] { Manifest.permission.READ_PHONE_STATE};
     }
 
 

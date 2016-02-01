@@ -13,12 +13,12 @@ import android.content.IntentFilter;
 import android.telephony.SmsManager;
 import android.util.Log;
 
-import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
+import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.plugins.call.CallEvent;
 import com.exarlabs.android.myrules.business.rule.event.plugins.sms.SmsEvent;
-import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
  * Action plugin which sends a given text to a given phone number as an SMS
@@ -63,8 +63,9 @@ public class SendSmsActionPlugin extends ActionPlugin {
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
+
     @Override
-    public void initialize(List<RuleActionProperty> properties) {
+    public void initialize(List<? extends RuleComponentProperty> properties) {
         super.initialize(properties);
         if(getProperty(KEY_PHONE_NUMBER) != null)
             mPhoneNumber = getProperty(KEY_PHONE_NUMBER).getValue();
@@ -154,6 +155,10 @@ public class SendSmsActionPlugin extends ActionPlugin {
         sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveryPI);
     }
 
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] { android.Manifest.permission.SEND_SMS};
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

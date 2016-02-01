@@ -50,7 +50,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_RECORD\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"RULE_NAME\" TEXT," + // 1: ruleName
+                "\"RULE_NAME\" TEXT NOT NULL ," + // 1: ruleName
                 "\"STATE\" INTEGER NOT NULL ," + // 2: state
                 "\"EVENT_CODE\" INTEGER NOT NULL ," + // 3: eventCode
                 "\"RULE_CONDITION_TREE_ID\" INTEGER);"); // 4: ruleConditionTreeId
@@ -71,11 +71,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        String ruleName = entity.getRuleName();
-        if (ruleName != null) {
-            stmt.bindString(2, ruleName);
-        }
+        stmt.bindString(2, entity.getRuleName());
         stmt.bindLong(3, entity.getState());
         stmt.bindLong(4, entity.getEventCode());
  
@@ -102,7 +98,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
     public RuleRecord readEntity(Cursor cursor, int offset) {
         RuleRecord entity = new RuleRecord( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // ruleName
+            cursor.getString(offset + 1), // ruleName
             cursor.getInt(offset + 2), // state
             cursor.getInt(offset + 3), // eventCode
             cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // ruleConditionTreeId
@@ -114,7 +110,7 @@ public class RuleRecordDao extends AbstractDao<RuleRecord, Long> {
     @Override
     public void readEntity(Cursor cursor, RuleRecord entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setRuleName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setRuleName(cursor.getString(offset + 1));
         entity.setState(cursor.getInt(offset + 2));
         entity.setEventCode(cursor.getInt(offset + 3));
         entity.setRuleConditionTreeId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));

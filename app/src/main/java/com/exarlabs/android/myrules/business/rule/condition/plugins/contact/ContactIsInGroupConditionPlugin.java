@@ -42,6 +42,11 @@ public class ContactIsInGroupConditionPlugin extends ConditionPlugin {
     public boolean evaluate(Event event) {
         return true;
     }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[] { android.Manifest.permission.READ_CONTACTS };
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

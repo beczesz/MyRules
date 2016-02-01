@@ -1,6 +1,11 @@
 package com.exarlabs.android.myrules.business.rule.event;
 
+import java.util.List;
+
 import android.util.Log;
+
+import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
+import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -9,7 +14,7 @@ import rx.Subscriber;
  * Abstract event plugin which serveres as a base class for all the RuleEventHandler
  * Created by becze on 1/11/2016.
  */
-public abstract class EventHandlerPlugin {
+public abstract class EventHandlerPlugin implements RuleComponentPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -57,6 +62,17 @@ public abstract class EventHandlerPlugin {
     // METHODS
     // ------------------------------------------------------------------------
 
+
+    @Override
+    public void initialize(List<? extends RuleComponentProperty> properties) {
+        // Void implementation since an event will nto be saved into database
+    }
+
+    @Override
+    public List<? extends RuleComponentProperty> getProperties() {
+        // Void implementation since an event will nto be saved into database
+        return null;
+    }
 
     /**
      * Initializes the plugin on creation.
