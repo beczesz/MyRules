@@ -118,6 +118,10 @@ public class RuleManager {
     public Set<String> getPermissions(RuleRecord ruleRecord) {
         Set<String> requiredPermissions = new HashSet<>();
 
+        if(!ruleRecord.isAttached()){
+            return requiredPermissions;
+        }
+
         // Add the required permissions by the conditions tree
         requiredPermissions.addAll(mConditionManager.getPermissions(ruleRecord.getRuleConditionTree()));
 

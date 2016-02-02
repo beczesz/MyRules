@@ -152,7 +152,7 @@ public class RuleDetailsFragment extends BaseFragment {
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
         }
 
-        // Load the condition display fragment
+        // Load the action display fragment
         if(mActionCardsFragment == null) {
             mActionCardsFragment = ActionCardsFragment.newInstance();
             if(mRuleRecord.getId() != null)
@@ -179,7 +179,7 @@ public class RuleDetailsFragment extends BaseFragment {
     }
 
     private void setUpEvents() {
-        // Initialize the event spinenr
+        // Initialize the event spinner
         List<EventHandlerPlugin> plugins = mEventPluginManager.getPlugins();
 
         //@formatter:off
@@ -241,7 +241,10 @@ public class RuleDetailsFragment extends BaseFragment {
      */
     private void checkPermissions() {
         // Get the array of permissions.
-        Set<String> permissionsSet = mRuleManager.getPermissions(mRuleRecord);
+        int selectedItemPosition = mEventsSpinner.getSelectedItemPosition();
+        EventHandlerPlugin plugin = mEventPluginManager.getPlugins().get(selectedItemPosition);
+
+        Set<String> permissionsSet = plugin.getRequiredPermissions();
         String[] permissions = permissionsSet.toArray(new String[permissionsSet.size()]);
 
         if (permissions.length > 0) {
