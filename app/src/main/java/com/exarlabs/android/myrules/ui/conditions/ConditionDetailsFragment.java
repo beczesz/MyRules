@@ -3,6 +3,7 @@ package com.exarlabs.android.myrules.ui.conditions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -18,15 +19,18 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
+import com.exarlabs.android.myrules.business.rx.CallbackSubscriber;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -175,6 +179,37 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
      */
     @OnClick(R.id.button_save)
     public void saveNewCondition(){
+        checkPermissions();
+    }
+
+    /**
+     * Checks if all the necessary permission is granted for this rule
+     */
+    private void checkPermissions() {
+        // Get the array of permissions.
+        Set<String> permissionsSet = mRuleCondition.getConditionPlugin().getRequiredPermissions();
+        String[] permissions = permissionsSet.toArray(new String[permissionsSet.size()]);
+
+        if (permissions.length > 0) {
+            //@formatter:off
+            // Must be done during an initialization phase like onCreate
+            RxPermissions.getInstance(getActivity())
+                            .request( permissions)
+                            .subscribe(new CallbackSubscriber<Boolean>() {
+                                           @Override
+                                           public void onResult(Boolean result, Throwable e) {
+                                               if (result) {
+                                                  doSave();
+                                               } else {
+                                                   Toast.makeText(getActivity(), R.string.message_error_permission_denied, Toast.LENGTH_SHORT).show();
+                                               }
+                                           }
+                                       });
+            //@formatter:on
+        }
+    }
+
+    private void doSave() {
         if(mConditionId == -1 && mConditionTypeSpinner.getSelectedItemPosition() == 0) {
             // TODO: notify the user that must select an condition type
             return;

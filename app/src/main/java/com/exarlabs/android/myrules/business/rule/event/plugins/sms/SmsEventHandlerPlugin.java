@@ -1,22 +1,24 @@
 package com.exarlabs.android.myrules.business.rule.event.plugins.sms;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.inject.Inject;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.rule.event.Event;
-import com.exarlabs.android.myrules.business.rule.event.EventFactory;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 
 /**
  * The plugin converts the received SMS to an SmsEvent
- *
+ * <p>
  * Created by atiyka on 1/21/2016.
  */
-public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsReceivedListener{
+public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsReceivedListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -44,9 +46,6 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public SmsEventHandlerPlugin(){
-        super(Event.Type.RULE_EVENT_SMS);
-    }
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
@@ -67,13 +66,20 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
 
     @Override
     public void getSms(String sender, String message) {
-        SmsEvent event = (SmsEvent) EventFactory.create(Event.Type.RULE_EVENT_SMS);
+        SmsEvent event = createNewEvent();
         event.setSender(sender);
         event.setMessage(message);
         dispatchEvent(event);
 
         Log.w(TAG, "SMS from: " + sender);
         Log.w(TAG, "SMS text: " + message);
+    }
+
+    @Override
+    public Set<String> getRequiredPermissions() {
+        HashSet<String> permissions = new HashSet<>();
+        permissions.add(Manifest.permission.RECEIVE_SMS);
+        return permissions;
     }
 
     // ------------------------------------------------------------------------

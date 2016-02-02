@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.condition.plugins.contact;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 
@@ -41,6 +44,13 @@ public class ContactIsInGroupConditionPlugin extends ConditionPlugin {
     @Override
     public boolean evaluate(Event event) {
         return true;
+    }
+
+    @Override
+    public Set<String> getRequiredPermissions() {
+        HashSet<String> permissions = new HashSet<>();
+        permissions.add(android.Manifest.permission.READ_CONTACTS);
+        return permissions;
     }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

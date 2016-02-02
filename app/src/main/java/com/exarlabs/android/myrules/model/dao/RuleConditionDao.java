@@ -45,7 +45,7 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_CONDITION\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"CONDITION_NAME\" TEXT," + // 1: conditionName
+                "\"CONDITION_NAME\" TEXT NOT NULL ," + // 1: conditionName
                 "\"TYPE\" INTEGER NOT NULL );"); // 2: type
     }
 
@@ -64,11 +64,7 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        String conditionName = entity.getConditionName();
-        if (conditionName != null) {
-            stmt.bindString(2, conditionName);
-        }
+        stmt.bindString(2, entity.getConditionName());
         stmt.bindLong(3, entity.getType());
     }
 
@@ -89,7 +85,7 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
     public RuleCondition readEntity(Cursor cursor, int offset) {
         RuleCondition entity = new RuleCondition( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // conditionName
+            cursor.getString(offset + 1), // conditionName
             cursor.getInt(offset + 2) // type
         );
         return entity;
@@ -99,7 +95,7 @@ public class RuleConditionDao extends AbstractDao<RuleCondition, Long> {
     @Override
     public void readEntity(Cursor cursor, RuleCondition entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setConditionName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setConditionName(cursor.getString(offset + 1));
         entity.setType(cursor.getInt(offset + 2));
      }
     

@@ -1,7 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.event.plugins.math;
 
-import com.exarlabs.android.myrules.business.rule.event.Event;
-import com.exarlabs.android.myrules.business.rule.event.EventFactory;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 
 /**
@@ -30,12 +31,6 @@ public class NumberEventHandlerPlugin extends EventHandlerPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public NumberEventHandlerPlugin() {
-        super(Event.Type.RULE_EVENT_NUMBER);
-    }
-
-
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
@@ -52,9 +47,15 @@ public class NumberEventHandlerPlugin extends EventHandlerPlugin {
      * @param i
      */
     public void dispatchNumber(int i) {
-        NumberEvent event = (NumberEvent) EventFactory.create(Event.Type.RULE_EVENT_NUMBER);
+        NumberEvent event = createNewEvent();
         event.setValue(i);
         dispatchEvent(event);
+    }
+
+    @Override
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
+
     }
 
 

@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.ui.rules;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -16,22 +17,26 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
+import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
+import com.exarlabs.android.myrules.business.rx.CallbackSubscriber;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -181,19 +186,20 @@ public class RuleDetailsFragment extends BaseFragment {
         // Get the list of event plugins.
         List<String> eventPluginNames = new ArrayList<>();
         Observable.from(plugins)
-                        .map(plugin -> plugin.getClass().getSimpleName())
-                        .subscribe(conditionName -> eventPluginNames.add(conditionName));
+                        .map(plugin -> mEventPluginManager.getFromEventCode(plugin.getType()))
+                        .subscribe(type -> eventPluginNames.add(getContext().getResources().getString(type.getTitleResId())));
         //@formatter:on
 
         // setup the spinner
         mEventsSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, eventPluginNames));
 
-        for (int i = 0; i < plugins.size(); i++) {
-            EventHandlerPlugin plugin = plugins.get(i);
-            if (plugin.getType() == mRuleRecord.getEventCode()) {
-                mEventsSpinner.setSelection(i);
-                break;
-            }
+        // Initialize the spinner.
+        Event.Type eventType = mEventPluginManager.getFromEventCode(mRuleRecord.getEventCode());
+        EventHandlerPlugin plugin = mEventPluginManager.getPluginInstance(eventType);
+
+        if (plugin != null) {
+            int selectedIndex = plugins.indexOf(plugin);
+            mEventsSpinner.setSelection(selectedIndex);
         }
 
     }
@@ -218,9 +224,44 @@ public class RuleDetailsFragment extends BaseFragment {
 
     @OnClick(R.id.button_save)
     public void saveRule() {
+
+        checkPermissions();
+
+    }
+
+    private void doSave() {
         if (validateRule()) {
             updateRule();
             goBack();
+        }
+    }
+
+    /**
+     * Checks if all the necessary permission is granted for this rule
+     */
+    private void checkPermissions() {
+        // Get the array of permissions.
+        Set<String> permissionsSet = mRuleManager.getPermissions(mRuleRecord);
+        String[] permissions = permissionsSet.toArray(new String[permissionsSet.size()]);
+
+        if (permissions.length > 0) {
+
+            //@formatter:off
+            // Must be done during an initialization phase like onCreate
+            RxPermissions.getInstance(getActivity())
+                            .request( permissions)
+                            .subscribe(new CallbackSubscriber<Boolean>() {
+                                           @Override
+                                           public void onResult(Boolean result, Throwable e) {
+                                               if (result) {
+                                                  doSave();
+                                               } else {
+                                                   Toast.makeText(getActivity(), R.string.message_error_permission_denied, Toast.LENGTH_SHORT).show();
+                                               }
+                                           }
+                                       });
+
+            //@formatter:on
         }
     }
 

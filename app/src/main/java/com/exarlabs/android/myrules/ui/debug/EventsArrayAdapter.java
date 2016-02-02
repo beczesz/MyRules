@@ -1,7 +1,5 @@
 package com.exarlabs.android.myrules.ui.debug;
 
-import java.util.Collection;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.ui.R;
 
 import butterknife.Bind;
@@ -20,7 +18,7 @@ import butterknife.ButterKnife;
  * It's a special array adapter for list view items in the Debug menu
  * Created by atiyka on 2016.01.15..
  */
-public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> implements View.OnClickListener {
+public class EventsArrayAdapter extends ArrayAdapter<Event.Type> implements View.OnClickListener {
     // ------------------------------------------------------------------------
     // STATIC CLASSES
     // ------------------------------------------------------------------------
@@ -59,7 +57,6 @@ public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> impleme
     private OnTriggerEventListener mTriggerEventListener;
 
     private Context mContext;
-    private Collection<EventHandlerPlugin> mEvents;
 
 
     // ------------------------------------------------------------------------
@@ -97,26 +94,26 @@ public class EventsArrayAdapter extends ArrayAdapter<EventHandlerPlugin> impleme
 
         ViewHolder holder = (ViewHolder) root.getTag();
 
-        EventHandlerPlugin event = (EventHandlerPlugin) mEvents.toArray()[position];
+        Event.Type event = getItem(position);
 
-        holder.itemText.setText(event.getClass().getSimpleName());
-
+        holder.itemText.setText(event.getTitleResId());
         holder.triggerEvent.setTag(event);
         holder.triggerEvent.setOnClickListener(this);
 
         return root;
     }
 
-    public void addAllPlugins(Collection<EventHandlerPlugin> collection) {
-        addAll(collection);
-        mEvents = collection;
+    public void addAllPlugins(Event.Type ... types) {
+        addAll(types);
     }
 
     @Override
     public void onClick(View view) {
         Button button = (Button) view;
-        EventHandlerPlugin event = (EventHandlerPlugin) button.getTag();
-        if (mTriggerEventListener != null) mTriggerEventListener.triggerEvent(event);
+        Event.Type event = (Event.Type) button.getTag();
+        if (mTriggerEventListener != null) {
+            mTriggerEventListener.triggerEvent(event);
+        }
     }
 
 

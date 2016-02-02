@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.condition.plugins;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 
@@ -43,6 +46,11 @@ public class AlwaysTrueConditionPlugin extends ConditionPlugin {
     @Override
     public String toString() {
         return "Always returns True";
+    }
+
+    @Override
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
     }
 
     // ------------------------------------------------------------------------

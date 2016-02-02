@@ -15,6 +15,7 @@ import com.exarlabs.android.myrules.business.rule.Rule;
 public class RuleRecord extends Rule  {
 
     private Long id;
+    /** Not-null value. */
     private String ruleName;
     private int state;
     private int eventCode;
@@ -63,10 +64,12 @@ public class RuleRecord extends Rule  {
         this.id = id;
     }
 
+    /** Not-null value. */
     public String getRuleName() {
         return ruleName;
     }
 
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setRuleName(String ruleName) {
         this.ruleName = ruleName;
     }
@@ -172,7 +175,7 @@ public class RuleRecord extends Rule  {
      * @return is the record attached
      */
     public boolean isAttached() {
-        return daoSession != null;
+        return myDao != null;
     }
     // KEEP METHODS END
 

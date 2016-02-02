@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.support.annotation.NonNull;
 
+import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleActionLink;
@@ -13,14 +14,25 @@ import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 
 /**
- * Base class for all the rules
+ * A rule is a logical structure which is defined by three components.
+ * <ul compact>
+ * <li> 1. Events: Different event which can occur in one time like battery level change, network connection, incoming SMS etc.
+ * <li> 2. Conditions: Evaluable components which can determine if the rule accomplishes some conditions.
+ * <li> 3. ActionsL Runnable components, tasks which should be carried out when a rule evaluates to true for a given event.
+ * </ul>
+ *
+ * @see Event Event
+ * @see com.exarlabs.android.myrules.business.rule.condition.Condition Condition
+ * @see com.exarlabs.android.myrules.business.rule.action.Action Action
+ * <p>
  * Created by becze on 1/11/2016.
  */
-public abstract class Rule implements GreenDaoEntity {
+public abstract class Rule implements GreenDaoEntity, Evaluable, Buildable, Runnable {
 
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
+
     /**
      * Possible states of rules
      * Created by becze on 1/11/2016.
@@ -67,6 +79,13 @@ public abstract class Rule implements GreenDaoEntity {
 
     protected abstract List<RuleActionLink> getRuleActionLinks();
 
+
+    @Override
+    public boolean evaluate(Event event) {
+        RuleConditionTree ruleConditionTree = getRuleConditionTree();
+        return ruleConditionTree != null ? ruleConditionTree.evaluate(event) : false;
+    }
+
     /**
      * Builds the actions and conditions for this rule
      */
@@ -81,15 +100,39 @@ public abstract class Rule implements GreenDaoEntity {
         // Build the conditions and actions
         if (!isBuilt) {
             if (ruleConditionTree != null) {
-                ruleConditionTree.build();
+                ruleConditionTree.rebuild();
             }
 
             for (RuleAction action : ruleActions) {
-                action.build();
+                action.rebuild();
             }
 
-            setIsBuilt(true);
+            isBuilt = true;
         }
+    }
+
+    @Override
+    public void rebuild() {
+        isBuilt = false;
+        build();
+    }
+
+
+    @Override
+    public boolean run(Event event) {
+        /*
+         * Run sequentially all the actions.
+         */
+        List<RuleAction> ruleActions = getRuleActions();
+        if (ruleActions != null) {
+            for (RuleAction ruleAction : ruleActions) {
+                ruleAction.run(event);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -160,11 +203,5 @@ public abstract class Rule implements GreenDaoEntity {
     public boolean isBuilt() {
         return isBuilt;
     }
-
-    public void setIsBuilt(boolean isBuilt) {
-        this.isBuilt = isBuilt;
-    }
-
-
 
 }

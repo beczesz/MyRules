@@ -90,7 +90,7 @@ public class ConditionPluginManager {
      */
     public int getTypeByPosition(int position){
         List<ConditionPlugin> plugins = new ArrayList<>(mPluginMap.values());
-        return plugins.get(position).getPluginType();
+        return plugins.get(position).getType();
     }
 
     /**

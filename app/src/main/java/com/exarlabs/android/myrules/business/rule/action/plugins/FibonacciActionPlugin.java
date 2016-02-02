@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.action.plugins;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.util.Log;
 
 import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
@@ -65,6 +68,11 @@ public class FibonacciActionPlugin extends ActionPlugin {
     @Override
     public String toString() {
         return "Calculates Fibonacci";
+    }
+
+    @Override
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
     }
 
     // ------------------------------------------------------------------------

@@ -1,5 +1,8 @@
 package com.exarlabs.android.myrules.business.rule.condition.plugins.math;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.util.Log;
 
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
@@ -62,6 +65,12 @@ public class IsNumberPrimeConditionPlugin extends ConditionPlugin {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
+
     }
 
 

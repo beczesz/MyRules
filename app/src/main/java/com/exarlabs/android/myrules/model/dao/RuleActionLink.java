@@ -170,6 +170,12 @@ public class RuleActionLink {
     }
 
     // KEEP METHODS - put your custom methods here
+    /**
+     * @return is the record attached
+     */
+    public boolean isAttached() {
+        return myDao != null;
+    }
     // KEEP METHODS END
 
 }

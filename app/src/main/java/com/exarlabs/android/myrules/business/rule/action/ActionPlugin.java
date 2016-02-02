@@ -3,17 +3,19 @@ package com.exarlabs.android.myrules.business.rule.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
+import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
+import com.exarlabs.android.myrules.business.rule.Runnable;
 import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
  * A ActionPlugin is an implementation of the behaviour of a RuleAction.
  * Is is initialized with a list of Propoerties, and this plugin, can modify, delete add new propoerties.
  * Based on these properties is can evaluate itself at any time.
- * <p/>
+ * <p>
  * Created by becze on 12/18/2015.
  */
-public abstract class ActionPlugin {
+public abstract class ActionPlugin implements Runnable, RuleComponentPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -51,21 +53,9 @@ public abstract class ActionPlugin {
     // METHODS
     // ------------------------------------------------------------------------
 
-    /**
-     * Runs the action on the current thread, based on the event
-     *
-     * @param event
-     * @return the result of the evaluation. True if the action holds and false otherwise
-     */
-    public abstract boolean run(Event event);
-
-    /**
-     * Initializes the plugin with the saved properties
-     *
-     * @param properties
-     */
-    public void initialize(List<RuleActionProperty> properties) {
-        for (RuleActionProperty property : properties) {
+    @Override
+    public void initialize(List<? extends RuleComponentProperty> properties) {
+        for (RuleComponentProperty property : properties) {
             saveProperty(property.getKey(), property.getValue());
         }
     }
@@ -73,7 +63,6 @@ public abstract class ActionPlugin {
 
 
     /**
-     *
      * @param key
      * @return returns true if we have the given property with the given key
      */
@@ -91,10 +80,11 @@ public abstract class ActionPlugin {
 
     /**
      * Returns the property with the given key
+     *
      * @param key
      * @return
      */
-    public RuleActionProperty getProperty (String key) {
+    public RuleActionProperty getProperty(String key) {
 
         if (mProperties != null) {
             for (RuleActionProperty property : mProperties) {
@@ -109,6 +99,7 @@ public abstract class ActionPlugin {
 
     /**
      * Adds/updates the property with the given key/value.
+     *
      * @param key
      * @param value
      */

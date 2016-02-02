@@ -2,6 +2,9 @@ package com.exarlabs.android.myrules.business.rule.action;
 
 import java.util.List;
 
+import com.exarlabs.android.myrules.business.rule.Buildable;
+import com.exarlabs.android.myrules.business.rule.RuleComponent;
+import com.exarlabs.android.myrules.business.rule.Runnable;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.model.GreenDaoEntity;
@@ -18,7 +21,7 @@ import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
  * </p>
  * Created by becze on 1/11/2016.
  */
-public abstract class Action implements GreenDaoEntity{
+public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable, Runnable {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -63,11 +66,6 @@ public abstract class Action implements GreenDaoEntity{
     // ------------------------------------------------------------------------
 
     /**
-     * @return the type of the condition
-     */
-    public abstract int getType();
-
-    /**
      * @return the list of properties for this condition
      */
     public abstract List<RuleActionProperty> getProperties();
@@ -100,6 +98,8 @@ public abstract class Action implements GreenDaoEntity{
         mActionPlugin = null;
         build();
     }
+
+
 
     /**
      * Regenerates the action plugin

@@ -46,7 +46,7 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"RULE_ACTION\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"TYPE\" INTEGER NOT NULL ," + // 1: type
-                "\"ACTION_NAME\" TEXT);"); // 2: actionName
+                "\"ACTION_NAME\" TEXT NOT NULL );"); // 2: actionName
     }
 
     /** Drops the underlying database table. */
@@ -65,11 +65,7 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getType());
- 
-        String actionName = entity.getActionName();
-        if (actionName != null) {
-            stmt.bindString(3, actionName);
-        }
+        stmt.bindString(3, entity.getActionName());
     }
 
     @Override
@@ -90,7 +86,7 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
         RuleAction entity = new RuleAction( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getInt(offset + 1), // type
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // actionName
+            cursor.getString(offset + 2) // actionName
         );
         return entity;
     }
@@ -100,7 +96,7 @@ public class RuleActionDao extends AbstractDao<RuleAction, Long> {
     public void readEntity(Cursor cursor, RuleAction entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setType(cursor.getInt(offset + 1));
-        entity.setActionName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setActionName(cursor.getString(offset + 2));
      }
     
     /** @inheritdoc */

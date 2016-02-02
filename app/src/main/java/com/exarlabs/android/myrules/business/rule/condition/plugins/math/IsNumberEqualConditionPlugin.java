@@ -1,13 +1,15 @@
 package com.exarlabs.android.myrules.business.rule.condition.plugins.math;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.util.Log;
 
+import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEvent;
-import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
  * Example implementation where this plugin can decide if a number is equal with another number
@@ -51,7 +53,7 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
 
 
     @Override
-    public void initialize(List<RuleConditionProperty> properties) {
+    public void initialize(List<? extends RuleComponentProperty> properties) {
         super.initialize(properties);
 
         mValue = Double.parseDouble(getProperty(KEY_VALUE).getValue());
@@ -73,6 +75,11 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
     @Override
     public String toString() {
         return "Check if number equals with" + mValue;
+    }
+
+    @Override
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
     }
 
     // ------------------------------------------------------------------------

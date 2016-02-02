@@ -1,6 +1,14 @@
 package com.exarlabs.android.myrules.business.rule.event;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import android.util.Log;
+
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
+import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -9,7 +17,7 @@ import rx.Subscriber;
  * Abstract event plugin which serveres as a base class for all the RuleEventHandler
  * Created by becze on 1/11/2016.
  */
-public abstract class EventHandlerPlugin {
+public abstract class EventHandlerPlugin implements RuleComponentPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -38,12 +46,16 @@ public abstract class EventHandlerPlugin {
      */
     private int mType;
 
+    @Inject
+    public EventPluginManager mEventPluginManager;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public EventHandlerPlugin(int type) {
-        mType = type;
+    public EventHandlerPlugin() {
+        DaggerManager.component().inject(this);
+        mType = mEventPluginManager.getFromEventPlugin(this.getClass()).getType();
 
         // Initialize the plugin on creation
         init();
@@ -57,13 +69,38 @@ public abstract class EventHandlerPlugin {
     // METHODS
     // ------------------------------------------------------------------------
 
-
     /**
      * Initializes the plugin on creation.
      *
      * @return true if the initialization is successful.
      */
     protected abstract boolean initPlugin();
+
+    /**
+     * Initialize the plugin by preparing an observable
+     */
+    public void init() {
+        mEventObservable = Observable.create(subscriber -> mSubscriber = subscriber);
+        if (!initPlugin()) {
+            Log.e(TAG, "Plugin could not be initialized");
+        }
+    }
+
+    public void enable() {
+        isEnabled = true;
+    }
+
+    public void disable() {
+        isEnabled = false;
+    }
+
+    /**
+     * @return Returns a new event instance with the type T.
+     */
+    protected <T extends Event> T createNewEvent() {
+        return (T) mEventPluginManager.createNew(getType());
+    }
+
 
     /**
      * Dispatches a new event
@@ -82,22 +119,15 @@ public abstract class EventHandlerPlugin {
         }
     }
 
-    /**
-     * Initialize the plugin by preparing an observable
-     */
-    public void init() {
-        mEventObservable = Observable.create(subscriber -> mSubscriber = subscriber);
-        if (!initPlugin()) {
-            Log.e(TAG, "Plugin could not be initialized");
-        }
+    @Override
+    public void initialize(List<? extends RuleComponentProperty> properties) {
+        // Void implementation since an event will nto be saved into database
     }
 
-    public void enable() {
-        isEnabled = true;
-    }
-
-    public void disable() {
-        isEnabled = false;
+    @Override
+    public List<? extends RuleComponentProperty> getProperties() {
+        // Void implementation since an event will nto be saved into database
+        return null;
     }
 
 
