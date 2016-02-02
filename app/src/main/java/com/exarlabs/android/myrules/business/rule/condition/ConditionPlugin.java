@@ -3,6 +3,10 @@ package com.exarlabs.android.myrules.business.rule.condition;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.Evaluable;
 import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
@@ -35,15 +39,22 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
     // ------------------------------------------------------------------------
     // List of properties
     private List<RuleConditionProperty> mProperties;
-    private int mPluginType;
+    private int mType;
+
+    @Inject
+    public ConditionPluginManager mConditionPluginManager;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public ConditionPlugin(int pluginType) {
+    public ConditionPlugin() {
+        DaggerManager.component().inject(this);
+
         mProperties = new ArrayList<>();
-        mPluginType = pluginType;
+
+        // Infer the plugin type
+        mType = mConditionPluginManager.getFromEventPlugin(this.getClass()).getType();
     }
 
 
@@ -138,6 +149,6 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
     }
 
     public int getType() {
-        return mPluginType;
+        return mType;
     }
 }

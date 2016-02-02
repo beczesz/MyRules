@@ -116,8 +116,10 @@ android {
 }
 
 dependencies {
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
 
@@ -139,7 +141,10 @@ dependencies {
     // Rx - permissions
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.5.1@aar'
 
+    // ------------------------------------------------------------------------
     // UI libs
+    // ------------------------------------------------------------------------
+
     compile 'com.norbsoft.typefacehelper:library:0.9.0'
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
@@ -149,13 +154,20 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
+
     // floating action button
     compile 'com.github.shell-software:fab:1.1.2'
+
     // expandable layout
     compile 'com.github.aakira:expandable-layout:1.4.1@aar'
     compile 'com.jmedeisis:draglinearlayout:1.1.0'
 
+    // Spinner
+    compile 'com.github.ganfra:material-spinner:1.1.1'
+
+    // ------------------------------------------------------------------------
     // Development / Analytics
+    // ------------------------------------------------------------------------
     compile 'com.facebook.stetho:stetho:1.2.0'
 
 }

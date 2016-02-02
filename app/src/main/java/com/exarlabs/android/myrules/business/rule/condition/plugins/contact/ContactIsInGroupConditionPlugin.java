@@ -32,10 +32,6 @@ public class ContactIsInGroupConditionPlugin extends ConditionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public ContactIsInGroupConditionPlugin(int pluginType) {
-        super(pluginType);
-    }
-
 
     // ------------------------------------------------------------------------
     // METHODS

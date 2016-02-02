@@ -1,24 +1,17 @@
 package com.exarlabs.android.myrules.business.condition;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
-import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginFactory;
-import com.exarlabs.android.myrules.business.rule.condition.plugins.AlwaysFalseConditionPlugin;
-import com.exarlabs.android.myrules.business.rule.condition.plugins.AlwaysTrueConditionPlugin;
-import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
-import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
-import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberPrimeConditionPlugin;
+import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
 
 /**
- * The plugin manager keeps track of al the plugins written and their actual state.
- * Created by atiyka on 1/19/2016.
+ * Manages all the available condition plugin. It provides a single point access for every other compoennt to the
+ * condition plugins.
+ * Created by becze on 12/18/2015.
  */
 public class ConditionPluginManager {
 
@@ -37,79 +30,100 @@ public class ConditionPluginManager {
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-
-    private Map<Class<? extends ConditionPlugin>, ConditionPlugin> mPluginMap;
+    /*
+     * We use 2 maps to associate event codes, event, plugins with type
+     */
+    private Map<Integer, Condition.Type> mConditionTypeToTypeMap;
+    private Map<Class<? extends ConditionPlugin>, Condition.Type> mConditionPluginToTypeMap;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-
     public ConditionPluginManager() {
-        mPluginMap = new LinkedHashMap<>();
 
-        // Add the plugins
-        mPluginMap.put(AlwaysTrueConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.DEBUG_ALWAYS_TRUE));
-        mPluginMap.put(AlwaysFalseConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.DEBUG_ALWAYS_FALSE));
-        mPluginMap.put(IsNumberEqualConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL));
-        mPluginMap.put(IsNumberInIntervalConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL));
-        mPluginMap.put(IsNumberPrimeConditionPlugin.class, ConditionPluginFactory.create(Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME));
+        /*
+         * For each type it links the id and plugin to the type and generates a new instance.
+         */
 
+        mConditionTypeToTypeMap = new LinkedHashMap<>();
+        mConditionPluginToTypeMap = new LinkedHashMap<>();
+
+        // Fill in the maps with the values
+        for (Condition.Type type : Condition.Type.values()) {
+
+            // link the id with the type
+            mConditionTypeToTypeMap.put(type.getType(), type);
+
+            // Link the event with the type
+            mConditionPluginToTypeMap.put(type.getPlugin(), type);
+        }
     }
+
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
+    /**
+     * Creator for the condition plugins.
+     *
+     * @param code
+     * @return a new condition plugin, if no plugin found a default AlwaysTrueConditionPlugin is created.
+     */
+    public ConditionPlugin createNewPluginInstance(int code) {
+        try {
+            Condition.Type fromEventCode = getFromConditionTypeCode(code);
+            return fromEventCode.getPlugin().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Creator for the condition plugin fragments.
+     *
+     * @param code
+     * @return a new condition plugin fragment, if no plugin found a default is created
+     */
+    public ConditionPluginFragment createNewPluginFragmentInstance(int code) {
+
+        try {
+            Condition.Type fromEventCode = getFromConditionTypeCode(code);
+            return fromEventCode.getPluginFragment().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    /**
+     * @param code
+     * @return the Event.Type associated with this code
+     */
+    public Condition.Type getFromConditionTypeCode(int code) {
+        return mConditionTypeToTypeMap.get(code);
+    }
+
+    /**
+     * @param plugin
+     * @return the Event.Type associated with this plugin.
+     */
+    public Condition.Type getFromEventPlugin(Class<? extends ConditionPlugin> plugin) {
+        return mConditionPluginToTypeMap.get(plugin);
+    }
+
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
-
-    /**
-     * @return the list of plugins
-     */
-    public Collection<ConditionPlugin> getPlugins() {
-        return mPluginMap.values();
-    }
-
-    /**
-     * Returns the instance of the plugin.
-     *
-     * @param key
-     * @return
-     */
-    public ConditionPlugin get(Class<? extends ConditionPlugin> key) {
-        return mPluginMap.get(key);
-    }
-
-    /**
-     * Returns the plugin type from the given position in the map
-     *
-     * @param position
-     * @return
-     */
-    public int getTypeByPosition(int position){
-        List<ConditionPlugin> plugins = new ArrayList<>(mPluginMap.values());
-        return plugins.get(position).getType();
-    }
-
-    /**
-     * Returns the position in the map
-     *
-     * @param type
-     * @return
-     */
-    public int getPositionInMap(int type){
-        Class className = ConditionPluginFactory.create(type).getClass();
-        Iterator iterator = mPluginMap.keySet().iterator();
-
-        int i = 0;
-        while(iterator.hasNext()) {
-            if (iterator.next().equals(className))
-                return i;
-            i++;
-        }
-
-        return 0;
-    }
 }
+

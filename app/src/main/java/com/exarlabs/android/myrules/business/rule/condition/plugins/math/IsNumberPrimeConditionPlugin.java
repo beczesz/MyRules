@@ -37,9 +37,6 @@ public class IsNumberPrimeConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public IsNumberPrimeConditionPlugin(int pluginType) {
-        super(pluginType);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS
@@ -60,9 +57,8 @@ public class IsNumberPrimeConditionPlugin extends ConditionPlugin {
 
     //checks whether an int is prime or not.
     boolean isPrime(int n) {
-        for(int i=2;2*i<n;i++) {
-            if(n%i==0)
-                return false;
+        for (int i = 2; 2 * i < n; i++) {
+            if (n % i == 0) return false;
         }
         return true;
     }

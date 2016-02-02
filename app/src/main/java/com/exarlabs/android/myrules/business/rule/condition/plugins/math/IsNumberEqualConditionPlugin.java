@@ -43,9 +43,6 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public IsNumberEqualConditionPlugin(int pluginType) {
-        super(pluginType);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS

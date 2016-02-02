@@ -1,8 +1,5 @@
 package com.exarlabs.android.myrules.business.rule.condition;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -208,7 +205,9 @@ public class ConditionManager {
      */
     public RuleCondition getDefaultCondition() {
         RuleCondition c = new RuleCondition();
-        c.setType(Condition.Type.DEBUG_ALWAYS_TRUE);
+        Condition.Type conditionType = Condition.Type.DEBUG_ALWAYS_TRUE;
+        c.setType(conditionType.getType());
+        c.setConditionName(Condition.Type.DEBUG_ALWAYS_TRUE.toString());
         saveCondition(c);
         return c;
     }
@@ -216,7 +215,6 @@ public class ConditionManager {
     /**
      * Returns all the defined perimissions needed to run this rule.
      *
-     * @param ruleRecord
      * @return
      */
     public Set<String> getPermissions(RuleConditionTree ruleConditionTree) {

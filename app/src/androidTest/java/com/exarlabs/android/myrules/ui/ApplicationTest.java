@@ -86,11 +86,11 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
      */
     public void testConditionsEvaluation() {
         // create a condition structure
-        RuleCondition c1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
-        RuleCondition c2 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE);
-        RuleCondition c3 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
-        RuleCondition c4 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE);
-        RuleCondition c5 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE);
+        RuleCondition c1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
+        RuleCondition c2 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE.getType());
+        RuleCondition c3 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
+        RuleCondition c4 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE.getType());
+        RuleCondition c5 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_FALSE.getType());
 
         List<RuleCondition> condition = new ArrayList<>();
         Collections.addAll(condition, c1, c2, c3, c4, c5);
@@ -120,7 +120,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     public void testConditionProperties() {
 
         // create a condition structure
-        RuleCondition c = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        RuleCondition c = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
         ConditionPlugin conditionPlugin = c.getConditionPlugin();
 
         assertTrue(conditionPlugin instanceof AlwaysTrueConditionPlugin);
@@ -182,16 +182,16 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         /*
          * Create the conditions
          */
-        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
-        RuleCondition cTrue1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
+        RuleCondition cTrue1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
 
-        RuleCondition cInterval = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL);
+        RuleCondition cInterval = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL.getType());
         ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMin(5);
         ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMax(500);
 
-        RuleCondition cPrime = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME);
+        RuleCondition cPrime = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME.getType());
 
-        RuleCondition cEqual = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL);
+        RuleCondition cEqual = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL.getType());
         ((IsNumberEqualConditionPlugin) cEqual.getConditionPlugin()).setValue(1);
 
         List<RuleCondition> ruleConditions = new ArrayList<>();

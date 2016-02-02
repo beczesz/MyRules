@@ -2,6 +2,8 @@ package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
 import com.exarlabs.android.myrules.business.RulesEngineService;
+import com.exarlabs.android.myrules.business.rule.condition.Condition;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.action.plugins.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
@@ -20,6 +22,7 @@ import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragme
 import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsArrayAdapter;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
@@ -106,4 +109,10 @@ public interface DaggerComponentGraph {
     void inject(EventHandlerPlugin eventHandlerPlugin);
     
     void inject(ActionsSectorFragment actionsSectorFragment);
+
+    void inject(ConditionPlugin conditionPlugin);
+
+    void inject(Condition condition);
+
+    void inject(ConditionsArrayAdapter conditionsArrayAdapter);
 }

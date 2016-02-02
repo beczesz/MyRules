@@ -30,9 +30,6 @@ public class AlwaysTrueConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public AlwaysTrueConditionPlugin(int pluginType) {
-        super(pluginType);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS

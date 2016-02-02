@@ -2,12 +2,28 @@ package com.exarlabs.android.myrules.business.rule.condition;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.Buildable;
 import com.exarlabs.android.myrules.business.rule.Evaluable;
 import com.exarlabs.android.myrules.business.rule.RuleComponent;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.AlwaysFalseConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.AlwaysTrueConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.contact.ContactIsInGroupConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberPrimeConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
+import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
 
 /**
  * It is a rule condition abstraction which with a bridge pattern it decouples the
@@ -17,7 +33,7 @@ import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
  * </p>
  * Created by becze on 12/18/2015.
  */
-public abstract class Condition implements GreenDaoEntity, RuleComponent, Evaluable, Buildable{
+public abstract class Condition implements GreenDaoEntity, RuleComponent, Evaluable, Buildable {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -26,19 +42,63 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
     /**
      * Encapsulates the Condition Types.
      */
-    public static class Type {
-        // Debug condition types
-        public static final int DEBUG_ALWAYS_TRUE = 100;
-        public static final int DEBUG_ALWAYS_FALSE = 101;
+    public enum Type {
 
-        // Arithmetric conditions
-        public static final int ARITHMETRIC_IS_NUMBER_EQUAL = 201;
-        public static final int ARITHMETRIC_IS_NUMBER_IN_INTERVAL = 202;
-        public static final int ARITHMETRIC_IS_NUMBER_PRIME = 203;
+        // ------------------------------------------------------------------------
+        // DEBUG CONDITIONS
+        // ------------------------------------------------------------------------
+
+        DEBUG_ALWAYS_TRUE(1000, AlwaysTrueConditionPlugin.class, DefaultConditionPluginFragment.class,
+                        R.string.condition_title_always_true_condition),
+        DEBUG_ALWAYS_FALSE(1001, AlwaysFalseConditionPlugin.class, DefaultConditionPluginFragment.class,
+                        R.string.condition_title_always_false_condition),
+
+        // ------------------------------------------------------------------------
+        // ARITHMETRIC CONDITIONS
+        // ------------------------------------------------------------------------
+
+        ARITHMETRIC_IS_NUMBER_EQUAL(2001, IsNumberEqualConditionPlugin.class, EqualConditionPluginFragment.class,
+                        R.string.condition_title_is_number_equal_condition),
+        ARITHMETRIC_IS_NUMBER_IN_INTERVAL(2002, IsNumberInIntervalConditionPlugin.class, IntervalConditionPluginFragment.class,
+                        R.string.condition_title_is_number_in_interval_condition),
+        ARITHMETRIC_IS_NUMBER_PRIME(2003, IsNumberPrimeConditionPlugin.class, DefaultConditionPluginFragment.class,
+                        R.string.condition_title_is_number_prime_condition),
 
 
-        // Contacts conditions
-        public static final int CONTACT_IS_IN_GROUP = 301;
+        // ------------------------------------------------------------------------
+        // CONTACT CONDITIONS
+        // ------------------------------------------------------------------------
+        CONTACT_IS_IN_GROUP(3001, ContactIsInGroupConditionPlugin.class, ContactIsInGroupConditionPluginFragment.class,
+                        R.string.condition_title_contact_is_in_group_condition);
+
+
+        private final int mType;
+        private final Class<? extends ConditionPlugin> mPlugin;
+        private final Class<? extends ConditionPluginFragment> mPluginFragment;
+        private final int mTitleResId;
+
+        Type(int type, Class<? extends ConditionPlugin> plugin, Class<? extends ConditionPluginFragment> pluginFragment, int titleResId) {
+            mType = type;
+            mPlugin = plugin;
+            mPluginFragment = pluginFragment;
+            mTitleResId = titleResId;
+        }
+
+        public int getType() {
+            return mType;
+        }
+
+        public Class<? extends ConditionPlugin> getPlugin() {
+            return mPlugin;
+        }
+
+        public int getTitleResId() {
+            return mTitleResId;
+        }
+
+        public Class<? extends ConditionPluginFragment> getPluginFragment() {
+            return mPluginFragment;
+        }
     }
 
 
@@ -58,10 +118,18 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
     private ConditionPlugin mConditionPlugin;
     private boolean isBuilt;
 
+    @Inject
+    ConditionPluginManager mConditionPluginManager;
+
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
+    public Condition() {
+        DaggerManager.component().inject(this);
+    }
+
 
     // ------------------------------------------------------------------------
     // METHODS
@@ -130,7 +198,7 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
     public ConditionPlugin getConditionPlugin() {
         if (mConditionPlugin == null) {
             // First build this condition
-            mConditionPlugin = ConditionPluginFactory.create(getType());
+            mConditionPlugin = mConditionPluginManager.createNewPluginInstance(getType());
         }
         return mConditionPlugin;
     }

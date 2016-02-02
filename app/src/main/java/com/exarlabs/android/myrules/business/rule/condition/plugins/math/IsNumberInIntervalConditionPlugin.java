@@ -44,9 +44,6 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public IsNumberInIntervalConditionPlugin(int pluginType) {
-        super(pluginType);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS

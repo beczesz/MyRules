@@ -2,6 +2,7 @@ package com.exarlabs.android.myrules.business.rule.event;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -108,7 +109,7 @@ public class EventPluginManager {
     /**
      * @return the list of plugins
      */
-    public ArrayList<EventHandlerPlugin> getPlugins() {
+    public List<EventHandlerPlugin> getPlugins() {
         return new ArrayList<>(mPluginMap.values());
     }
 

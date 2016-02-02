@@ -62,5 +62,12 @@
     <string name="event_title_incomming_sms_event">Incoming SMS</string>
     <string name="event_title_incomming_call_event">Incoming Call</string>
 
+    <!-- Condition names -->
+    <string name="condition_title_always_true_condition">Always True Condition</string>
+    <string name="condition_title_always_false_condition">Always False Condition</string>
+    <string name="condition_title_is_number_prime_condition">Is Number Prime Condition</string>
+    <string name="condition_title_is_number_in_interval_condition">Is Number in Interval Condition</string>
+    <string name="condition_title_is_number_equal_condition">Is Number Equal With Condition</string>
+    <string name="condition_title_contact_is_in_group_condition">Contact is in Group Condition</string>
 
 </resources>

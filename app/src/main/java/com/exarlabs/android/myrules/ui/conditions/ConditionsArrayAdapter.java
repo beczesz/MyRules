@@ -3,6 +3,8 @@ package com.exarlabs.android.myrules.ui.conditions;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 import com.exarlabs.android.myrules.ui.R;
@@ -29,8 +33,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
     // STATIC CLASSES
     // ------------------------------------------------------------------------
 
-    static class ConditionViewHolder
-    {
+    static class ConditionViewHolder {
         public ConditionViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
@@ -73,6 +76,8 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
     private Collection<? extends RuleCondition> mRuleConditions;
 
 
+    @Inject
+    public ConditionPluginManager mConditionPluginManager;
     // ------------------------------------------------------------------------
     // INITIALIZERS
     // ------------------------------------------------------------------------
@@ -82,6 +87,8 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
     // ------------------------------------------------------------------------
     public ConditionsArrayAdapter(Context context) {
         super(context, R.layout.conditions_list_view_item);
+
+        DaggerManager.component().inject(this);
         mContext = context;
     }
 
@@ -89,7 +96,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
     // METHODS
     // ------------------------------------------------------------------------
 
-    public void setOnConditionEditListener(OnConditionEditListener listener){
+    public void setOnConditionEditListener(OnConditionEditListener listener) {
         mConditionEditListener = listener;
     }
 
@@ -97,15 +104,11 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
     public View getView(int position, View convertView, ViewGroup parent) {
         View root;
 
-        if(convertView == null)
-        {
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             root = inflater.inflate(R.layout.conditions_list_view_item, parent, false);
-
             root.setTag(new ConditionViewHolder(root));
-        }
-        else
-        {
+        } else {
             root = convertView;
         }
 
@@ -119,7 +122,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
 
         // TODO: T.B.D. - details, text
         String details = "Type No.: " + condition.getType() + "\n" +
-                         "Class: " + condition.getConditionPlugin().getClass().getSimpleName();
+                        "Class: " + mConditionPluginManager.getFromConditionTypeCode(condition.getType()).getPluginFragment().getSimpleName();
 
         List<RuleConditionProperty> properties = condition.getProperties();
         for (RuleConditionProperty property : properties) {
@@ -127,7 +130,6 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
         }
 
         holder.itemDetails.setText(details);
-
         holder.editCondition.setTag(condition.getId());
         holder.editCondition.setOnClickListener(this);
 
@@ -143,20 +145,18 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
     @Override
     public void onClick(View view) {
         // clicked on a RelativeLayout -> expand or collapse the list item
-        if(view.getClass().equals(RelativeLayout.class)){
+        if (view.getClass().equals(RelativeLayout.class)) {
             ConditionViewHolder holder = new ConditionViewHolder(view);
             if (holder.expandableLayout.isExpanded()) holder.expandableLayout.collapse();
             else holder.expandableLayout.expand();
 
-        // else on a button
+            // else on a button
         } else {
             Button button = (Button) view;
             Long id = (Long) button.getTag();
-            if(mConditionEditListener != null)
-                mConditionEditListener.onConditionEdit(id);
+            if (mConditionEditListener != null) mConditionEditListener.onConditionEdit(id);
         }
     }
-
 
 
 }

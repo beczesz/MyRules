@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
 import com.exarlabs.android.myrules.business.rule.Rule;
@@ -25,7 +26,6 @@ import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionP
 import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
-import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginFactory;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
@@ -93,6 +93,9 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
     @Inject
     public ConditionManager mConditionManager;
+
+    @Inject
+    public ConditionPluginManager mConditionPluginManager;
 
     private View mRootView;
     private EventsArrayAdapter mAdapter;
@@ -180,7 +183,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
          * Create the conditions
          */
         // ToDo: to be handled an event without conditions and without building the condition tree
-        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
         mConditionManager.saveCondition(cTrue);
 
         // create dependencies between conditions
@@ -224,7 +227,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
          * Create the conditions
          */
         // ToDo: to be handled an event without conditions and without building the condition tree
-        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
         mConditionManager.saveCondition(cTrue);
 
         // create dependencies between conditions
@@ -284,16 +287,16 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         /*
          * Create the conditions
          */
-        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
-        RuleCondition cTrue1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE);
+        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
+        RuleCondition cTrue1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
 
-        RuleCondition cInterval = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL);
+        RuleCondition cInterval = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL.getType());
         ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMin(5);
         ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMax(500);
 
-        RuleCondition cPrime = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME);
+        RuleCondition cPrime = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME.getType());
 
-        RuleCondition cEqual = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL);
+        RuleCondition cEqual = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_EQUAL.getType());
         ((IsNumberEqualConditionPlugin) cEqual.getConditionPlugin()).setValue(1);
 
         List<RuleCondition> ruleConditions = new ArrayList<>();
@@ -337,7 +340,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     private RuleCondition generateNewCondition(int type) {
         RuleCondition c = new RuleCondition();
         c.setType(type);
-        c.setConditionName(ConditionPluginFactory.create(type).getClass().getSimpleName());
+        c.setConditionName(getResources().getString(mConditionPluginManager.getFromConditionTypeCode(type).getTitleResId()));
         return c;
     }
 

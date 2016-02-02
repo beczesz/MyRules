@@ -180,7 +180,7 @@ public class RuleDetailsFragment extends BaseFragment {
 
     private void setUpEvents() {
         // Initialize the event spinenr
-        ArrayList<EventHandlerPlugin> plugins = mEventPluginManager.getPlugins();
+        List<EventHandlerPlugin> plugins = mEventPluginManager.getPlugins();
 
         //@formatter:off
         // Get the list of event plugins.
