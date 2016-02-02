@@ -8,12 +8,13 @@ import android.support.v4.app.FragmentManager;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
-import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 import com.exarlabs.android.myrules.ui.util.contact.ContactsSectorFragment;
 
@@ -147,13 +148,14 @@ public class NavigationManager {
         openAsRoot(fragment);
     }
 
-    public void startAddRuleFragment() {
-        Fragment fragment = RulesAddRuleFragment.newInstance();
+    public void startRuleDetailsFragment(long ruleId) {
+        Fragment fragment = RuleDetailsFragment.newInstance(ruleId);
         open(fragment);
     }
 
-    public void startRuleDetailsFragment(long ruleId) {
-        Fragment fragment = RuleDetailsFragment.newInstance(ruleId);
+    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener) {
+        ContactsSectorFragment fragment = ContactsSectorFragment.newInstance();
+        fragment.setContactsSelectorListener(listener);
         open(fragment);
     }
 
@@ -169,6 +171,12 @@ public class NavigationManager {
         open(fragment);
     }
 
+    public void startConditionsSelectorFragment(ConditionsSectorFragment.ConditionsSelectorListener listener) {
+        ConditionsSectorFragment fragment = ConditionsSectorFragment.newInstance();
+        fragment.setConditionsSelectorListener(listener);
+        open(fragment);
+    }
+
 
     // MY ACTIONS
     public void startActionsOverview() {
@@ -181,9 +189,9 @@ public class NavigationManager {
         open(fragment);
     }
 
-    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener) {
-        ContactsSectorFragment fragment = ContactsSectorFragment.newInstance();
-        fragment.setContactsSelectorListener(listener);
+    public void startActionsSelectorFragment(ActionsSectorFragment.ActionsSelectorListener listener) {
+        ActionsSectorFragment fragment = ActionsSectorFragment.newInstance();
+        fragment.setActionsSelectorListener(listener);
         open(fragment);
     }
 

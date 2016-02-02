@@ -2,7 +2,7 @@ package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
 import com.exarlabs.android.myrules.business.RulesEngineService;
-import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.action.plugins.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
@@ -15,10 +15,12 @@ import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionsSectorFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
-import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPlugin;
+import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
@@ -29,7 +31,6 @@ import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
-import com.exarlabs.android.myrules.ui.rules.RulesAddRuleFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 import com.exarlabs.android.myrules.ui.util.contact.ContactsSectorFragment;
 
@@ -62,8 +63,6 @@ public interface DaggerComponentGraph {
 
     void inject(RulesEngineService ruleService);
 
-    void inject(RulesAddRuleFragment rulesAddRuleFragment);
-
     void inject(DebugOverviewFragment debugOverviewFragment);
 
     void inject(SendSmsActionPlugin sendSmsActionPlugin);
@@ -94,13 +93,17 @@ public interface DaggerComponentGraph {
 
     void inject(IntervalConditionPluginFragment intervalConditionPluginFragment);
 
-    void inject(SendSMSToGroupActionPlugin sendSMSToGroupActionPlugin);
+    void inject(SendSMSToGroupActionPluginFragment sendSMSToGroupActionPluginFragment);
 
     void inject(ContactsSectorFragment contactsSectorFragment);
 
     void inject(ConditionDetailsFragment conditionDetailsFragment);
 
+    void inject(ConditionsSectorFragment conditionsSectorFragment);
+    
     void inject(Event event);
 
     void inject(EventHandlerPlugin eventHandlerPlugin);
+    
+    void inject(ActionsSectorFragment actionsSectorFragment);
 }

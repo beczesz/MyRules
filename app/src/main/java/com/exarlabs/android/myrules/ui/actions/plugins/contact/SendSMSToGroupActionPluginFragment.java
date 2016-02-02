@@ -23,7 +23,7 @@ import butterknife.OnClick;
 /**
  * Created by becze on 1/28/2016.
  */
-public class SendSMSToGroupActionPlugin extends ActionPluginFragment {
+public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -40,8 +40,8 @@ public class SendSMSToGroupActionPlugin extends ActionPluginFragment {
     /**
      * @return newInstance of SendSMSToGroupActionPlugin
      */
-    public static SendSMSToGroupActionPlugin newInstance() {
-        return new SendSMSToGroupActionPlugin();
+    public static SendSMSToGroupActionPluginFragment newInstance() {
+        return new SendSMSToGroupActionPluginFragment();
     }
 
     // ------------------------------------------------------------------------

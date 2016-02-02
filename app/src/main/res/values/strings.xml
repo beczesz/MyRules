@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="exit_message">Are you sure you want to exit?</string>
 
-
+    <!-- Drawer -->
     <string name="my_rules">My Rules</string>
     <string name="my_actions">My Actions</string>
     <string name="my_conditions">My Conditions</string>
@@ -25,8 +25,6 @@
 
     <string name="lbl_start_rules_engine">Start Rules Engine</string>
     <string name="lbl_stop_rules_engine">Stop Rules Engine</string>
-    <string name="lbl_start_rules_engine_icon">{faw-play}</string>
-    <string name="lbl_stop_rules_engine_icon">{faw-stop}</string>
     <string name="lbl_enter_a_name">Enter a name</string>
     <string name="lbl_hint_interv_end">Type the interval end</string>
     <string name="lbl_hint_interv_start">Type the interval start</string>
@@ -35,6 +33,7 @@
     <string name="lbl_conditions">Conditions</string>
     <string name="lbl_actions">Actions</string>
     <string name="lbl_no_condition_added">No conditions added</string>
+    <string name="lbl_no_action_added">No actions added</string>
     <string name="lbl_hint_number_equal">Type the number</string>
     <string name="lbl_hint_number_multiply">Type the multiplier</string>
     <string name="operator_or">O\nR</string>
@@ -45,7 +44,16 @@
     <string name="contact_selected">Selected contacts:</string>
     <string name="lbl_complete_selection">Complete selection</string>
     <string name="select_a_condition">Select a Condition...</string>
+    <string name="lbl_search_condition">Search a condition...</string>
+    <string name="lbl_search_action">Search an action...</string>
+    <string name="condition_selected">Selected conditions:</string>
+    <string name="action_selected">Selected actions:</string>
+
+    <!-- Font awesome icons-->
+    <string name="lbl_start_rules_engine_icon">{faw-play}</string>
+    <string name="lbl_stop_rules_engine_icon">{faw-stop}</string>
     <string name="lbl_edit_item">{faw-pencil}</string>
+    <string name="lbl_delete_item">{faw-trash-o}</string>
     <string name="message_error_permission_denied">To save you have to grant all of the permissions.</string>
 
 

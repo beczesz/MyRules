@@ -54,6 +54,9 @@ public class ConditionTreeFragment extends BaseFragment {
 
         @Bind(R.id.card_body)
         public LinearLayout mCardBody;
+
+        @Bind(R.id.delete_card)
+        public TextView mDeleteCard;
     }
 
     // ------------------------------------------------------------------------
@@ -96,7 +99,7 @@ public class ConditionTreeFragment extends BaseFragment {
     public NavigationManager mNavigationManager;
 
     private RuleConditionTree mRuleConditionTree;
-
+    private LayoutInflater mInflater;
     // By default the selected operator will be and
     private int mSelectedOperator = ConditionTree.Operator.AND;
     // ------------------------------------------------------------------------
@@ -122,6 +125,8 @@ public class ConditionTreeFragment extends BaseFragment {
 
         // init with the operator
         mSelectedOperator = mRuleConditionTree.getOperator();
+
+        mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Nullable
@@ -143,43 +148,46 @@ public class ConditionTreeFragment extends BaseFragment {
      * Regenerate the list of conditions.
      */
     private void updateUI() {
-
         // update the operator
         updateOperator();
-        updateConditions();
+        if(mRuleConditionTree.getId() != null)
+            updateConditions();
     }
 
     /**
      * Generates a card for each of the conditions.
      */
     private void updateConditions() {
-
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         // Remove all the cards
         mConditionsContainer.removeAllViews();
 
-        // TODO change it to a drag and drop list view
         for (RuleConditionTree child : mRuleConditionTree.getChildConditions()) {
-
-            // Inflate the card and add the child as a tag
-            View card = inflater.inflate(R.layout.card_layout, null);
-            card.setTag(child);
-
-            // get the child condition
-            RuleCondition childRuleCondition = child.getRuleCondition();
-            ConditionCardViewHolder viewHolder = new ConditionCardViewHolder(card);
-            viewHolder.mConditionTitle.setText(childRuleCondition.getConditionName());
-            viewHolder.mConditionDescription.setText(childRuleCondition.getConditionPlugin().toString());
-
-            // setup the link to the condition editor
-            viewHolder.mCardBody.setOnClickListener(
-                            v -> mNavigationManager.startConditionsDetails(childRuleCondition.getId()));
-
-            // add the current card
-            mConditionsContainer.addDragView(card, viewHolder.mDragHandle);
+            addConditionToContainer(child.getRuleCondition());
         }
 
+    }
+
+    /**
+     * Creates a new card view with the condition, and adds to the container
+     *
+     * @param ruleCondition
+     */
+    public void addConditionToContainer(RuleCondition ruleCondition){
+        // Inflate the card and add the child as a tag
+        View card = mInflater.inflate(R.layout.card_layout, null);
+        card.setTag(ruleCondition);
+
+        // get the child condition
+        ConditionCardViewHolder viewHolder = new ConditionCardViewHolder(card);
+        viewHolder.mConditionTitle.setText(ruleCondition.getConditionName());
+        viewHolder.mConditionDescription.setText(ruleCondition.getConditionPlugin().toString());
+
+        // setup the link to the condition editor
+        viewHolder.mCardBody.setOnClickListener(v -> mNavigationManager.startConditionsDetails(ruleCondition.getId()));
+        viewHolder.mDeleteCard.setOnClickListener(l -> mConditionsContainer.removeDragView(card));
+
+        // add the current card
+        mConditionsContainer.addDragView(card, viewHolder.mDragHandle);
 
         mDefaultMessageTextView.setVisibility(mConditionsContainer.getChildCount() > 0 ? View.GONE : View.VISIBLE);
     }
@@ -192,7 +200,7 @@ public class ConditionTreeFragment extends BaseFragment {
 
         for (int i = 0; i < mConditionsContainer.getChildCount(); i++) {
             View conditionCard = mConditionsContainer.getChildAt(i);
-            conditions.add(((RuleConditionTree) conditionCard.getTag()).getRuleCondition());
+            conditions.add((RuleCondition) conditionCard.getTag());
         }
 
         RuleConditionTree.Builder builder = new ConditionTree.Builder();

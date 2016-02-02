@@ -3,14 +3,15 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+
     <EditText
-        android:id="@+id/contacts_filter"
+        android:id="@+id/actions_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search a contacts..."/>
+        android:hint="@string/lbl_search_action"/>
 
     <ListView
-        android:id="@+id/contact_list"
+        android:id="@+id/action_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

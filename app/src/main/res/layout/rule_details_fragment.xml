@@ -3,8 +3,7 @@
                 xmlns:fab="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-    >
+                android:orientation="horizontal">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,8 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
 
             <EditText
@@ -28,8 +26,7 @@
                 style="@style/Header2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lbl_event"
-                />
+                android:text="@string/lbl_event"/>
 
             <Spinner
                 android:id="@+id/spinner_events"
@@ -40,8 +37,7 @@
                 style="@style/Header2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lbl_conditions"
-                />
+                android:text="@string/lbl_conditions"/>
 
             <FrameLayout
                 android:id="@+id/condition_card_container"
@@ -65,8 +61,7 @@
                 style="@style/Header2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lbl_actions"
-                />
+                android:text="@string/lbl_actions"/>
 
             <FrameLayout
                 android:id="@+id/actions_card_container"
@@ -89,8 +84,7 @@
                 layout="@layout/save_cancel_button_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                />
+                android:layout_alignParentBottom="true"/>
 
         </LinearLayout>
     </ScrollView>
@@ -102,7 +96,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        />
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

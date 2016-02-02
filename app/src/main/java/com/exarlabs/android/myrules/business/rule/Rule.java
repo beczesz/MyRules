@@ -173,8 +173,6 @@ public abstract class Rule implements GreenDaoEntity, Evaluable, Buildable, Runn
                 ruleActionLinks.add(ruleActionLink);
             }
         }
-
-
     }
 
     public void addRuleActions(RuleAction... actions) {

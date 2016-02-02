@@ -98,6 +98,7 @@ public class RuleManager {
         // if there were any temporary actions save them
         ruleRecord.addTempraryRuleActions();
         // save the actions
+        
         mActionManager.saveActionLinks(ruleRecord, ruleRecord.getRuleActionLinks());
 
         // save the rule

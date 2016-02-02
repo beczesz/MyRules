@@ -21,17 +21,19 @@ import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rx.CallbackSubscriber;
+import com.exarlabs.android.myrules.model.dao.RuleAction;
+import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -143,13 +145,20 @@ public class RuleDetailsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Load the condition display fragment
-        mConditionTreeFragment = ConditionTreeFragment.newInstance(mRuleRecord.getRuleConditionTreeId());
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
+        if(mConditionTreeFragment == null) {
+            long id = mRuleRecord.getRuleConditionTreeId() == null ? -1 : mRuleRecord.getRuleConditionTreeId();
+
+            mConditionTreeFragment = ConditionTreeFragment.newInstance(id);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
+        }
 
         // Load the condition display fragment
-        mActionCardsFragment = ActionCardsFragment.newInstance();
-        mActionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, mActionCardsFragment).commit();
+        if(mActionCardsFragment == null) {
+            mActionCardsFragment = ActionCardsFragment.newInstance();
+            if(mRuleRecord.getId() != null)
+                mActionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, mActionCardsFragment).commit();
+        }
 
     }
 
@@ -197,12 +206,20 @@ public class RuleDetailsFragment extends BaseFragment {
 
     @OnClick(R.id.fab_add_condition)
     public void showAddConditionFragment() {
-        Toast.makeText(getActivity(), "Select condition fragment", Toast.LENGTH_SHORT).show();
+        mNavigationManager.startConditionsSelectorFragment(conditions -> {
+            for (RuleCondition condition : conditions) {
+                mConditionTreeFragment.addConditionToContainer(condition);
+            }
+        });
     }
 
     @OnClick(R.id.fab_add_action)
     public void showAdActionFragment() {
-        Toast.makeText(getActivity(), "Select action fragment", Toast.LENGTH_SHORT).show();
+        mNavigationManager.startActionsSelectorFragment(actions -> {
+            for (RuleAction action : actions) {
+                mActionCardsFragment.addActionToTheContainer(action);
+            }
+        });
     }
 
     @OnClick(R.id.button_save)
@@ -262,9 +279,21 @@ public class RuleDetailsFragment extends BaseFragment {
 
         // Update the conditions
         ConditionTree.Builder builder = mConditionTreeFragment.generateCurrentConditionTree();
-        RuleConditionTree ruleConditionTree = mConditionManager.rebuildConditionTree(mRuleRecord.getRuleConditionTree(), builder);
+
+        RuleConditionTree ruleConditionTree;
+        if(mRuleRecord.getRuleConditionTreeId() != null)
+            ruleConditionTree = mConditionManager.rebuildConditionTree(mRuleRecord.getRuleConditionTree(), builder);
+        else
+            ruleConditionTree = mConditionManager.buildConditionTree(builder);
+
         mRuleRecord.setRuleConditionTree(ruleConditionTree);
 
+        // Update the actions
+        List<RuleAction> actions = mActionCardsFragment.getCurrentActionsList();
+        if(mRuleRecord.getId() != null)
+            mRuleRecord.getRuleActionLinks().clear();
+
+        mRuleRecord.addRuleActions(actions);
 
         // Save the rule record
         mRuleManager.saveRuleRecord(mRuleRecord);

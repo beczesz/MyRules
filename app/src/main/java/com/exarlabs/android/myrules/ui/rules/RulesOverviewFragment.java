@@ -172,7 +172,7 @@ public class RulesOverviewFragment extends BaseFragment {
 
     @OnClick(R.id.fab_add_rule)
     public void showAddRuleFragment() {
-        mNavigationManager.startAddRuleFragment();
+        mNavigationManager.startRuleDetailsFragment((long)-1);
     }
 
     @OnClick({ R.id.lbl_rules_engine_starter, R.id.lbl_rules_engine_starter_icon })
