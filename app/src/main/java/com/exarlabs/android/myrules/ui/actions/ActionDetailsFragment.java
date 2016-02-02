@@ -224,6 +224,8 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
                                        });
 
             //@formatter:on
+        } else {
+            doSave();
         }
     }
 

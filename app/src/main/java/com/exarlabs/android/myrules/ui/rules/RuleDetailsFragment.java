@@ -262,6 +262,8 @@ public class RuleDetailsFragment extends BaseFragment {
                                        });
 
             //@formatter:on
+        } else {
+            doSave();
         }
     }
 
