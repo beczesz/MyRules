@@ -12,9 +12,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.rule.event.Event;
-import com.exarlabs.android.myrules.business.rule.event.EventFactory;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 
 /**
  * The plugin converts the incoming call event to a CallEvent
@@ -45,14 +44,12 @@ public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnInco
     @Inject
     public Context mContext;
 
+    @Inject
+    public EventPluginManager mEventPluginManager;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-
-
-    public CallEventHandlerPlugin() {
-        super(Event.Type.RULE_EVENT_CALL);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS
@@ -73,7 +70,7 @@ public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnInco
 
     @Override
     public void getCall(String caller) {
-        CallEvent event = (CallEvent) EventFactory.create(Event.Type.RULE_EVENT_CALL);
+        CallEvent event = createNewEvent();
         event.setCaller(caller);
 
         dispatchEvent(event);

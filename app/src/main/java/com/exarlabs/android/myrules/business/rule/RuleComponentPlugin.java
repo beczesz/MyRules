@@ -30,4 +30,9 @@ public interface RuleComponentPlugin {
      */
     List<? extends RuleComponentProperty> getProperties();
 
+    /**
+     * @return the type of this component
+     */
+    int getType();
+
 }

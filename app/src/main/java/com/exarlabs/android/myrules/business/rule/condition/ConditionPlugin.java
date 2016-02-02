@@ -137,7 +137,7 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
         return mProperties;
     }
 
-    public int getPluginType() {
+    public int getType() {
         return mPluginType;
     }
 }

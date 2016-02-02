@@ -6,6 +6,8 @@ import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.action.plugins.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.plugins.call.CallEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.plugins.sms.SmsEventHandlerPlugin;
 import com.exarlabs.android.myrules.ui.BaseActivity;
@@ -97,4 +99,8 @@ public interface DaggerComponentGraph {
     void inject(ContactsSectorFragment contactsSectorFragment);
 
     void inject(ConditionDetailsFragment conditionDetailsFragment);
+
+    void inject(Event event);
+
+    void inject(EventHandlerPlugin eventHandlerPlugin);
 }

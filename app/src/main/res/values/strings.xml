@@ -47,4 +47,12 @@
     <string name="select_a_condition">Select a Condition...</string>
     <string name="lbl_edit_item">{faw-pencil}</string>
     <string name="message_error_permission_denied">To save you have to grant all of the permissions.</string>
+
+
+    <!-- Event names -->
+    <string name="event_title_number_event">Number Event</string>
+    <string name="event_title_incomming_sms_event">Incoming SMS</string>
+    <string name="event_title_incomming_call_event">Incoming Call</string>
+
+
 </resources>

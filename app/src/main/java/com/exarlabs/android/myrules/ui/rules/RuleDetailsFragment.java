@@ -24,6 +24,7 @@ import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionCardsFragment;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
+import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rx.CallbackSubscriber;
@@ -176,19 +177,20 @@ public class RuleDetailsFragment extends BaseFragment {
         // Get the list of event plugins.
         List<String> eventPluginNames = new ArrayList<>();
         Observable.from(plugins)
-                        .map(plugin -> plugin.getClass().getSimpleName())
-                        .subscribe(conditionName -> eventPluginNames.add(conditionName));
+                        .map(plugin -> mEventPluginManager.getFromEventCode(plugin.getType()))
+                        .subscribe(type -> eventPluginNames.add(getContext().getResources().getString(type.getTitleResId())));
         //@formatter:on
 
         // setup the spinner
         mEventsSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, eventPluginNames));
 
-        for (int i = 0; i < plugins.size(); i++) {
-            EventHandlerPlugin plugin = plugins.get(i);
-            if (plugin.getType() == mRuleRecord.getEventCode()) {
-                mEventsSpinner.setSelection(i);
-                break;
-            }
+        // Initialize the spinner.
+        Event.Type eventType = mEventPluginManager.getFromEventCode(mRuleRecord.getEventCode());
+        EventHandlerPlugin plugin = mEventPluginManager.getPluginInstance(eventType);
+
+        if (plugin != null) {
+            int selectedIndex = plugins.indexOf(plugin);
+            mEventsSpinner.setSelection(selectedIndex);
         }
 
     }

@@ -7,7 +7,7 @@ import com.exarlabs.android.myrules.business.rule.event.Event;
  *
  * Created by atiyka on 1/22/2016.
  */
-public class CallEvent implements Event {
+public class CallEvent extends Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -37,11 +37,6 @@ public class CallEvent implements Event {
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
-
-    @Override
-    public int getType() {
-        return Type.RULE_EVENT_CALL;
-    }
 
     @Override
     public String toString() {

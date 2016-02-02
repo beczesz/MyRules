@@ -7,7 +7,7 @@ import com.exarlabs.android.myrules.business.rule.event.Event;
  *
  * Created by atiyka on 1/21/2016.
  */
-public class SmsEvent implements Event {
+public class SmsEvent extends Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -40,11 +40,6 @@ public class SmsEvent implements Event {
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
-
-    @Override
-    public int getType() {
-        return Type.RULE_EVENT_SMS;
-    }
 
     @Override
     public String toString() {

@@ -11,8 +11,6 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.rule.event.Event;
-import com.exarlabs.android.myrules.business.rule.event.EventFactory;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 
 /**
@@ -48,10 +46,6 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public SmsEventHandlerPlugin() {
-        super(Event.Type.RULE_EVENT_SMS);
-    }
-
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
@@ -72,7 +66,7 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
 
     @Override
     public void getSms(String sender, String message) {
-        SmsEvent event = (SmsEvent) EventFactory.create(Event.Type.RULE_EVENT_SMS);
+        SmsEvent event = createNewEvent();
         event.setSender(sender);
         event.setMessage(message);
         dispatchEvent(event);

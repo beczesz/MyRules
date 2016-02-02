@@ -1,7 +1,5 @@
 package com.exarlabs.android.myrules.business.rule.event;
 
-import java.util.Collection;
-
 import rx.Observable;
 
 /**
@@ -35,8 +33,8 @@ public class RuleEventManager {
     /**
      * List of plugins which are dispatching the events
      */
-    private Collection<? extends EventHandlerPlugin> mPlugins;
     private Observable<Event> mEventObservable;
+    private final EventPluginManager mEventPluginManager;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -46,7 +44,8 @@ public class RuleEventManager {
      * Creates a rule event manager with the list of plugins
      */
     public RuleEventManager(EventPluginManager eventPluginManager) {
-        mPlugins = eventPluginManager.getPlugins();
+        // Initialize the plugins when the manager is created.
+        mEventPluginManager = eventPluginManager;
     }
 
     // ------------------------------------------------------------------------
@@ -57,7 +56,8 @@ public class RuleEventManager {
      * Initialize the event manager.
      */
     public void init() {
-        mEventObservable = Observable.from(mPlugins).flatMap(plugin -> plugin.getEventObservable());
+        mEventPluginManager.initPlugins();
+        mEventObservable = Observable.from(mEventPluginManager.getPlugins()).flatMap(plugin -> plugin.getEventObservable());
     }
 
 

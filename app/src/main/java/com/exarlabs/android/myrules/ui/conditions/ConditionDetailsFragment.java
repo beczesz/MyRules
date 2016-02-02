@@ -205,7 +205,6 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
                                                }
                                            }
                                        });
-
             //@formatter:on
         }
     }

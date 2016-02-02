@@ -77,11 +77,11 @@ public class SendSmsActionPlugin extends ActionPlugin {
     @Override
     public boolean run(Event event) {
         // reply to sender
-        if (event.getType() == Event.Type.RULE_EVENT_SMS) {
+        if (event.getType() == Event.Type.RULE_EVENT_SMS.getType()) {
             SmsEvent smsEvent = (SmsEvent) event;
             sendSMS(smsEvent.getSender(), "I have got! :)");
 
-        } else if (event.getType() == Event.Type.RULE_EVENT_CALL) {
+        } else if (event.getType() == Event.Type.RULE_EVENT_CALL.getType()) {
             CallEvent callEvent = (CallEvent) event;
             sendSMS(callEvent.getCaller(), mMessage);
 

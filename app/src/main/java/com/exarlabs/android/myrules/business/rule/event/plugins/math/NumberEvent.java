@@ -6,7 +6,7 @@ import com.exarlabs.android.myrules.business.rule.event.Event;
  * Example implementation of an Event which delivers an integer number
  * Created by becze on 1/11/2016.
  */
-public class NumberEvent implements Event {
+public class NumberEvent extends Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -38,11 +38,6 @@ public class NumberEvent implements Event {
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
-
-    @Override
-    public int getType() {
-        return Type.RULE_EVENT_NUMBER;
-    }
 
     @Override
     public String toString() {

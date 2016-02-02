@@ -1,7 +1,6 @@
 package com.exarlabs.android.myrules.ui.debug;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.devel.DevelManager;
+import com.exarlabs.android.myrules.business.rule.Rule;
+import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionPluginFactory;
@@ -26,17 +29,11 @@ import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginFacto
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
-import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.devel.DevelManager;
 import com.exarlabs.android.myrules.business.rule.event.Event;
-import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rule.event.plugins.call.CallEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEvent;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEventHandlerPlugin;
-import com.exarlabs.android.myrules.business.rule.event.plugins.sms.SmsEventHandlerPlugin;
-import com.exarlabs.android.myrules.business.rule.Rule;
-import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
@@ -149,20 +146,25 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
      */
     private void updateUI() {
         mAdapter.clear();
-        Collection<EventHandlerPlugin> plugins = mEventPluginManager.getPlugins();
-
-        mAdapter.addAllPlugins(plugins);
+        mAdapter.addAllPlugins(Event.Type.values());
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void triggerEvent(EventHandlerPlugin event) {
-        if (event.getClass().equals(NumberEventHandlerPlugin.class)) {
-            dispatchNumberEvent();
-        } else if (event.getClass().equals(SmsEventHandlerPlugin.class)) {
-            testSmsEventRule();
-        } else if (event.getClass().equals(CallEventHandlerPlugin.class)) {
-            dispatchCallEvent();
+    public void triggerEvent(Event.Type event) {
+
+        switch (event) {
+            case RULE_EVENT_NUMBER:
+                dispatchNumberEvent();
+                break;
+
+            case RULE_EVENT_SMS:
+                testSmsEventRule();
+                break;
+
+            case RULE_EVENT_CALL:
+                dispatchCallEvent();
+                break;
         }
     }
 
@@ -203,7 +205,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
         // set the event
         ruleRecord.setRuleName("Reject call Rule");
-        ruleRecord.setEventCode(Event.Type.RULE_EVENT_CALL);
+        ruleRecord.setEventCode(Event.Type.RULE_EVENT_CALL.getType());
         ruleRecord.setRuleConditionTree(root);
         ruleRecord.addRuleActions(aRejectCall, aSms);
         mRuleManager.saveRuleRecord(ruleRecord);
@@ -247,7 +249,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
         // set the event
         ruleRecord.setRuleName("Respond to Sms Rule");
-        ruleRecord.setEventCode(Event.Type.RULE_EVENT_SMS);
+        ruleRecord.setEventCode(Event.Type.RULE_EVENT_SMS.getType());
         ruleRecord.setRuleConditionTree(root);
         ruleRecord.addRuleActions(aSms);
         mRuleManager.saveRuleRecord(ruleRecord);
@@ -256,13 +258,13 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
     public void dispatchNumberEvent() {
         testSimpleArithmetricRule();
-        NumberEventHandlerPlugin eventHandlerPlugin = (NumberEventHandlerPlugin) mEventPluginManager.get(NumberEventHandlerPlugin.class);
+        NumberEventHandlerPlugin eventHandlerPlugin = (NumberEventHandlerPlugin) mEventPluginManager.getPluginInstance(Event.Type.RULE_EVENT_NUMBER);
         eventHandlerPlugin.dispatchNumber(7);
     }
 
     public void dispatchCallEvent() {
         testSimpleArithmetricRule();
-        CallEventHandlerPlugin eventHandlerPlugin = (CallEventHandlerPlugin) mEventPluginManager.get(CallEventHandlerPlugin.class);
+        CallEventHandlerPlugin eventHandlerPlugin = (CallEventHandlerPlugin) mEventPluginManager.getPluginInstance(Event.Type.RULE_EVENT_CALL);
         eventHandlerPlugin.getCall("Attila");
     }
 
