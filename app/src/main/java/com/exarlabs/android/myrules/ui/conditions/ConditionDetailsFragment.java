@@ -168,7 +168,7 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initActionBar(true, getString(R.string.my_conditions));
+        initActionBarWithBackButton(getString(R.string.my_conditions));
 
 
         if (!isInitialized) {

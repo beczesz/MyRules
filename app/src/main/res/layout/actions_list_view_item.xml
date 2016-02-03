@@ -4,59 +4,53 @@
                 android:layout_height="match_parent">
 
     <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/card"
-    android:layout_margin="@dimen/padding_default"
-    android:padding="@dimen/padding_small">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_default"
+        android:background="@drawable/card"
+        android:padding="@dimen/padding_small">
 
         <RelativeLayout
-                android:id="@+id/layout_header"
+            android:id="@+id/layout_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/header_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text=""
+                android:textSize="@dimen/text_size_large"/>
 
-                <TextView
-                    android:id="@+id/header_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text=""
-                    android:textSize="@dimen/text_size_large"/>
+            <TextView
+                android:id="@+id/button_edit_action"
+                style="@style/EditIcons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
 
-                <TextView
-                    android:id="@+id/button_edit_action"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/lbl_edit_item"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:paddingTop="@dimen/padding_default"
-                    android:paddingBottom="@dimen/padding_default"
-                    android:paddingLeft="@dimen/padding_large"
-                    android:paddingRight="@dimen/padding_large"
-                    android:background="@color/transparent"/>
+        </RelativeLayout>
 
-            </RelativeLayout>
+        <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+            android:id="@+id/expandable_layout"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_header"
+            app:ael_duration="400"
+            app:ael_expanded="false"
+            app:ael_interpolator="accelerateDecelerate"
+            app:ael_orientation="vertical">
 
-            <com.github.aakira.expandablelayout.ExpandableRelativeLayout
-                android:id="@+id/expandable_layout"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <TextView
+                android:id="@+id/item_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/layout_header"
-                app:ael_duration="400"
-                app:ael_expanded="false"
-                app:ael_interpolator="accelerateDecelerate"
-                app:ael_orientation="vertical">
+                android:text=""
+                android:textSize="@dimen/text_size_small"/>
 
-                <TextView
-                    android:id="@+id/item_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="@dimen/text_size_small"/>
-
-            </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+        </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

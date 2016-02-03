@@ -5,6 +5,7 @@
     <color name="colorPrimary">#31A4D9</color>
     <color name="colorPrimaryDark">@color/md_indigo_600</color>
     <color name="colorAccent">#82CD49</color>
+    <color name="colorAccentNo">#F97070</color>
 
     <!-- base colors -->
     <color name="text_primary">#808080</color>
@@ -34,8 +35,8 @@
     <color name="red">@color/md_red_700</color>
 
     <!-- Conditions -->
-    <color name="operator_and">@color/md_blue_600</color>
-    <color name="operator_or">@color/md_green_600</color>
+    <color name="operator_and">@color/colorPrimary</color>
+    <color name="operator_or">@color/colorPrimary</color>
 
     <!-- card colors -->
     <color name="card_background">#FFFFFF</color>

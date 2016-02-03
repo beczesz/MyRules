@@ -239,7 +239,7 @@ public class ContactsSectorFragment extends BaseFragment {
 
         // update the fragment's title
         String title = getString(R.string.contact_selected) + " " + mSelectedContacts.size();
-        initActionBar(true, title);
+        initActionBarWithBackButton(title);
 
         // notify the adapter to update the items
         mContactAdapter.notifyDataSetChanged();

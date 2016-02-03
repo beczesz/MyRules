@@ -35,7 +35,7 @@ import butterknife.OnClick;
 import fr.ganfra.materialspinner.MaterialSpinner;
 
 /**
- * Displays the detials of a condition
+ * Displays the details of a action
  * Created by becze on 1/21/2016.
  */
 public class ActionDetailsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
@@ -44,11 +44,11 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
-    private class ConditionPluginAdapter extends ArrayAdapter<Action.Type> {
+    private class ActionPluginAdapter extends ArrayAdapter<Action.Type> {
 
         private final int mLayout;
 
-        public ConditionPluginAdapter(Context context, int layout) {
+        public ActionPluginAdapter(Context context, int layout) {
             super(context, layout);
             mLayout = layout;
         }
@@ -126,8 +126,9 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     private RuleAction mRuleAction;
     private Long mActionId;
     private ActionPluginFragment mActionPluginFragment;
-    private ConditionPluginAdapter mSpinnerAdapter;
     private boolean isInitialized;
+
+    private ActionPluginAdapter mSpinnerAdapter;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -145,7 +146,7 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
 
-        // get out the condition id or type
+        // get out the action id or type
         mActionId = getArguments().containsKey(KEY_ACTION_ID) ? (long) getArguments().get(KEY_ACTION_ID) : -1;
 
         // Get the action if we have a valid id
@@ -176,25 +177,35 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
 
         if (!isInitialized) {
             isInitialized = true;
-            initActionBar(true, getString(R.string.my_actions));
+            // Init the toolbar
+            if (mRuleAction.isAttached()) {
+                initActionBarWithBackButton(getString(R.string.action_edit));
 
-            mSpinnerAdapter = new ConditionPluginAdapter(getActivity(), R.layout.spinner_item);
+            } else {
+                initActionBarWithBackButton(getString(R.string.action_new));
+            }
+
+            mSpinnerAdapter = new ActionPluginAdapter(getActivity(), R.layout.spinner_item);
             mSpinnerAdapter.addAll(Action.Type.values());
             mActionTypeSpinner.setAdapter(mSpinnerAdapter);
             mActionTypeSpinner.setOnItemSelectedListener(this);
+
+            // only add if adding a new action
+            if (!mRuleAction.isAttached()) {
+                mActionTypeSpinner.setHint(R.string.select_an_action);
+            }
 
             // In edit mode: init the name field and the select the corresponding item in spinner
             if (mRuleAction.isAttached()) {
 
                 int type = mRuleAction.getType();
-
-                // Set the condition title
+                // Set the action title
                 //@formatter:off
-                String conditionName = !TextUtils.isEmpty(
+                String actionName = !TextUtils.isEmpty(
                                 mRuleAction.getActionName()) ?
                                 mRuleAction.getActionName() :
                                 getResources().getString(mActionPluginManager.getFromActionTypeCode(type).getTitleResId());
-                mActionName.setText(conditionName);
+                mActionName.setText(actionName);
                 //@formatter:on
 
                 int position = mSpinnerAdapter.getPosition(mActionPluginManager.getFromActionTypeCode(mRuleAction.getType()));

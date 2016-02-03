@@ -128,7 +128,7 @@ public class RulesOverviewFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initActionBar(true, getString(R.string.my_rules));
+        initActionBarWithHomeButton(getString(R.string.my_rules));
 
         mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
         mRulesListView.setAdapter(mAdapter);

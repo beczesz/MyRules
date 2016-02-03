@@ -2,21 +2,23 @@
 <RelativeLayout
     android:id="@+id/relativeLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:gravity="center_horizontal">
+    android:layout_alignParentBottom="true">
 
-    <Button
-        android:id="@+id/button_save"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save"/>
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/button_cancel"
+            style="@style/CancelButton"
+            android:text="@string/cancel"/>
 
-    <Button
-        android:id="@+id/button_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/button_save"
-        android:text="@string/cancel"/>
+        <Button
+            android:id="@+id/button_save"
+            style="@style/SaveButton"
+            android:text="@string/save"/>
+    </LinearLayout>
 </RelativeLayout>

@@ -50,9 +50,7 @@ public class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         TypefaceHelper.typeface(view);
-        initActionBar(true, getString(R.string.app_name));
-
-
+        //initActionBar(true, getString(R.string.app_name));
     }
     @Override
     public void onDestroy() {
@@ -65,13 +63,21 @@ public class BaseFragment extends Fragment {
     /**
      * Initializes the ActionBar
      *
-     * @param showHomeButton
      * @param title
      */
-    public void initActionBar(boolean showHomeButton, String title) {
+    public void initActionBarWithHomeButton(String title) {
         if (getActivity() != null && getActivity() instanceof BaseActivity ) {
             ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
-            supportActionBar.setHomeButtonEnabled(showHomeButton);
+            supportActionBar.setHomeButtonEnabled(true);
+            supportActionBar.setTitle(title);
+        }
+    }
+
+    public void initActionBarWithBackButton(String title) {
+        if (getActivity() != null && getActivity() instanceof BaseActivity ) {
+            ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
+            supportActionBar.setHomeButtonEnabled(true);
+
             supportActionBar.setTitle(title);
         }
     }

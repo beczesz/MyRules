@@ -130,7 +130,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initActionBar(true, getString(R.string.debug));
+        initActionBarWithHomeButton(getString(R.string.debug));
 
         if (BuildConfig.DEBUG) {
             mDevelInfo.setText(mDevelManager.getBuildDescription());

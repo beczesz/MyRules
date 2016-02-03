@@ -1,6 +1,5 @@
 <resources>
 
-
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/divider_height</item>
@@ -39,10 +38,51 @@
         <item name="android:padding">@dimen/padding_small</item>
     </style>
 
+    <style name="Operator">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/padding_small</item>
+        <item name="android:textColor">@color/text_dark_bg_primary</item>
+        <item name="android:background">@drawable/operator_and</item>
+    </style>
 
+    <!-- EditText -->
+    <style name="EditText">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textCursorDrawable">@drawable/cursor</item>
+    </style>
+
+    <!-- Icons -->
     <style name="Icons" parent="TextView">
         <item name="android:textSize">@dimen/text_size_xlarge</item>
-        <item name="android:padding">@dimen/text_size_normal</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="EditIcons" parent="Icons">
+        <item name="android:paddingTop">@dimen/padding_default</item>
+        <item name="android:paddingBottom">@dimen/padding_default</item>
+        <item name="android:paddingLeft">@dimen/padding_large</item>
+        <item name="android:paddingRight">@dimen/padding_large</item>
+        <item name="android:text">@string/lbl_edit_item</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="Button">
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:textColor">@color/text_dark_bg_primary</item>
+        <item name="android:layout_margin">@dimen/padding_default</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- ToDo: how to define the same width beautiful? -->
+    <style name="SaveButton" parent="Button">
+        <item name="android:background">@drawable/save_button</item>
+        <item name="android:layout_width">130dip</item>
+    </style>
+
+    <style name="CancelButton" parent="Button">
+        <item name="android:background">@drawable/cancel_button</item>
+        <item name="android:layout_width">130dip</item>
     </style>
 
 </resources>

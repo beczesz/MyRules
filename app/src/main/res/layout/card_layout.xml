@@ -12,8 +12,9 @@
         style="@style/Icons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/lbl_start_rules_engine_icon"
-        tools:text="B"/>
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:text="@string/lbl_reorder_items"/>
 
     <LinearLayout
         android:id="@+id/card_body"

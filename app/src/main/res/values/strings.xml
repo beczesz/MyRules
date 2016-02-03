@@ -3,12 +3,14 @@
     <string name="action_settings">Settings</string>
     <string name="exit_message">Are you sure you want to exit?</string>
 
-    <!-- Drawer -->
+    <!-- Drawer and toolbar -->
     <string name="my_rules">My Rules</string>
     <string name="my_actions">My Actions</string>
     <string name="my_conditions">My Conditions</string>
     <string name="history">History</string>
     <string name="debug">Debug</string>
+    <string name="action_edit">Edit Action</string>
+    <string name="action_new">New Action</string>
 
     <string-array name="list_of_events">
         <item>Select an Event</item>
@@ -48,13 +50,14 @@
     <string name="lbl_search_action">Search an action...</string>
     <string name="condition_selected">Selected conditions:</string>
     <string name="action_selected">Selected actions:</string>
+    <string name="message_error_permission_denied">To save you have to grant all of the permissions.</string>
 
     <!-- Font awesome icons-->
     <string name="lbl_start_rules_engine_icon">{faw-play}</string>
     <string name="lbl_stop_rules_engine_icon">{faw-stop}</string>
     <string name="lbl_edit_item">{faw-pencil}</string>
     <string name="lbl_delete_item">{faw-trash-o}</string>
-    <string name="message_error_permission_denied">To save you have to grant all of the permissions.</string>
+    <string name="lbl_reorder_items">{faw-sort}</string>
 
 
     <!-- Event names -->

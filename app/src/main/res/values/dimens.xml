@@ -15,12 +15,14 @@
 
 
     <!-- Default spacing -->
+    <dimen name="padding_xtiny">1dip</dimen>
     <dimen name="padding_tiny">3dip</dimen>
     <dimen name="padding_small">5dip</dimen>
     <dimen name="padding_default">10dip</dimen>
     <dimen name="padding_large">15dip</dimen>
     <dimen name="padding_xlarge">20dip</dimen>
     <dimen name="padding_xxlarge">30dip</dimen>
+    <dimen name="padding_operator">35dip</dimen>
     <dimen name="padding_xxxlarge">50dip</dimen>
 
     <!-- Containers-->

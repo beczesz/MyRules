@@ -210,9 +210,9 @@ public class ConditionTreeFragment extends BaseFragment {
 
     private void updateOperator() {
         // set the background color
-        mOperatorTextView.setBackgroundColor(
-                        mSelectedOperator == ConditionTree.Operator.AND ? getResources().getColor(R.color.operator_and) : getResources().getColor(
-                                        R.color.operator_or));
+        // ToDo: make another drawable for the OR operator if it's needed
+        mOperatorTextView.setBackgroundResource(
+                        mSelectedOperator == ConditionTree.Operator.AND ? R.drawable.operator_and : R.drawable.operator_and);
 
         mOperatorTextView.setText(mSelectedOperator == ConditionTree.Operator.AND ? R.string.operator_and : R.string.operator_or);
     }

@@ -105,7 +105,7 @@ public class ConditionsOverviewFragment extends BaseFragment implements OnCondit
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initActionBar(true, getString(R.string.my_conditions));
+        initActionBarWithHomeButton(getString(R.string.my_conditions));
 
         mAdapter = new ConditionsArrayAdapter(getContext());
         mAdapter.setOnConditionEditListener(this);

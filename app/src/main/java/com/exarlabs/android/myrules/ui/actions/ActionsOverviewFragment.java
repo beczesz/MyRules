@@ -105,7 +105,7 @@ public class ActionsOverviewFragment extends BaseFragment implements OnActionEdi
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initActionBar(true, getString(R.string.my_actions));
+        initActionBarWithHomeButton(getString(R.string.my_actions));
 
         mAdapter = new ActionsArrayAdapter(getContext());
         mAdapter.setOnActionEditListener(this);
