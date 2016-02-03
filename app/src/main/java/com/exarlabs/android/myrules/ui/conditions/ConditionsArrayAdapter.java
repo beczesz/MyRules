@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,7 +44,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
         public ExpandableLayout expandableLayout;
 
         @Bind(R.id.button_edit_condition)
-        public Button editCondition;
+        public TextView editCondition;
 
         @Bind(R.id.item_details)
         public TextView itemDetails;
@@ -152,7 +151,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
 
             // else on a button
         } else {
-            Button button = (Button) view;
+            TextView button = (TextView) view;
             Long id = (Long) button.getTag();
             if (mConditionEditListener != null) mConditionEditListener.onConditionEdit(id);
         }

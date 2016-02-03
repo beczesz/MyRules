@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,7 +41,7 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         public ExpandableLayout expandableLayout;
 
         @Bind(R.id.button_edit_action)
-        public Button editAction;
+        public TextView editAction;
 
         @Bind(R.id.item_details)
         public TextView itemDetails;
@@ -148,7 +147,7 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
 
         // else on a button
         } else {
-            Button button = (Button) view;
+            TextView button = (TextView) view;
             Long id = (Long) button.getTag();
             if(mActionEditListener != null)
                 mActionEditListener.onActionEdit(id);
