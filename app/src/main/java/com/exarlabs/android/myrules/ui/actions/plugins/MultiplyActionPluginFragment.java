@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.exarlabs.android.myrules.business.rule.action.ActionManager;
-import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.SampleFragment;
@@ -19,7 +18,7 @@ import butterknife.Bind;
 
 /**
  * Fragment which let's the user to configure a multiplier
- *
+ * <p>
  * Created by atiyka on 1/26/2016.
  */
 public class MultiplyActionPluginFragment extends ActionPluginFragment {
@@ -86,7 +85,7 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
         /*
          * Check if the action has the right plugin type, and we are in edit mode
          */
-        if(action.getId() != null && action.getActionPlugin() instanceof MultiplyActionPlugin) {
+        if (action.getId() != null && action.getActionPlugin() instanceof MultiplyActionPlugin) {
             mMultiplyActionPlugin = (MultiplyActionPlugin) action.getActionPlugin();
         }
 
@@ -94,8 +93,9 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
 
     @Override
     protected void refreshUI() {
-        if(mMultiplyActionPlugin != null)
+        if (mMultiplyActionPlugin != null) {
             mNumber.setText((int) mMultiplyActionPlugin.getValue() + "");
+        }
     }
 
     /**
@@ -104,8 +104,9 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
     @Override
     protected void saveChanges() {
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if(mAction.getId() != null)
+        if (mAction.getId() != null) {
             mAction.reGenerateActionPlugin();
+        }
 
         double value = Double.parseDouble(mNumber.getText().toString());
         ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);

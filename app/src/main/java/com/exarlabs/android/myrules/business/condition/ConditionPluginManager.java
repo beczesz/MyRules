@@ -9,7 +9,7 @@ import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
 
 /**
- * Manages all the available condition plugin. It provides a single point access for every other compoennt to the
+ * Manages all the available condition plugin. It provides a single point access for every other component to the
  * condition plugins.
  * Created by becze on 12/18/2015.
  */
@@ -31,7 +31,7 @@ public class ConditionPluginManager {
     // FIELDS
     // ------------------------------------------------------------------------
     /*
-     * We use 2 maps to associate event codes, event, plugins with type
+     * We use 2 maps to associate condition codes and plugins with type
      */
     private Map<Integer, Condition.Type> mConditionTypeToTypeMap;
     private Map<Class<? extends ConditionPlugin>, Condition.Type> mConditionPluginToTypeMap;
@@ -55,7 +55,7 @@ public class ConditionPluginManager {
             // link the id with the type
             mConditionTypeToTypeMap.put(type.getType(), type);
 
-            // Link the event with the type
+            // Link the with the type
             mConditionPluginToTypeMap.put(type.getPlugin(), type);
         }
     }
@@ -73,8 +73,8 @@ public class ConditionPluginManager {
      */
     public ConditionPlugin createNewPluginInstance(int code) {
         try {
-            Condition.Type fromEventCode = getFromConditionTypeCode(code);
-            return fromEventCode.getPlugin().newInstance();
+            Condition.Type type = getFromConditionTypeCode(code);
+            return type.getPlugin().newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -115,9 +115,9 @@ public class ConditionPluginManager {
 
     /**
      * @param plugin
-     * @return the Event.Type associated with this plugin.
+     * @return the Condition.Type associated with this plugin.
      */
-    public Condition.Type getFromEventPlugin(Class<? extends ConditionPlugin> plugin) {
+    public Condition.Type getFromPlugin(Class<? extends ConditionPlugin> plugin) {
         return mConditionPluginToTypeMap.get(plugin);
     }
 

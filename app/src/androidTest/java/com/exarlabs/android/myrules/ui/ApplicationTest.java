@@ -148,7 +148,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
      * Tests actions with some random properties
      */
     public void testActionProperties() {
-        RuleAction ruleAction = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI);
+        RuleAction ruleAction = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI.getType());
         ActionPlugin plugin = ruleAction.getActionPlugin();
 
         assertTrue(plugin instanceof FibonacciActionPlugin);
@@ -209,16 +209,17 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
          * Create actions
          */
 
-        RuleAction aMultiply = generateNewAction(Action.Type.ARITHMETRIC_ACTION_MULTIPLY);
+        RuleAction aMultiply = generateNewAction(Action.Type.ARITHMETRIC_ACTION_MULTIPLY.getType());
         ((MultiplyActionPlugin) aMultiply.getActionPlugin()).setValue(5);
 
-        RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI);
+        RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI.getType());
         mActionManager.saveActions(aFib, aMultiply);
 
         // Create a rule with these actions and conditions
         RuleRecord ruleRecord = new RuleRecord();
 
         // set the event
+        ruleRecord.setRuleName("Rule" + Math.random()*1000);
         ruleRecord.setEventCode(event.getType());
         ruleRecord.setRuleConditionTree(root);
         ruleRecord.addRuleActions(aFib, aMultiply);
@@ -284,6 +285,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     private RuleCondition generateNewCondition(int type) {
         RuleCondition c = new RuleCondition();
+        c.setConditionName("Condition" + Math.random()*1000);
         c.setType(type);
         return c;
     }
@@ -291,6 +293,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     private RuleAction generateNewAction(int type) {
         RuleAction ruleAction = new RuleAction();
         ruleAction.setType(type);
+        ruleAction.setActionName("Action" + Math.random()*1000);
         return ruleAction;
     }
 }

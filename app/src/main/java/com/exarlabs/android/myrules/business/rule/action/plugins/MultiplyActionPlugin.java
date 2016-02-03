@@ -42,9 +42,6 @@ public class MultiplyActionPlugin extends ActionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public MultiplyActionPlugin(int type) {
-        super(type);
-    }
 
     // ------------------------------------------------------------------------
     // METHODS

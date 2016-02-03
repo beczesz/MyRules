@@ -70,4 +70,9 @@
     <string name="condition_title_is_number_equal_condition">Is Number Equal With Condition</string>
     <string name="condition_title_contact_is_in_group_condition">Contact is in Group Condition</string>
 
+    <!-- Action names -->
+    <string name="action_title_multiply_action">Multiply With a Number</string>
+    <string name="action_title_fibonacci_action">Calculate Fibonacci Number</string>
+    <string name="action_title_send_sms_action">Send SMS to ... Action</string>
+    <string name="action_title_reject_call_action">Reject Call</string>
 </resources>

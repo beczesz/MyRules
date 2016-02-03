@@ -50,8 +50,7 @@ public class RejectCallActionPlugin extends ActionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public RejectCallActionPlugin(int type){
-        super(type);
+    public RejectCallActionPlugin(){
         DaggerManager.component().inject(this);
     }
 

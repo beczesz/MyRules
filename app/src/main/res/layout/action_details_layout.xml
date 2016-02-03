@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/action_name"/>
 
-        <Spinner
+        <fr.ganfra.materialspinner.MaterialSpinner
             android:id="@+id/spinner_select_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

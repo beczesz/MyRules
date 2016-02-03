@@ -54,7 +54,7 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
         mProperties = new ArrayList<>();
 
         // Infer the plugin type
-        mType = mConditionPluginManager.getFromEventPlugin(this.getClass()).getType();
+        mType = mConditionPluginManager.getFromPlugin(this.getClass()).getType();
     }
 
 

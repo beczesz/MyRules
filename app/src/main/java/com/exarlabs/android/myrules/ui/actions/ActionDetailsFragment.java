@@ -1,15 +1,14 @@
 package com.exarlabs.android.myrules.ui.actions;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,23 +17,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.exarlabs.android.myrules.business.rule.action.ActionManager;
-import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.ActionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.action.Action;
+import com.exarlabs.android.myrules.business.rule.action.ActionManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionPluginManager;
 import com.exarlabs.android.myrules.business.rx.CallbackSubscriber;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
+import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import rx.Observable;
+import fr.ganfra.materialspinner.MaterialSpinner;
 
 /**
  * Displays the detials of a condition
@@ -45,6 +44,34 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
+    private class ConditionPluginAdapter extends ArrayAdapter<Action.Type> {
+
+        private final int mLayout;
+
+        public ConditionPluginAdapter(Context context, int layout) {
+            super(context, layout);
+            mLayout = layout;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            SpinnerItemViewHolder viewHolder;
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getActivity()).inflate(mLayout, null);
+                viewHolder = new SpinnerItemViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            }
+
+            viewHolder = (SpinnerItemViewHolder) convertView.getTag();
+
+            Action.Type item = getItem(position);
+            viewHolder.mItemText.setText(getResources().getText(item.getTitleResId()));
+
+            return convertView;
+        }
+    }
+
 
     // ------------------------------------------------------------------------
     // STATIC FIELDS
@@ -57,10 +84,8 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     // ------------------------------------------------------------------------
 
     /**
-     *
      * @param actionID
      * @return new instance of ActionDetailsFragment
-     *
      */
     public static ActionDetailsFragment newInstance(long actionID) {
         Bundle args = new Bundle();
@@ -83,7 +108,7 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     public EditText mActionName;
 
     @Bind(R.id.spinner_select_action)
-    public Spinner mActionTypeSpinner;
+    public MaterialSpinner mActionTypeSpinner;
 
     @Bind(R.id.action_plugin_fragment_container)
     public FrameLayout mActionPluginFragmentContainer;
@@ -100,6 +125,7 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     private RuleAction mRuleAction;
     private Long mActionId;
     private ActionPluginFragment mActionPluginFragment;
+    private ConditionPluginAdapter mSpinnerAdapter;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -147,47 +173,48 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
 
         initActionBar(true, getString(R.string.my_actions));
 
-        Collection<ActionPlugin> plugins = mActionPluginManager.getPlugins();
-        List<CharSequence> pluginsName = new ArrayList<>();
-
-        // only add if adding a new action
-        if (mActionId == -1){
-            pluginsName.add(getString(R.string.select_an_action));
-        }
-
-        // fills the drop down list with the plugins
-        Observable.from(plugins)
-                        .map(plugin -> plugin.getClass().getSimpleName())
-                        .subscribe(name -> pluginsName.add(name));
-
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, pluginsName);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mActionTypeSpinner.setAdapter(adapter);
+        mSpinnerAdapter = new ConditionPluginAdapter(getActivity(), R.layout.spinner_item);
+        mSpinnerAdapter.addAll(Action.Type.values());
+        mActionTypeSpinner.setAdapter(mSpinnerAdapter);
         mActionTypeSpinner.setOnItemSelectedListener(this);
 
-        // In edit mode: init the name field and the spinner
-        int actionType = mRuleAction.getType();
-        if(mActionId != -1){
-            mActionName.setText(mRuleAction.getActionName());
-
-            int selected = mActionPluginManager.getPositionInMap(actionType);
-            mActionTypeSpinner.setSelection(selected);
+        // only add if adding a new action
+        if (!mRuleAction.isAttached()) {
+            mActionTypeSpinner.setHint(R.string.select_an_action);
         }
 
-        inflateLayout(actionType);
+
+        // In edit mode: init the name field and the select the corresponding item in spinner
+        if (mRuleAction.isAttached()) {
+
+            int type = mRuleAction.getType();
+
+            // Set the condition title
+            //@formatter:off
+            String conditionName = !TextUtils.isEmpty(
+                            mRuleAction.getActionName()) ?
+                            mRuleAction.getActionName() :
+                            getResources().getString(mActionPluginManager.getFromActionTypeCode(type).getTitleResId());
+            mActionName.setText(conditionName);
+            //@formatter:on
+
+            int position = mSpinnerAdapter.getPosition(mActionPluginManager.getFromActionTypeCode(mRuleAction.getType()));
+            mActionTypeSpinner.setSelection(position);
+
+            inflateLayout(type);
+        }
     }
 
     /**
      * Clicked on Save button
-     *
      */
     @OnClick(R.id.button_save)
-    public void saveNewAction(){
+    public void saveNewAction() {
         checkPermissions();
     }
 
     private void doSave() {
-        if(mActionId == -1 && mActionTypeSpinner.getSelectedItemPosition() == 0) {
+        if (mActionId == -1 && mActionTypeSpinner.getSelectedItemPosition() == 0) {
             // TODO: notify the user that must select an action type
             return;
         }
@@ -231,18 +258,16 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
 
     /**
      * Clicked on Cancel button
-     *
      */
     @OnClick(R.id.button_cancel)
-    public void cancelNewAction(){
+    public void cancelNewAction() {
         goBack();
     }
 
     /**
      * Hides the keyboard, and navigates back
-     *
      */
-    private void goBack(){
+    private void goBack() {
         // hide the keyboard
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
@@ -260,16 +285,11 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // in edit mode doesn't exists the first row (Select an action...)
-        if(mActionId == -1) {
-            position--;
+        int type = Action.Type.ARITHMETRIC_ACTION_FIBONACCI.getType();
+        if (position != -1) {
+            type = mSpinnerAdapter.getItem(position).getType();
         }
-
-        if (position >= 0) {
-            int actionType = mActionPluginManager.getTypeByPosition(position);
-
-            inflateLayout(actionType);
-        }
+        inflateLayout(type);
     }
 
     @Override
@@ -282,17 +302,13 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
      *
      * @param actionType
      */
-    private void inflateLayout(int actionType){
-        mActionPluginFragment = ActionPluginFragmentFactory.create(actionType);
+    private void inflateLayout(int actionType) {
+        mActionPluginFragment = mActionPluginManager.createNewPluginFragmentInstance(actionType);
         mRuleAction.setType(actionType);
         mActionPluginFragment.init(mRuleAction);
 
         // add the fragment to the container.
-        getActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.action_plugin_fragment_container, mActionPluginFragment)
-                        .commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.action_plugin_fragment_container, mActionPluginFragment).commit();
     }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

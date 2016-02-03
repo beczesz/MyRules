@@ -2,6 +2,8 @@ package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
 import com.exarlabs.android.myrules.business.RulesEngineService;
+import com.exarlabs.android.myrules.business.rule.action.Action;
+import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
@@ -115,4 +117,8 @@ public interface DaggerComponentGraph {
     void inject(Condition condition);
 
     void inject(ConditionsArrayAdapter conditionsArrayAdapter);
+
+    void inject(Action action);
+
+    void inject(ActionPlugin actionPlugin);
 }

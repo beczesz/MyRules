@@ -3,6 +3,9 @@ package com.exarlabs.android.myrules.business.rule.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.business.rule.Runnable;
@@ -39,13 +42,20 @@ public abstract class ActionPlugin implements Runnable, RuleComponentPlugin {
     // List of properties
     private List<RuleActionProperty> mProperties;
 
+    @Inject
+    ActionPluginManager mActionPluginManager;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public ActionPlugin(int type) {
+    public ActionPlugin() {
+        DaggerManager.component().inject(this);
+
         mProperties = new ArrayList<>();
-        this.mType = type;
+
+        // Infer the plugin type
+        mType = mActionPluginManager.getFromPlugin(this.getClass()).getType();
     }
 
 

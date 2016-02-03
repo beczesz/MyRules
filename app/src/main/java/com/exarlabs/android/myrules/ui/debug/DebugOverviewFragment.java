@@ -21,7 +21,7 @@ import com.exarlabs.android.myrules.business.rule.Rule;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
-import com.exarlabs.android.myrules.business.rule.action.ActionPluginFactory;
+import com.exarlabs.android.myrules.business.rule.action.ActionPluginManager;
 import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
@@ -74,28 +74,31 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     // FIELDS
     // ------------------------------------------------------------------------
     @Bind(R.id.build_info)
-    public TextView mDevelInfo;
+    TextView mDevelInfo;
 
     @Bind(R.id.list_view_event_plugins)
-    public ListView mEventPlugins;
+    ListView mEventPlugins;
 
     @Inject
-    public DevelManager mDevelManager;
+    DevelManager mDevelManager;
 
     @Inject
-    public EventPluginManager mEventPluginManager;
+    EventPluginManager mEventPluginManager;
 
     @Inject
-    public RuleManager mRuleManager;
+    RuleManager mRuleManager;
 
     @Inject
-    public ActionManager mActionManager;
+    ActionManager mActionManager;
 
     @Inject
-    public ConditionManager mConditionManager;
+    ConditionManager mConditionManager;
 
     @Inject
-    public ConditionPluginManager mConditionPluginManager;
+    ConditionPluginManager mConditionPluginManager;
+
+    @Inject
+    ActionPluginManager mActionPluginManager;
 
     private View mRootView;
     private EventsArrayAdapter mAdapter;
@@ -196,9 +199,9 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
          * Create actions
          */
 
-        RuleAction aRejectCall = generateNewAction(Action.Type.REJECT_CALL_ACTION);
+        RuleAction aRejectCall = generateNewAction(Action.Type.REJECT_CALL_ACTION.getType());
 
-        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
+        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION.getType());
         ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("I'll call you back later.");
 
         mActionManager.saveActions(aRejectCall, aSms);
@@ -240,7 +243,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
          * Create actions
          */
 
-        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION);
+        RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION.getType());
         // ToDo: when the Trigger button was pushed more than one time, the fields in SendSmsActionPlugin will be null. ?
 //        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
 //        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
@@ -314,12 +317,12 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
          * Create actions
          */
 
-        RuleAction aMultiply = generateNewAction(Action.Type.ARITHMETRIC_ACTION_MULTIPLY);
+        RuleAction aMultiply = generateNewAction(Action.Type.ARITHMETRIC_ACTION_MULTIPLY.getType());
         ((MultiplyActionPlugin) aMultiply.getActionPlugin()).setValue(5);
 
-        RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI);
+        RuleAction aFib = generateNewAction(Action.Type.ARITHMETRIC_ACTION_FIBONACCI.getType());
 
-        RuleAction aMultiply10 = generateNewAction(Action.Type.ARITHMETRIC_ACTION_MULTIPLY);
+        RuleAction aMultiply10 = generateNewAction(Action.Type.ARITHMETRIC_ACTION_MULTIPLY.getType());
         ((MultiplyActionPlugin) aMultiply10.getActionPlugin()).setValue(10);
 
         mActionManager.saveActions(aMultiply, aFib, aMultiply10);
@@ -347,7 +350,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     private RuleAction generateNewAction(int type) {
         RuleAction ruleAction = new RuleAction();
         ruleAction.setType(type);
-        ruleAction.setActionName(ActionPluginFactory.create(type).getClass().getSimpleName());
+        ruleAction.setActionName(getResources().getString(mActionPluginManager.getFromActionTypeCode(type).getTitleResId()));
         return ruleAction;
     }
 

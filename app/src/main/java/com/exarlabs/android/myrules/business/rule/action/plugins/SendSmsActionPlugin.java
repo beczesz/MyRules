@@ -58,7 +58,6 @@ public class SendSmsActionPlugin extends ActionPlugin {
     // ------------------------------------------------------------------------
 
     public SendSmsActionPlugin(int type) {
-        super(type);
         DaggerManager.component().inject(this);
     }
 
