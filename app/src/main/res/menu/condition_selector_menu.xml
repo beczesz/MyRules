@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:apps="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/selection_completed"
         android:icon="@android:drawable/checkbox_on_background"
         android:visible="true"
+        apps:showAsAction="always"
         android:title="@string/lbl_complete_selection"/>
 </menu>

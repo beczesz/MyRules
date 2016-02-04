@@ -55,6 +55,11 @@
     <string name="action_selected">Selected actions:</string>
     <string name="message_error_permission_denied">To save you have to grant all of the permissions.</string>
 
+    <!-- Deleting -->
+    <string name="really_delete_action">Do you really want to delete this action?</string>
+    <string name="really_delete_condition">Do you really want to delete this condition?</string>
+    <string name="really_delete_rule">Do you really want to delete this rule?</string>
+
     <!-- Font awesome icons-->
     <string name="lbl_start_rules_engine_icon">{faw-play}</string>
     <string name="lbl_stop_rules_engine_icon">{faw-stop}</string>

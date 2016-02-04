@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.model.dao.RuleAction;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionDao;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
@@ -220,7 +222,22 @@ public class ConditionManager {
     }
 
     /**
-     * Returns all the defined perimissions needed to run this rule.
+     * Deletes a condition and all of it's properties
+     *
+     * @param ruleCondition
+     */
+    public void deleteCondition(RuleCondition ruleCondition) {
+        List<RuleConditionProperty> properties = ruleCondition.getProperties();
+
+        // delete the properties
+        mRuleConditionPropertyDao.deleteInTx(properties);
+        // and the condition
+        mRuleConditionDao.delete(ruleCondition);
+    }
+
+
+    /**
+     * Returns all the defined permissions needed to run this rule.
      *
      * @return
      */

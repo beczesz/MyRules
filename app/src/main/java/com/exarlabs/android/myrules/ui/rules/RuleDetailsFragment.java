@@ -6,11 +6,15 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -37,6 +41,9 @@ import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -153,6 +160,7 @@ public class RuleDetailsFragment extends RuleComponentDetailsFragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
+        setHasOptionsMenu(true);
 
         // If we have a rule Id then just extract the rule from the database. Otherwise create a new one
         long ruleId = (long) getArguments().get(KEY_RULE_ID);
@@ -172,6 +180,42 @@ public class RuleDetailsFragment extends RuleComponentDetailsFragment implements
             mRootView = inflater.inflate(R.layout.rule_details_fragment, null);
         }
         return mRootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // the trash appears only in edit mode
+        if(mRuleRecord.isAttached()) {
+            inflater.inflate(R.menu.delete_item, menu);
+            menu.findItem(R.id.delete_item).setIcon(
+                            new IconicsDrawable(getContext(), FontAwesome.Icon.faw_trash_o).colorRes(R.color.text_dark_bg_secondary));
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            default:
+            case R.id.delete_item:
+                deleteRule();
+                break;
+        }
+        return false;
+    }
+
+    /**
+     * Shows the dialog if the user really wants to delete the rule
+     */
+    protected void deleteRule() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setMessage(R.string.really_delete_rule).setCancelable(false).
+                        setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            mRuleManager.deleteRule(mRuleRecord);
+                            goBack();
+                        }).setNegativeButton(android.R.string.cancel, null);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override

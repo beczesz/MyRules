@@ -91,6 +91,7 @@ public class BaseFragment extends Fragment {
         if (getActivity() != null && getActivity() instanceof BaseActivity ) {
             ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
             supportActionBar.setHomeButtonEnabled(isEnabled);
+
         }
     }
 

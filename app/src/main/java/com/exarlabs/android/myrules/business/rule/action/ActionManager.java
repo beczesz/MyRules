@@ -176,7 +176,7 @@ public class ActionManager {
     }
 
     /**
-     * Returns all the defined perimissions needed to run these rule actions.
+     * Returns all the defined permissions needed to run these rule actions.
      *
      * @return
      */

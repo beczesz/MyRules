@@ -5,11 +5,15 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -28,6 +32,9 @@ import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.RuleComponentDetailsFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -138,6 +145,7 @@ public class ConditionDetailsFragment extends RuleComponentDetailsFragment imple
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
+        setHasOptionsMenu(true);
 
         // get out the condition id or type
         mConditionId = getArguments().containsKey(KEY_CONDITION_ID) ? (long) getArguments().get(KEY_CONDITION_ID) : -1;
@@ -152,6 +160,43 @@ public class ConditionDetailsFragment extends RuleComponentDetailsFragment imple
             mRuleCondition = new RuleCondition();
         }
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // the trash only appears in edit mode
+        if(mRuleCondition.isAttached()) {
+            inflater.inflate(R.menu.delete_item, menu);
+            menu.findItem(R.id.delete_item).setIcon(
+                            new IconicsDrawable(getContext(), FontAwesome.Icon.faw_trash_o).colorRes(R.color.text_dark_bg_secondary).actionBarSize());
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            default:
+            case R.id.delete_item:
+                deleteCondition();
+                break;
+        }
+        return false;
+    }
+
+    /**
+     * Shows the dialog if the user really wants to delete the condition
+     */
+    protected void deleteCondition() {
+        // ToDo: check if it's contained by a rule
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setMessage(R.string.really_delete_condition).setCancelable(false).
+                        setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            mConditionManager.deleteCondition(mRuleCondition);
+                            goBack();
+                        }).setNegativeButton(android.R.string.cancel, null);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Nullable

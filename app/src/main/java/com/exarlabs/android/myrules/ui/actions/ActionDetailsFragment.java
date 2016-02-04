@@ -5,11 +5,15 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,6 +31,9 @@ import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.RuleComponentDetailsFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -83,7 +90,6 @@ public class ActionDetailsFragment extends RuleComponentDetailsFragment implemen
 
     /**
      * @param actionID
-     *
      * @return new instance of ActionDetailsFragment
      */
     public static ActionDetailsFragment newInstance(long actionID) {
@@ -103,13 +109,13 @@ public class ActionDetailsFragment extends RuleComponentDetailsFragment implemen
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    @Bind (R.id.editText_action_name)
+    @Bind(R.id.editText_action_name)
     public EditText mActionName;
 
-    @Bind (R.id.spinner_select_action)
+    @Bind(R.id.spinner_select_action)
     public MaterialSpinner mActionTypeSpinner;
 
-    @Bind (R.id.action_plugin_fragment_container)
+    @Bind(R.id.action_plugin_fragment_container)
     public FrameLayout mActionPluginFragmentContainer;
 
     @Inject
@@ -144,6 +150,7 @@ public class ActionDetailsFragment extends RuleComponentDetailsFragment implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
+        setHasOptionsMenu(true);
 
         // get out the action id or type
         mActionId = getArguments().containsKey(KEY_ACTION_ID) ? (long) getArguments().get(KEY_ACTION_ID) : -1;
@@ -167,6 +174,43 @@ public class ActionDetailsFragment extends RuleComponentDetailsFragment implemen
             mRootView = inflater.inflate(R.layout.action_details_layout, null);
         }
         return mRootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // the trash only appears in edit mode
+        if(mRuleAction.isAttached()) {
+            inflater.inflate(R.menu.delete_item, menu);
+            menu.findItem(R.id.delete_item).setIcon(
+                            new IconicsDrawable(getContext(), FontAwesome.Icon.faw_trash_o).colorRes(R.color.text_dark_bg_secondary).actionBarSize());
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            default:
+            case R.id.delete_item:
+                deleteAction();
+                break;
+        }
+        return false;
+    }
+
+    /**
+     * Shows the dialog if the user really wants to delete the action
+     */
+    protected void deleteAction() {
+        // ToDo: check if it's contained by a rule
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setMessage(R.string.really_delete_action).setCancelable(false).
+                        setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            mActionManager.deleteAction(mRuleAction);
+                            goBack();
+                        }).setNegativeButton(android.R.string.cancel, null);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -214,7 +258,7 @@ public class ActionDetailsFragment extends RuleComponentDetailsFragment implemen
     /**
      * Initializes the action bar with the corresponding text
      */
-    private void initActionBar(){
+    private void initActionBar() {
         if (mRuleAction.isAttached()) {
             initActionBarWithBackButton(getString(R.string.action_edit));
 
@@ -275,7 +319,7 @@ public class ActionDetailsFragment extends RuleComponentDetailsFragment implemen
     /**
      * Clicked on Cancel button
      */
-    @OnClick (R.id.button_cancel)
+    @OnClick(R.id.button_cancel)
     public void cancelNewAction() {
         // we reset everything what we have set on the object
         mActionManager.refresh(mRuleAction);
