@@ -14,6 +14,7 @@ import com.exarlabs.android.myrules.business.rule.condition.plugins.contact.Cont
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberPrimeConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.time.IsTimeInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
@@ -23,6 +24,7 @@ import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPlugin
 import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.time.IntervalTimeConditionPluginFragment;
 
 /**
  * It is a rule condition abstraction which with a bridge pattern it decouples the
@@ -47,30 +49,36 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
         // DEBUG CONDITIONS
         // ------------------------------------------------------------------------
         CONNECTOR_CONDITION_PLUGIN(1, AlwaysTrueConditionPlugin.class, DefaultConditionPluginFragment.class,
-                          R.string.condition_title_always_true_condition),
+                        R.string.condition_title_always_true_condition),
 
         DEBUG_ALWAYS_TRUE(1000, AlwaysTrueConditionPlugin.class, DefaultConditionPluginFragment.class,
-                          R.string.condition_title_always_true_condition),
+                        R.string.condition_title_always_true_condition),
         DEBUG_ALWAYS_FALSE(1001, AlwaysFalseConditionPlugin.class, DefaultConditionPluginFragment.class,
-                           R.string.condition_title_always_false_condition),
+                        R.string.condition_title_always_false_condition),
 
         // ------------------------------------------------------------------------
         // ARITHMETRIC CONDITIONS
         // ------------------------------------------------------------------------
 
-        ARITHMETRIC_IS_NUMBER_EQUAL(2001, IsNumberEqualConditionPlugin.class, EqualConditionPluginFragment.class,
-                                    R.string.condition_title_is_number_equal_condition),
-        ARITHMETRIC_IS_NUMBER_IN_INTERVAL(2002, IsNumberInIntervalConditionPlugin.class, IntervalConditionPluginFragment.class,
-                                          R.string.condition_title_is_number_in_interval_condition),
-        ARITHMETRIC_IS_NUMBER_PRIME(2003, IsNumberPrimeConditionPlugin.class, DefaultConditionPluginFragment.class,
-                                    R.string.condition_title_is_number_prime_condition),
+        ARITHMETRIC_IS_NUMBER_EQUAL(2000, IsNumberEqualConditionPlugin.class, EqualConditionPluginFragment.class,
+                        R.string.condition_title_is_number_equal_condition),
+        ARITHMETRIC_IS_NUMBER_IN_INTERVAL(2001, IsNumberInIntervalConditionPlugin.class, IntervalConditionPluginFragment.class,
+                        R.string.condition_title_is_number_in_interval_condition),
+        ARITHMETRIC_IS_NUMBER_PRIME(2002, IsNumberPrimeConditionPlugin.class, DefaultConditionPluginFragment.class,
+                        R.string.condition_title_is_number_prime_condition),
 
 
         // ------------------------------------------------------------------------
         // CONTACT CONDITIONS
         // ------------------------------------------------------------------------
-        CONTACT_IS_IN_GROUP(3001, ContactIsInGroupConditionPlugin.class, ContactIsInGroupConditionPluginFragment.class,
-                            R.string.condition_title_contact_is_in_group_condition);
+        CONTACT_IS_IN_GROUP(3000, ContactIsInGroupConditionPlugin.class, ContactIsInGroupConditionPluginFragment.class,
+                        R.string.condition_title_contact_is_in_group_condition),
+
+        // ------------------------------------------------------------------------
+        // TIME CONDITIONS
+        // ------------------------------------------------------------------------
+        TIME_IS_IN_INTERVAL(4000, IsTimeInIntervalConditionPlugin.class, IntervalTimeConditionPluginFragment.class,
+                        R.string.condition_title_is_time_in_interval_condition);
 
 
         private final int mType;
@@ -168,7 +176,6 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
      * Evaluates the condition and recursively all of the child-conditions based on the event.
      *
      * @param event
-     *
      * @return true if the condition is true otherwise false.
      */
     public boolean evaluate(Event event) {

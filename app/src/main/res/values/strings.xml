@@ -60,6 +60,13 @@
     <string name="really_delete_condition">Do you really want to delete this condition?</string>
     <string name="really_delete_rule">Do you really want to delete this rule?</string>
 
+    <string name="is_outisde_of_iterval">Is outside of interval</string>
+    <string name="set_min_time">Set from time</string>
+    <string name="set_max_time">Set to time</string>
+    <string name="time_interval_info">Time interval</string>
+
+    <string name="msg_err_bad_time_interval">Min time have to be less or equal then max time!</string>
+
     <!-- Font awesome icons-->
     <string name="lbl_start_rules_engine_icon">{faw-play}</string>
     <string name="lbl_stop_rules_engine_icon">{faw-stop}</string>
@@ -80,6 +87,7 @@
     <string name="condition_title_is_number_in_interval_condition">Is Number in Interval Condition</string>
     <string name="condition_title_is_number_equal_condition">Is Number Equal With Condition</string>
     <string name="condition_title_contact_is_in_group_condition">Contact is in Group Condition</string>
+    <string name="condition_title_is_time_in_interval_condition">Is Time in Interval Condition</string>
 
     <!-- Action names -->
     <string name="action_title_toast_incoming_event_action">Toast the Incoming Event</string>

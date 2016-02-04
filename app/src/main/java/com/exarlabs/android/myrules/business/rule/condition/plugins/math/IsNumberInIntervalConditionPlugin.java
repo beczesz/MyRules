@@ -27,10 +27,12 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+
     private static final String TAG = IsNumberInIntervalConditionPlugin.class.getSimpleName();
 
     private static final String KEY_INTERVAL_MIN = "INTERVAL_MIN";
     private static final String KEY_INTERVAL_MAX = "INTERVAL_MAX";
+    private static final String KEY_INTERVAL_IS_OUT = "INTERVAL_IS_OUT";
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -40,6 +42,7 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
     // FIELDS
     // ------------------------------------------------------------------------
     private double mMin, mMax;
+    private boolean mIsOutside;
 
 
     // ------------------------------------------------------------------------
@@ -59,15 +62,19 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
         mMin = minProperty != null ? Double.parseDouble(minProperty.getValue()) : 0;
         RuleConditionProperty property = getProperty(KEY_INTERVAL_MAX);
         mMax = minProperty != null ? Double.parseDouble(property.getValue()) : 0;
+        mIsOutside = Boolean.parseBoolean(getProperty(KEY_INTERVAL_IS_OUT).getValue());
     }
 
     @Override
     public boolean evaluate(Event event) {
         if (event instanceof NumberEvent) {
             int value = ((NumberEvent) event).getValue();
-            boolean isInside = mMin <= value && mMax >= value;
-            Log.w(TAG, "Value: " + value + " is indeed: " + isInside);
-            return isInside;
+            boolean result = mMin <= value && mMax >= value;
+            if (mIsOutside) {
+                result = !result;
+            }
+            Log.w(TAG, "Value: " + value + " is " + (mIsOutside ? "outside: " : "inside: ") + result);
+            return result;
         }
 
         // Always return true if we can not process this event
@@ -101,5 +108,14 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
     public void setMax(double max) {
         saveProperty(KEY_INTERVAL_MAX, Double.toString(max));
         mMax = max;
+    }
+
+    public boolean isOutside() {
+        return mIsOutside;
+    }
+
+    public void setOutside(boolean isOutside) {
+        saveProperty(KEY_INTERVAL_IS_OUT, Boolean.toString(isOutside));
+        this.mIsOutside = isOutside;
     }
 }
