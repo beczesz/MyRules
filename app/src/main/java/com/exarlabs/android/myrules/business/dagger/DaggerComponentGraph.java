@@ -32,7 +32,6 @@ import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
-import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
@@ -77,7 +76,7 @@ public interface DaggerComponentGraph {
     void inject(RejectCallActionPlugin rejectCallActionPlugin);
 
     void inject(SmsEventHandlerPlugin smsEventHandlerPlugin);
-    
+
     void inject(CallEventHandlerPlugin callEventHandlerPlugin);
 
     void inject(RuleDetailsFragment ruleDetailsFragment);
@@ -98,8 +97,6 @@ public interface DaggerComponentGraph {
 
     void inject(EqualConditionPluginFragment equalConditionPluginFragment);
 
-    void inject(IntervalConditionPluginFragment intervalConditionPluginFragment);
-
     void inject(SendSMSToGroupActionPluginFragment sendSMSToGroupActionPluginFragment);
 
     void inject(ContactsSectorFragment contactsSectorFragment);
@@ -107,11 +104,11 @@ public interface DaggerComponentGraph {
     void inject(ConditionDetailsFragment conditionDetailsFragment);
 
     void inject(ConditionsSectorFragment conditionsSectorFragment);
-    
+
     void inject(Event event);
 
     void inject(EventHandlerPlugin eventHandlerPlugin);
-    
+
     void inject(ActionsSectorFragment actionsSectorFragment);
 
     void inject(ConditionPlugin conditionPlugin);

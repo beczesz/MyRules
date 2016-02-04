@@ -5,6 +5,7 @@
                 android:orientation="horizontal">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -24,6 +25,13 @@
             android:hint="@string/lbl_hint_interv_end"
             android:inputType="numberDecimal"/>
 
+        <CheckBox
+            android:id="@+id/is_outside"
+            android:layout_width="189dp"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/is_outisde_of_iterval"/>
+
     </LinearLayout>
 
     <ProgressBar
@@ -34,5 +42,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:visibility="gone"/>
+
 
 </RelativeLayout>

@@ -51,27 +51,28 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
         // DEBUG ACTIONS
         // ------------------------------------------------------------------------
         DEBUG_TOAST_INCOMING_EVENT(1, ToastIncomingEventAction.class, DefaultActionPluginFragment.class,
-                                   R.string.action_title_toast_incoming_event_action),
+                        R.string.action_title_toast_incoming_event_action),
 
         // ------------------------------------------------------------------------
         // ARITHMETRIC ACTIONS
         // ------------------------------------------------------------------------
 
-        ARITHMETRIC_ACTION_MULTIPLY(2001, MultiplyActionPlugin.class, MultiplyActionPluginFragment.class, R.string.action_title_multiply_action),
-        ARITHMETRIC_ACTION_FIBONACCI(2002, FibonacciActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_fibonacci_action),
+        ARITHMETRIC_ACTION_MULTIPLY(2000, MultiplyActionPlugin.class, MultiplyActionPluginFragment.class, R.string.action_title_multiply_action),
+
+        ARITHMETRIC_ACTION_FIBONACCI(2001, FibonacciActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_fibonacci_action),
 
         // ------------------------------------------------------------------------
         // SMS ACTIONS
         // ------------------------------------------------------------------------
 
-        SEND_SMS_ACTION(3002, SendSmsActionPlugin.class, SendSMSToGroupActionPluginFragment.class, R.string.action_title_send_sms_action),
-        FORWARD_SMS_ACTION(3003, ForwardSmsActionPlugin.class, ForwardSMSToGroupActionPluginFragment.class, R.string.action_title_send_sms_action),
+        SEND_SMS_ACTION(3000, SendSmsActionPlugin.class, SendSMSToGroupActionPluginFragment.class, R.string.action_title_send_sms_action),
+        FORWARD_SMS_ACTION(3001, ForwardSmsActionPlugin.class, ForwardSMSToGroupActionPluginFragment.class, R.string.action_title_send_sms_action),
 
         // ------------------------------------------------------------------------
         // CALL ACTIONS
         // ------------------------------------------------------------------------
 
-        REJECT_CALL_ACTION(4002, RejectCallActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_reject_call_action);
+        REJECT_CALL_ACTION(4000, RejectCallActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_reject_call_action);
 
 
         // ------------------------------------------------------------------------
@@ -148,7 +149,6 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
      * Run the action.
      *
      * @param event
-     *
      * @return
      */
     public boolean run(Event event) {
