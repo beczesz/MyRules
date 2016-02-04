@@ -109,6 +109,10 @@ public class RuleManager {
         return mRuleRecordDao.load(key);
     }
 
+    public void deleteRule(RuleRecord ruleRecord){
+        // ToDo: implement
+    }
+
     /**
      * Returns all the defined perimissions needed to run this rule.
      *

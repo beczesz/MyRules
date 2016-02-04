@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -19,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -181,7 +183,7 @@ public class ContactsSectorFragment extends BaseFragment {
             default:
             case R.id.selection_completed:
                 notifyContactSelectorListener(mSelectedContacts);
-                mNavigationManager.navigateBack(getActivity());
+                goBack();
                 break;
         }
 
@@ -319,5 +321,16 @@ public class ContactsSectorFragment extends BaseFragment {
             }
 
         }
+    }
+
+    /**
+     * Hides the keyboard, and navigates back
+     */
+    private void goBack() {
+        // hide the keyboard
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
+        mNavigationManager.navigateBack(getActivity());
     }
 }
