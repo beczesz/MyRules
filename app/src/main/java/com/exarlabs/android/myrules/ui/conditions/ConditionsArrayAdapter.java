@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
@@ -43,7 +43,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
         @Bind(R.id.expandable_layout)
         public ExpandableLayout expandableLayout;
 
-        @Bind(R.id.button_edit_condition)
+        @Bind(R.id.button_edit)
         public TextView editCondition;
 
         @Bind(R.id.item_details)
@@ -85,7 +85,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
     public ConditionsArrayAdapter(Context context) {
-        super(context, R.layout.conditions_list_view_item);
+        super(context, R.layout.list_view_item_for_main_screens);
 
         DaggerManager.component().inject(this);
         mContext = context;
@@ -105,7 +105,7 @@ public class ConditionsArrayAdapter extends ArrayAdapter<RuleCondition> implemen
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            root = inflater.inflate(R.layout.conditions_list_view_item, parent, false);
+            root = inflater.inflate(R.layout.list_view_item_for_main_screens, parent, false);
             root.setTag(new ConditionViewHolder(root));
         } else {
             root = convertView;

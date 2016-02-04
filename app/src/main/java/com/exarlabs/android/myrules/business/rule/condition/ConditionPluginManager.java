@@ -1,11 +1,9 @@
-package com.exarlabs.android.myrules.business.condition;
+package com.exarlabs.android.myrules.business.rule.condition;
 
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.exarlabs.android.myrules.business.rule.condition.Condition;
-import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
 
 /**

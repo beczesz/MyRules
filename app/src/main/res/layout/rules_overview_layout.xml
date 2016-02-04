@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
 
@@ -24,25 +24,26 @@
                 style="@style/Header1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lbl_start_rules_engine"
-                />
+                android:text="@string/lbl_start_rules_engine"/>
 
 
-            <com.mikepenz.iconics.view.IconicsTextView
+            <TextView
                 android:id="@+id/lbl_rules_engine_starter_icon"
                 style="@style/Header1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_default"
-                android:text="@string/lbl_start_rules_engine_icon"
-                />
+                android:text="@string/lbl_start_rules_engine_icon"/>
 
         </LinearLayout>
 
         <ListView
             android:id="@+id/listView_rules"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:divider="@color/transparent"/>
 
     </LinearLayout>
 

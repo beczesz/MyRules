@@ -157,6 +157,7 @@ dependencies {
     compile 'com.norbsoft.typefacehelper:library:0.9.0'
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
+    compile 'com.mikepenz:typeicons-typeface:2.0.7.1@aar'
     compile 'com.mikepenz:iconics-core:2.2.0'
     compile('com.mikepenz:materialdrawer:4.3.8@aar') {
         transitive = true

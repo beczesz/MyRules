@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
 import com.exarlabs.android.myrules.business.rule.Rule;

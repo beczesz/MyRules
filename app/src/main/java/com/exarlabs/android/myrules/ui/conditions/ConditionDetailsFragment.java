@@ -19,7 +19,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;

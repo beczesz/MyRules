@@ -1,6 +1,5 @@
 package com.exarlabs.android.myrules.ui.rules;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,17 +10,16 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.rule.action.ActionManager;
-import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.RulesEngineService;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
-import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
-import com.exarlabs.android.myrules.business.RulesEngineService;
+import com.exarlabs.android.myrules.business.rule.action.ActionManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
@@ -31,13 +29,12 @@ import com.software.shell.fab.ActionButton;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import rx.Observable;
 
 /**
  * Lists all the rules which are defined by the user.
  * Created by becze on 11/25/2015.
  */
-public class RulesOverviewFragment extends BaseFragment {
+public class RulesOverviewFragment extends BaseFragment implements OnRuleEditListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -98,7 +95,7 @@ public class RulesOverviewFragment extends BaseFragment {
     @Inject
     public EventPluginManager mEventPluginManager;
 
-    private ArrayAdapter<String> mAdapter;
+    private RulesArrayAdapter mAdapter;
     private List<RuleRecord> mRuleRecords;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -130,10 +127,9 @@ public class RulesOverviewFragment extends BaseFragment {
 
         initActionBarWithHomeButton(getString(R.string.my_rules));
 
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
+        mAdapter = new RulesArrayAdapter(getContext());
+        mAdapter.setOnRuleEditListener(this);
         mRulesListView.setAdapter(mAdapter);
-        mRulesListView.setOnItemClickListener(
-                        (parent, view1, position, id) -> mNavigationManager.startRuleDetailsFragment(mRuleRecords.get(position).getId()));
 
 
         if (BuildConfig.DEBUG) {
@@ -142,8 +138,6 @@ public class RulesOverviewFragment extends BaseFragment {
         }
 
         mAddRuleButton.playShowAnimation();
-
-
     }
 
     @Override
@@ -157,23 +151,15 @@ public class RulesOverviewFragment extends BaseFragment {
      */
     private void updateUI() {
 
-        // Updatet the statusbar
+        // Update the status bar
         updateRuleEngineStatusBar(RulesEngineService.isRunning());
 
         mAdapter.clear();
         mRuleRecords = mRuleManager.loadAllRules();
-        List<String> ruleNames = new ArrayList<>();
-        Observable.from(mRuleRecords).map(rule -> rule.getRuleName()).subscribe(ruleName -> ruleNames.add(ruleName));
-
-        mAdapter.addAll(ruleNames);
+        mAdapter.addAll(mRuleRecords);
         mAdapter.notifyDataSetChanged();
     }
 
-
-    @OnClick(R.id.fab_add_rule)
-    public void showAddRuleFragment() {
-        mNavigationManager.startRuleDetailsFragment((long)-1);
-    }
 
     @OnClick({ R.id.lbl_rules_engine_starter, R.id.lbl_rules_engine_starter_icon })
     public void starStopRulesEngine() {
@@ -193,6 +179,20 @@ public class RulesOverviewFragment extends BaseFragment {
         int color = isRunning ? R.color.red : R.color.green;
         mRulesEngineStarterIcon.setTextColor(getResources().getColor(color));
         mRulesEngineStarterIcon.setText(isRunning ? R.string.lbl_stop_rules_engine_icon : R.string.lbl_start_rules_engine_icon);
+    }
+
+    @OnClick(R.id.fab_add_rule)
+    public void showRuleDetailsFragment() {
+        showRuleDetailsFragment((long) -1);
+    }
+
+    private void showRuleDetailsFragment(long id){
+        mNavigationManager.startRuleDetailsFragment(id);
+    }
+
+    @Override
+    public void onRuleEdit(Long ruleId) {
+        showRuleDetailsFragment(ruleId);
     }
 
     // ------------------------------------------------------------------------

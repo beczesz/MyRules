@@ -11,6 +11,8 @@
     <string name="debug">Debug</string>
     <string name="action_edit">Edit Action</string>
     <string name="action_new">New Action</string>
+    <string name="select_contacts">Select contacts</string>
+    
 
     <string-array name="list_of_events">
         <item>Select an Event</item>
@@ -43,11 +45,12 @@
     <string name="action_sequence">S\nE\nQ</string>
     <string name="message_rule_name_mandatory">You must give a name for this rule.</string>
     <string name="select_an_action">Select an Action...</string>
-    <string name="contact_selected">Selected contacts:</string>
     <string name="lbl_complete_selection">Complete selection</string>
-    <string name="select_a_condition">Select a Condition...</string>
+    <string name="search_contacts">Search a contact...</string>
     <string name="lbl_search_condition">Search a condition...</string>
     <string name="lbl_search_action">Search an action...</string>
+    <string name="select_a_condition">Select a Condition...</string>
+    <string name="contact_selected">Selected contacts:</string>
     <string name="condition_selected">Selected conditions:</string>
     <string name="action_selected">Selected actions:</string>
     <string name="message_error_permission_denied">To save you have to grant all of the permissions.</string>

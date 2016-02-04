@@ -67,9 +67,6 @@ public class ContactsSectorFragment extends BaseFragment {
             ButterKnife.bind(this, v);
         }
 
-        @Bind(R.id.contact_id)
-        TextView mContactId;
-
         @Bind(R.id.contact_name)
         TextView mContactName;
 
@@ -101,7 +98,6 @@ public class ContactsSectorFragment extends BaseFragment {
             viewHolder = (ContactsRowViewHolder) convertView.getTag();
 
             Contact contactRow = getItem(position);
-            viewHolder.mContactId.setText(Long.toString(contactRow.getId()));
             viewHolder.mContactName.setText(contactRow.getName());
             viewHolder.mContactNumber.setText(contactRow.getNumber());
             viewHolder.mContactSelectedCB.setChecked(isSelected(contactRow));
@@ -201,6 +197,8 @@ public class ContactsSectorFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        initActionBarWithBackButton(getString(R.string.select_contacts));
 
         mContactsList.setAdapter(mContactAdapter);
 

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.exarlabs.android.myrules.business.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.Evaluable;
 import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;

@@ -1,7 +1,8 @@
-package com.exarlabs.android.myrules.ui.actions;
+package com.exarlabs.android.myrules.ui.rules;
 
 import java.util.Collection;
-import java.util.List;
+
+import javax.inject.Inject;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,8 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.model.dao.RuleAction;
-import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
+import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
+import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.ui.R;
 import com.github.aakira.expandablelayout.ExpandableLayout;
 
@@ -20,17 +22,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * It's a special array adapter for list view items showing the actions
+ * It's a special array adapter for list view items showing the rules
  * Created by atiyka on 2016.01.15..
  */
-public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements View.OnClickListener {
+public class RulesArrayAdapter extends ArrayAdapter<RuleRecord> implements View.OnClickListener {
     // ------------------------------------------------------------------------
     // STATIC CLASSES
     // ------------------------------------------------------------------------
 
-    static class ActionHolder
+    static class RuleViewHolder
     {
-        public ActionHolder(View view) {
+        public RuleViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
@@ -41,7 +43,7 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         public ExpandableLayout expandableLayout;
 
         @Bind(R.id.button_edit)
-        public TextView editAction;
+        public TextView editRule;
 
         @Bind(R.id.item_details)
         public TextView itemDetails;
@@ -66,12 +68,14 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private OnActionEditListener mActionEditListener;
+    private OnRuleEditListener mRuleEditListener;
 
     private Context mContext;
-    private Collection<? extends RuleAction> mRuleActions;
+    private Collection<? extends RuleRecord> mRuleRecords;
 
 
+    @Inject
+    public EventPluginManager mEventPluginManager;
     // ------------------------------------------------------------------------
     // INITIALIZERS
     // ------------------------------------------------------------------------
@@ -79,17 +83,18 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public ActionsArrayAdapter(Context context) {
+    public RulesArrayAdapter(Context context) {
         super(context, R.layout.list_view_item_for_main_screens);
         mContext = context;
+        DaggerManager.component().inject(this);
     }
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    public void setOnActionEditListener(OnActionEditListener listener){
-        mActionEditListener = listener;
+    public void setOnRuleEditListener(OnRuleEditListener listener){
+        mRuleEditListener = listener;
     }
 
     @Override
@@ -101,47 +106,46 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             root = inflater.inflate(R.layout.list_view_item_for_main_screens, parent, false);
 
-            root.setTag(new ActionHolder(root));
+            root.setTag(new RuleViewHolder(root));
         }
         else
         {
             root = convertView;
         }
 
-        ActionHolder holder = (ActionHolder) root.getTag();
+        RuleViewHolder holder = (RuleViewHolder) root.getTag();
 
-        RuleAction action = (RuleAction) mRuleActions.toArray()[position];
+        RuleRecord rule = (RuleRecord) mRuleRecords.toArray()[position];
 
-        holder.headerText.setText(action.getActionName());
+        holder.headerText.setText(rule.getRuleName());
         // make the list items expandable
         ((View) holder.headerText.getParent().getParent()).setOnClickListener(this);
 
+
         // TODO: T.B.D. - details, text
-        String details = "Type No.: " + action.getType() + "\nClass: " + action.getActionPlugin().getClass().getSimpleName();
-        List<RuleActionProperty> properties = action.getProperties();
-        for (RuleActionProperty property : properties) {
-            details += "\n" + property.getKey() + " = " + property.getValue();
-        }
+        String details = "Event: " + getContext().getString(mEventPluginManager.getFromEventCode(rule.getEventCode()).getTitleResId()) +
+                        "\nConditions: " + rule.getRuleConditionTree().getChildConditions().size() +
+                        "\nActions: " + rule.getRuleActions().size();
 
         holder.itemDetails.setText(details);
 
-        holder.editAction.setTag(action.getId());
-        holder.editAction.setOnClickListener(this);
+        holder.editRule.setTag(rule.getId());
+        holder.editRule.setOnClickListener(this);
 
         return root;
     }
 
     @Override
-    public void addAll(Collection<? extends RuleAction> collection) {
+    public void addAll(Collection<? extends RuleRecord> collection) {
         super.addAll(collection);
-        mRuleActions = collection;
+        mRuleRecords = collection;
     }
 
     @Override
     public void onClick(View view) {
         // clicked on a RelativeLayout -> expand the list item
         if(view.getClass().equals(RelativeLayout.class)){
-            ActionHolder holder = new ActionHolder(view);
+            RuleViewHolder holder = new RuleViewHolder(view);
             if (holder.expandableLayout.isExpanded()) holder.expandableLayout.collapse();
             else holder.expandableLayout.expand();
 
@@ -149,8 +153,8 @@ public class ActionsArrayAdapter extends ArrayAdapter<RuleAction> implements Vie
         } else {
             TextView button = (TextView) view;
             Long id = (Long) button.getTag();
-            if(mActionEditListener != null)
-                mActionEditListener.onActionEdit(id);
+            if(mRuleEditListener != null)
+                mRuleEditListener.onRuleEdit(id);
         }
     }
 

@@ -49,7 +49,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/padding_default"
         android:layout_marginBottom="@dimen/padding_default"
-
         fab:type = "DEFAULT"
         fab:button_color="@color/colorAccent"
         fab:image="@drawable/fab_plus_icon"

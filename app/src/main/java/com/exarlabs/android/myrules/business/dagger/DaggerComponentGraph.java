@@ -36,6 +36,7 @@ import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
+import com.exarlabs.android.myrules.ui.rules.RulesArrayAdapter;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
 import com.exarlabs.android.myrules.ui.util.contact.ContactsSectorFragment;
 
@@ -122,4 +123,5 @@ public interface DaggerComponentGraph {
 
     void inject(ActionPlugin actionPlugin);
 
+    void inject(RulesArrayAdapter rulesArrayAdapter);
 }

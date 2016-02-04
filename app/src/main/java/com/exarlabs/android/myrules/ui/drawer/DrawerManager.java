@@ -23,6 +23,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.octicons_typeface_library.Octicons;
+import com.mikepenz.typeicons_typeface_library.Typeicons;
 
 /**
  * Created by becze on 10/21/2015.
@@ -134,16 +135,16 @@ public class DrawerManager {
         //if you want to update the items at a later time it is recommended to keep it in a variable
         //@formatter:off
         items.add(new PrimaryDrawerItem()
-                        .withName(MenuItem.MY_RULES.mLabel).withIcon(Octicons.Icon.oct_dashboard)
-                        .withIconColorRes(R.color.menu_item_1).withSelectedIconColorRes(R.color.menu_item_1));
+                        .withName(MenuItem.MY_RULES.mLabel).withIcon(Octicons.Icon.oct_checklist)
+                        .withIconColorRes(R.color.text_primary).withSelectedIconColorRes(R.color.text_primary));
 
         items.add(new PrimaryDrawerItem()
-                        .withName(MenuItem.MY_CONDITIONS.mLabel).withIcon(FontAwesome.Icon.faw_sign_out)
-                        .withIconColorRes(R.color.menu_item_3).withSelectedIconColorRes(R.color.menu_item_3));
+                        .withName(MenuItem.MY_CONDITIONS.mLabel).withIcon(FontAwesome.Icon.faw_wrench)
+                        .withIconColorRes(R.color.text_primary).withSelectedIconColorRes(R.color.text_primary));
 
         items.add(new PrimaryDrawerItem()
-                        .withName(MenuItem.MY_ACTIONS.mLabel).withIcon(FontAwesome.Icon.faw_sign_out)
-                        .withIconColorRes(R.color.menu_item_4).withSelectedIconColorRes(R.color.menu_item_4));
+                        .withName(MenuItem.MY_ACTIONS.mLabel).withIcon(Typeicons.Icon.typ_arrow_forward_outline)
+                        .withIconColorRes(R.color.text_primary).withSelectedIconColorRes(R.color.text_primary));
 
         if(BuildConfig.DEBUG){
             items.add(new PrimaryDrawerItem()

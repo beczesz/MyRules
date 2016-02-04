@@ -170,6 +170,11 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
         return mRootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initActionBar();
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -177,13 +182,6 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
 
         if (!isInitialized) {
             isInitialized = true;
-            // Init the toolbar
-            if (mRuleAction.isAttached()) {
-                initActionBarWithBackButton(getString(R.string.action_edit));
-
-            } else {
-                initActionBarWithBackButton(getString(R.string.action_new));
-            }
 
             mSpinnerAdapter = new ActionPluginAdapter(getActivity(), R.layout.spinner_item);
             mSpinnerAdapter.addAll(Action.Type.values());
@@ -211,6 +209,18 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
                 int position = mSpinnerAdapter.getPosition(mActionPluginManager.getFromActionTypeCode(mRuleAction.getType()));
                 mActionTypeSpinner.setSelection(++position);
             }
+        }
+    }
+
+    /**
+     * Initializes the action bar with the corresponding text
+     */
+    private void initActionBar(){
+        if (mRuleAction.isAttached()) {
+            initActionBarWithBackButton(getString(R.string.action_edit));
+
+        } else {
+            initActionBarWithBackButton(getString(R.string.action_new));
         }
     }
 

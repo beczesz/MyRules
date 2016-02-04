@@ -6,8 +6,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/card"
         android:layout_margin="@dimen/padding_default"
+        android:background="@drawable/card"
         android:padding="@dimen/padding_small">
 
         <RelativeLayout
@@ -24,7 +24,7 @@
                 android:textSize="@dimen/text_size_large"/>
 
             <TextView
-                android:id="@+id/button_edit_condition"
+                android:id="@+id/button_edit"
                 style="@style/EditIcons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,4 +52,5 @@
 
         </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
     </RelativeLayout>
+
 </RelativeLayout>
