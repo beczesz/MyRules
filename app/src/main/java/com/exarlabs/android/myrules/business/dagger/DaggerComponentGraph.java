@@ -20,6 +20,7 @@ import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsSectorFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.contact.ForwardSMSToGroupActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.debug.DefaultActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.math.MultiplyActionPluginFragment;
@@ -121,7 +122,9 @@ public interface DaggerComponentGraph {
 
     void inject(Action action);
 
-    void inject(ActionPlugin actionPlugin);
-
     void inject(RulesArrayAdapter rulesArrayAdapter);
+
+    void inject(ForwardSMSToGroupActionPluginFragment forwardSMSToGroupActionPluginFragment);
+
+    void inject(ActionPlugin actionPlugin);
 }

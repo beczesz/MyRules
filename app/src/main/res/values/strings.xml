@@ -12,7 +12,7 @@
     <string name="action_edit">Edit Action</string>
     <string name="action_new">New Action</string>
     <string name="select_contacts">Select contacts</string>
-    
+
 
     <string-array name="list_of_events">
         <item>Select an Event</item>
@@ -80,7 +80,8 @@
     <string name="action_title_toast_incoming_event_action">Toast the Incoming Event</string>
     <string name="action_title_multiply_action">Multiply With a Number</string>
     <string name="action_title_fibonacci_action">Calculate Fibonacci Number</string>
-    <string name="action_title_send_sms_action">Send SMS to ... Action</string>
+    <string name="action_title_send_sms_action">Send SMS to Contacts</string>
+    <string name="action_title_forward_sms_action">Forward SMS to Contacts</string>
     <string name="action_title_reject_call_action">Reject Call</string>
     <string name="error_mandatory_field">This field is mandatory!</string>
     <string name="lbl_send_to_contact_from_event">Send to contact from the event</string>

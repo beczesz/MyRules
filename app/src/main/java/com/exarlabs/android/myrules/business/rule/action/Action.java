@@ -11,6 +11,7 @@ import com.exarlabs.android.myrules.business.rule.Runnable;
 import com.exarlabs.android.myrules.business.rule.action.plugins.call.RejectCallActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.math.FibonacciActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.math.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.sms.ForwardSmsActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.sms.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.event.Event;
@@ -18,6 +19,7 @@ import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.contact.ForwardSMSToGroupActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.debug.DefaultActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.debug.ToastIncomingEventAction;
@@ -56,7 +58,6 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
         // ------------------------------------------------------------------------
 
         ARITHMETRIC_ACTION_MULTIPLY(2001, MultiplyActionPlugin.class, MultiplyActionPluginFragment.class, R.string.action_title_multiply_action),
-
         ARITHMETRIC_ACTION_FIBONACCI(2002, FibonacciActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_fibonacci_action),
 
         // ------------------------------------------------------------------------
@@ -64,9 +65,10 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
         // ------------------------------------------------------------------------
 
         SEND_SMS_ACTION(3002, SendSmsActionPlugin.class, SendSMSToGroupActionPluginFragment.class, R.string.action_title_send_sms_action),
+        FORWARD_SMS_ACTION(3003, ForwardSmsActionPlugin.class, ForwardSMSToGroupActionPluginFragment.class, R.string.action_title_send_sms_action),
 
         // ------------------------------------------------------------------------
-        // SMS ACTIONS
+        // CALL ACTIONS
         // ------------------------------------------------------------------------
 
         REJECT_CALL_ACTION(4002, RejectCallActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_reject_call_action);

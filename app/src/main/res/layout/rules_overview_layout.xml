@@ -15,6 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/text_dark_bg_secondary"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -32,7 +33,6 @@
                 style="@style/Header1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/padding_default"
                 android:text="@string/lbl_start_rules_engine_icon"/>
 
         </LinearLayout>
@@ -41,9 +41,9 @@
             android:id="@+id/listView_rules"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@color/transparent"
             android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"
-            android:divider="@color/transparent"/>
+            android:headerDividersEnabled="false"/>
 
     </LinearLayout>
 
