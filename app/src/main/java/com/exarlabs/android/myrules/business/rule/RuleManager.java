@@ -9,6 +9,9 @@ import javax.inject.Inject;
 import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
+import com.exarlabs.android.myrules.model.dao.RuleActionLinkDao;
+import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
+import com.exarlabs.android.myrules.model.dao.RuleConditionTreeDao;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
 import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
 
@@ -17,6 +20,7 @@ import com.exarlabs.android.myrules.model.dao.RuleRecordDao;
  * Created by becze on 12/15/2015.
  */
 public class RuleManager {
+    private final RuleConditionTreeDao mRuleConditionTreeDao;
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -43,6 +47,7 @@ public class RuleManager {
     private final RuleRecordDao mRuleRecordDao;
     private final ConditionManager mConditionManager;
     private final ActionManager mActionManager;
+    private final RuleActionLinkDao mRuleActionLinkDao;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -52,6 +57,8 @@ public class RuleManager {
     public RuleManager(DaoManager daoManager, ConditionManager conditionManager, ActionManager actionManager) {
         mDaoManager = daoManager;
         mRuleRecordDao = mDaoManager.getRuleRecordDao();
+        mRuleActionLinkDao = mDaoManager.getRuleActionLinkDao();
+        mRuleConditionTreeDao = mDaoManager.getRuleConditionTreeDao();
         mConditionManager = conditionManager;
         mActionManager = actionManager;
     }
@@ -68,7 +75,8 @@ public class RuleManager {
      * Loads the list of rules which are responding to a specified event and it has the given status.
      *
      * @param eventCode the code of the event
-     * @param status the status of the event
+     * @param status    the status of the event
+     *
      * @return
      */
     public List<RuleRecord> getRules(int eventCode, int status) {
@@ -98,7 +106,7 @@ public class RuleManager {
         // if there were any temporary actions save them
         ruleRecord.addTempraryRuleActions();
         // save the actions
-        
+
         mActionManager.saveActionLinks(ruleRecord, ruleRecord.getRuleActionLinks());
 
         // save the rule
@@ -109,20 +117,46 @@ public class RuleManager {
         return mRuleRecordDao.load(key);
     }
 
-    public void deleteRule(RuleRecord ruleRecord){
-        // ToDo: implement
+    /**
+     * Deletes the rule record.
+     *
+     * @param ruleRecord
+     */
+    public void deleteRule(RuleRecord ruleRecord) {
+        if (ruleRecord.isAttached()) {
+            // we have to delete the rule and all the realted links
+            mRuleActionLinkDao.deleteInTx(ruleRecord.getRuleActionLinks());
+
+            deleteRuleConditionLinks(ruleRecord.getRuleConditionTree());
+
+            // delete the rule itself
+            mRuleRecordDao.delete(ruleRecord);
+        }
+    }
+
+    /**
+     * Delete recursively all the links
+     * @param ruleConditionTree
+     */
+    public void deleteRuleConditionLinks(RuleConditionTree ruleConditionTree) {
+        List<RuleConditionTree> childConditions = ruleConditionTree.getChildConditions();
+        for (RuleConditionTree child : childConditions) {
+            deleteRuleConditionLinks(child);
+        }
+        mRuleConditionTreeDao.delete(ruleConditionTree);
     }
 
     /**
      * Returns all the defined perimissions needed to run this rule.
      *
      * @param ruleRecord
+     *
      * @return
      */
     public Set<String> getPermissions(RuleRecord ruleRecord) {
         Set<String> requiredPermissions = new HashSet<>();
 
-        if(!ruleRecord.isAttached()){
+        if (!ruleRecord.isAttached()) {
             return requiredPermissions;
         }
 

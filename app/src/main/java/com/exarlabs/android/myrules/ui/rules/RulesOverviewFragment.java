@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -60,19 +63,19 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-    @Bind(R.id.build_info)
+    @Bind (R.id.build_info)
     public TextView mDevelInfo;
 
-    @Bind(R.id.listView_rules)
+    @Bind (R.id.listView_rules)
     public ListView mRulesListView;
 
-    @Bind(R.id.fab_add_rule)
+    @Bind (R.id.fab_add_rule)
     public ActionButton mAddRuleButton;
 
-    @Bind(R.id.lbl_rules_engine_starter_icon)
+    @Bind (R.id.lbl_rules_engine_starter_icon)
     public TextView mRulesEngineStarterIcon;
 
-    @Bind(R.id.lbl_rules_engine_starter)
+    @Bind (R.id.lbl_rules_engine_starter)
     public TextView mRulesEngineStarterLabel;
 
     private View mRootView;
@@ -109,6 +112,19 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerManager.component().inject(this);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(RulesEngineService.Status.ENGINE_RUNNING);
+        filter.addAction(RulesEngineService.Status.ENGINE_STOPPED);
+
+        getActivity().registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                updateRuleEngineStatusBar(RulesEngineService.isRunning());
+            }
+        }, filter);
+
+
     }
 
     @Nullable
@@ -161,7 +177,7 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
     }
 
 
-    @OnClick({ R.id.lbl_rules_engine_starter, R.id.lbl_rules_engine_starter_icon })
+    @OnClick ({ R.id.lbl_rules_engine_starter, R.id.lbl_rules_engine_starter_icon })
     public void starStopRulesEngine() {
         if (!RulesEngineService.isRunning()) {
             getActivity().startService(new Intent(getActivity(), RulesEngineService.class));
@@ -181,12 +197,12 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
         mRulesEngineStarterIcon.setText(isRunning ? R.string.lbl_stop_rules_engine_icon : R.string.lbl_start_rules_engine_icon);
     }
 
-    @OnClick(R.id.fab_add_rule)
+    @OnClick (R.id.fab_add_rule)
     public void showRuleDetailsFragment() {
         showRuleDetailsFragment((long) -1);
     }
 
-    private void showRuleDetailsFragment(long id){
+    private void showRuleDetailsFragment(long id) {
         mNavigationManager.startRuleDetailsFragment(id);
     }
 
