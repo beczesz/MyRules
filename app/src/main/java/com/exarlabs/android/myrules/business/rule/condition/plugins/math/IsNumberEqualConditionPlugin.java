@@ -10,6 +10,7 @@ import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEvent;
+import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
  * Example implementation where this plugin can decide if a number is equal with another number
@@ -53,7 +54,8 @@ public class IsNumberEqualConditionPlugin extends ConditionPlugin {
     public void initialize(List<? extends RuleComponentProperty> properties) {
         super.initialize(properties);
 
-        mValue = Double.parseDouble(getProperty(KEY_VALUE).getValue());
+        RuleConditionProperty property = getProperty(KEY_VALUE);
+        mValue = property != null ? Double.parseDouble(property.getValue()) : 0;
     }
 
     @Override

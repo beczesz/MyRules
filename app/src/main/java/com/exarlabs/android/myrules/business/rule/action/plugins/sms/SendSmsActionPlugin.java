@@ -1,5 +1,7 @@
-package com.exarlabs.android.myrules.business.rule.action.plugins;
+package com.exarlabs.android.myrules.business.rule.action.plugins.sms;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,8 +21,13 @@ import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
-import com.exarlabs.android.myrules.business.rule.event.plugins.call.CallEvent;
-import com.exarlabs.android.myrules.business.rule.event.plugins.sms.SmsEvent;
+import com.exarlabs.android.myrules.business.rule.event.plugins.ContactEvent;
+import com.exarlabs.android.myrules.model.contact.Contact;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Action plugin which sends a given text to a given phone number as an SMS
@@ -37,8 +44,10 @@ public class SendSmsActionPlugin extends ActionPlugin {
     // ------------------------------------------------------------------------
 
     private static final String TAG = SendSmsActionPlugin.class.getSimpleName();
-    private static final String KEY_PHONE_NUMBER = "PHONE_NUMBER";
+
+    private static final String KEY_GROUP_SELECTION = "GROUP_SELECTION";
     private static final String KEY_MESSAGE = "MESSAGE";
+    private static final String KEY_SEND_TO_CONTACT_FROM_EVENT = "SEND_TO_CONTACT_FROM_EVENT";
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -47,18 +56,34 @@ public class SendSmsActionPlugin extends ActionPlugin {
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-    private String mPhoneNumber;
+    /**
+     * This is the list of contacts in this group
+     */
+    private List<Contact> mContacts;
+    private final Gson mGson;
+    private final Type mDatasetListType;
     private String mMessage;
+
+    private boolean mSendToContactFromEvent;
 
     @Inject
     public Context mContext;
+
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public SendSmsActionPlugin(int type) {
+    public SendSmsActionPlugin() {
         DaggerManager.component().inject(this);
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.serializeNulls();
+        mGson = builder.create();
+
+        mDatasetListType = new TypeToken<List<Contact>>() {}.getType();
+
+        mContacts = new ArrayList<>();
     }
 
     // ------------------------------------------------------------------------
@@ -68,42 +93,50 @@ public class SendSmsActionPlugin extends ActionPlugin {
     @Override
     public void initialize(List<? extends RuleComponentProperty> properties) {
         super.initialize(properties);
-        if (getProperty(KEY_PHONE_NUMBER) != null) mPhoneNumber = getProperty(KEY_PHONE_NUMBER).getValue();
+        try {
+            RuleActionProperty groupJSON = getProperty(KEY_GROUP_SELECTION);
+            mContacts = mGson.fromJson(groupJSON.getValue(), mDatasetListType);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
 
-        if (getProperty(KEY_MESSAGE) != null) mMessage = getProperty(KEY_MESSAGE).getValue();
+        if (getProperty(KEY_MESSAGE) != null) {
+            mMessage = getProperty(KEY_MESSAGE).getValue();
+        }
+
+        if (getProperty(KEY_SEND_TO_CONTACT_FROM_EVENT) != null) {
+            mSendToContactFromEvent = Boolean.parseBoolean(getProperty(KEY_SEND_TO_CONTACT_FROM_EVENT).getValue());
+        }
     }
 
     @Override
     public boolean run(Event event) {
-        // reply to sender
-        if (event.getType() == Event.Type.RULE_EVENT_SMS.getType()) {
-            SmsEvent smsEvent = (SmsEvent) event;
-            sendSMS(smsEvent.getSender(), "I have got! :)");
-
-        } else if (event.getType() == Event.Type.RULE_EVENT_CALL.getType()) {
-            CallEvent callEvent = (CallEvent) event;
-            sendSMS(callEvent.getCaller(), mMessage);
-
-        } else if (mPhoneNumber == null) {
-            Log.w(TAG, "The phone number is null");
-            return false;
+        if (mSendToContactFromEvent) {
+            if (event instanceof ContactEvent) {
+                sendSMS(((ContactEvent) event).getContact(), mMessage);
+            } else {
+                Log.e(TAG, "The event must be a ContactEvent");
+            }
+        } else {
+            for (Contact contact : mContacts) {
+                sendSMS(contact, mMessage);
+            }
         }
 
-        //sendSMS(mPhoneNumber, mMessage);
         return true;
     }
 
     /**
      * Sends an SMS to the given phone number, with the specified value
      *
-     * @param phoneNumber
      * @param message
      */
-    public void sendSMS(String phoneNumber, String message) {
+    public void sendSMS(Contact contact, String message) {
         String SENT = "SMS_SENT";
         String DELIVERED = "SMS_DELIVERED";
 
-        Log.w(TAG, "Phone number: " + phoneNumber);
+
+        Log.w(TAG, "Phone number: " + contact.getNumber());
         Log.w(TAG, "Msg: " + message);
 
         PendingIntent sentPI = PendingIntent.getBroadcast(mContext, 0, new Intent(SENT), 0);
@@ -150,7 +183,7 @@ public class SendSmsActionPlugin extends ActionPlugin {
         }, new IntentFilter(DELIVERED));
 
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveryPI);
+        sms.sendTextMessage(contact.getNumber(), null, message, sentPI, deliveryPI);
     }
 
     @Override
@@ -164,22 +197,32 @@ public class SendSmsActionPlugin extends ActionPlugin {
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
 
-    public String getPhoneNumber() {
-        return mPhoneNumber;
-    }
 
     public String getMessage() {
         return mMessage;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        saveProperty(KEY_PHONE_NUMBER, phoneNumber);
-        this.mPhoneNumber = phoneNumber;
-    }
-
     public void setMessage(String message) {
         saveProperty(KEY_MESSAGE, message);
         this.mMessage = message;
+    }
+
+    public List<Contact> getContacts() {
+        return mContacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        mContacts = contacts;
+        saveProperty(KEY_GROUP_SELECTION, mGson.toJson(mContacts, mDatasetListType));
+    }
+
+    public boolean isSendToContactFromEvent() {
+        return mSendToContactFromEvent;
+    }
+
+    public void setSendToContactFromEvent(boolean sendToContactFromEvent) {
+        mSendToContactFromEvent = sendToContactFromEvent;
+        saveProperty(KEY_SEND_TO_CONTACT_FROM_EVENT, Boolean.toString(sendToContactFromEvent));
     }
 
     @Override

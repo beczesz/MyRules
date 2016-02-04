@@ -174,8 +174,9 @@ public class ConditionManager {
     /**
      * Deletes the old condition tree and rebuilds the new one.
      *
-     * @param oldTree the root of the old tree
+     * @param oldTree          the root of the old tree
      * @param newCodnitionTree the Builder of the new tree
+     *
      * @return the root for the new tree.
      */
     public RuleConditionTree rebuildConditionTree(RuleConditionTree oldTree, ConditionTree.Builder newCodnitionTree) {
@@ -189,6 +190,7 @@ public class ConditionManager {
      * Builds the condition tree
      *
      * @param newCodnitionTree
+     *
      * @return
      */
     public RuleConditionTree buildConditionTree(ConditionTree.Builder newCodnitionTree) {
@@ -226,7 +228,10 @@ public class ConditionManager {
         }
 
         // Add the current condition's permission
-        requiredPermissions.addAll(ruleConditionTree.getRuleCondition().getConditionPlugin().getRequiredPermissions());
+        Set<String> permissions = ruleConditionTree.getRuleCondition().getConditionPlugin().getRequiredPermissions();
+        if (permissions != null) {
+            requiredPermissions.addAll(permissions);
+        }
 
         for (RuleConditionTree conditionTree : ruleConditionTree.getChildConditions()) {
             requiredPermissions.addAll(getPermissions(conditionTree));

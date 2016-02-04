@@ -49,27 +49,27 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
         // ------------------------------------------------------------------------
 
         DEBUG_ALWAYS_TRUE(1000, AlwaysTrueConditionPlugin.class, DefaultConditionPluginFragment.class,
-                        R.string.condition_title_always_true_condition),
+                          R.string.condition_title_always_true_condition),
         DEBUG_ALWAYS_FALSE(1001, AlwaysFalseConditionPlugin.class, DefaultConditionPluginFragment.class,
-                        R.string.condition_title_always_false_condition),
+                           R.string.condition_title_always_false_condition),
 
         // ------------------------------------------------------------------------
         // ARITHMETRIC CONDITIONS
         // ------------------------------------------------------------------------
 
         ARITHMETRIC_IS_NUMBER_EQUAL(2001, IsNumberEqualConditionPlugin.class, EqualConditionPluginFragment.class,
-                        R.string.condition_title_is_number_equal_condition),
+                                    R.string.condition_title_is_number_equal_condition),
         ARITHMETRIC_IS_NUMBER_IN_INTERVAL(2002, IsNumberInIntervalConditionPlugin.class, IntervalConditionPluginFragment.class,
-                        R.string.condition_title_is_number_in_interval_condition),
+                                          R.string.condition_title_is_number_in_interval_condition),
         ARITHMETRIC_IS_NUMBER_PRIME(2003, IsNumberPrimeConditionPlugin.class, DefaultConditionPluginFragment.class,
-                        R.string.condition_title_is_number_prime_condition),
+                                    R.string.condition_title_is_number_prime_condition),
 
 
         // ------------------------------------------------------------------------
         // CONTACT CONDITIONS
         // ------------------------------------------------------------------------
         CONTACT_IS_IN_GROUP(3001, ContactIsInGroupConditionPlugin.class, ContactIsInGroupConditionPluginFragment.class,
-                        R.string.condition_title_contact_is_in_group_condition);
+                            R.string.condition_title_contact_is_in_group_condition);
 
 
         private final int mType;
@@ -146,8 +146,11 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
      */
     public void build() {
         if (!isBuilt) {
-            getConditionPlugin().initialize(getProperties());
-            isBuilt = true;
+            ConditionPlugin conditionPlugin = getConditionPlugin();
+            if (isAttached()) {
+                conditionPlugin.initialize(getProperties());
+                isBuilt = true;
+            }
         }
     }
 
@@ -161,17 +164,10 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
     }
 
     /**
-     * Regenerates the action plugin
-     */
-    public void reGenerateConditionPlugin() {
-        mConditionPlugin = null;
-        getConditionPlugin();
-    }
-
-    /**
      * Evaluates the condition and recursively all of the child-conditions based on the event.
      *
      * @param event
+     *
      * @return true if the condition is true otherwise false.
      */
     public boolean evaluate(Event event) {

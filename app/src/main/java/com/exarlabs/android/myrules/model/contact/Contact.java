@@ -1,10 +1,12 @@
 package com.exarlabs.android.myrules.model.contact;
 
+import android.text.TextUtils;
+
 /**
  * Represents a contact from the phone
  * Created by becze on 1/28/2016.
  */
-public class ContactRow {
+public class Contact {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -46,7 +48,20 @@ public class ContactRow {
     // ------------------------------------------------------------------------
 
 
-    public ContactRow(long id, String name, String number) {
+    public Contact(long id) {
+        mId = id;
+    }
+
+    public Contact(String number) {
+        mNumber = number;
+    }
+
+    public Contact(long id, String number) {
+        mId = id;
+        mNumber = number;
+    }
+
+    public Contact(long id, String name, String number) {
         this.mId = id;
         this.mName = name;
         this.mNumber = number;
@@ -58,9 +73,27 @@ public class ContactRow {
 
     @Override
     public String toString() {
-        return Long.toString(mId) + ", " + mName + ", " + mNumber + "\n";
+        String contactToString = mId != -1 ? Long.toString(mId) : "";
+        contactToString += !TextUtils.isEmpty(mName) ? mName : "";
+        contactToString += !TextUtils.isEmpty(mNumber) ? " (" + mNumber + ") " : "";
+        return contactToString + "\n";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Contact) {
+            Contact contact = (Contact) o;
+            if (contact.getId() != -1) {
+                return contact.getId() == getId();
+            } else if (!TextUtils.isEmpty(contact.getNumber())) {
+                return contact.getNumber().equals(getNumber());
+            } else if (!TextUtils.isEmpty(contact.getName())) {
+                return contact.getNumber().equals(getName());
+            }
+        }
+
+        return super.equals(o);
+    }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

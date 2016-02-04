@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.ui.actions.plugins;
+package com.exarlabs.android.myrules.ui.actions.plugins.math;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.math.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.SampleFragment;

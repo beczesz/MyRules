@@ -22,8 +22,8 @@ import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionPluginManager;
-import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.math.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.sms.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
@@ -34,6 +34,7 @@ import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
 import com.exarlabs.android.myrules.business.rule.event.plugins.call.CallEventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEvent;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEventHandlerPlugin;
+import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
@@ -245,8 +246,8 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
 
         RuleAction aSms = generateNewAction(Action.Type.SEND_SMS_ACTION.getType());
         // ToDo: when the Trigger button was pushed more than one time, the fields in SendSmsActionPlugin will be null. ?
-//        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
-//        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
+        //        ((SendSmsActionPlugin) aSms.getActionPlugin()).setPhoneNumber("0740507135");
+        //        ((SendSmsActionPlugin) aSms.getActionPlugin()).setMessage("From the plugin :-)");
 
         mActionManager.saveActions(aSms);
 
@@ -271,7 +272,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     public void dispatchCallEvent() {
         testSimpleArithmetricRule();
         CallEventHandlerPlugin eventHandlerPlugin = (CallEventHandlerPlugin) mEventPluginManager.getPluginInstance(Event.Type.RULE_EVENT_CALL);
-        eventHandlerPlugin.getCall("Attila");
+        eventHandlerPlugin.onIncomingCall(new Contact(-1, "Attila", "0740507135"));
     }
 
     /**

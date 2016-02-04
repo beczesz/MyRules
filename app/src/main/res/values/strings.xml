@@ -71,8 +71,13 @@
     <string name="condition_title_contact_is_in_group_condition">Contact is in Group Condition</string>
 
     <!-- Action names -->
+    <string name="action_title_toast_incoming_event_action">Toast the Incoming Event</string>
     <string name="action_title_multiply_action">Multiply With a Number</string>
     <string name="action_title_fibonacci_action">Calculate Fibonacci Number</string>
     <string name="action_title_send_sms_action">Send SMS to ... Action</string>
     <string name="action_title_reject_call_action">Reject Call</string>
+    <string name="error_mandatory_field">This field is mandatory!</string>
+    <string name="lbl_send_to_contact_from_event">Send to contact from the event</string>
+    <string name="lbl_send_to_group">Send to Group</string>
+    <string name="select_event">Select an Event</string>
 </resources>

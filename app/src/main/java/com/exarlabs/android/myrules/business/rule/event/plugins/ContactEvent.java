@@ -1,13 +1,13 @@
-package com.exarlabs.android.myrules.business.rule.event.plugins.sms;
+package com.exarlabs.android.myrules.business.rule.event.plugins;
 
-import com.exarlabs.android.myrules.business.rule.event.plugins.ContactEvent;
+import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.model.contact.Contact;
 
 /**
- * Implementation of an SMS event
- *
- * Created by atiyka on 1/21/2016.
+ * A contact event can be any event which has something to do with a contact
+ * Created by becze on 2/3/2016.
  */
-public class SmsEvent extends ContactEvent {
+public abstract class ContactEvent extends Event {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -17,9 +17,6 @@ public class SmsEvent extends ContactEvent {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = SmsEvent.class.getSimpleName();
-
-
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -28,31 +25,26 @@ public class SmsEvent extends ContactEvent {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private String mMessage;
+    protected Contact mContact;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-
 
     // ------------------------------------------------------------------------
     // METHODS
     // ------------------------------------------------------------------------
 
-    @Override
-    public String toString() {
-        return TAG + "(Sender: " + getContact().toString() + ", Message: " + mMessage +")";
-    }
-
-
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
 
-    public void setMessage(String message) {
-        this.mMessage = message;
+
+    public Contact getContact() {
+        return mContact;
     }
 
-    public String getMessage() {
-        return mMessage;
+    public void setContact(Contact contact) {
+        mContact = contact;
     }
 }

@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
-import com.exarlabs.android.myrules.model.contact.ContactRow;
+import com.exarlabs.android.myrules.model.contact.Contact;
 
 /**
  * Manages the access to the phone's contacts.
@@ -58,9 +58,9 @@ public class PhoneContactManager {
      * @return the list of contacts from the phone.
      * Note: call it from a background thread.
      */
-    public List<ContactRow> getContacts() {
+    public List<Contact> getContacts() {
 
-        List<ContactRow> result = new ArrayList<>();
+        List<Contact> result = new ArrayList<>();
 
         // TODO optimize based on search pattern
         // Prepare the content resolver and the query
@@ -71,7 +71,7 @@ public class PhoneContactManager {
 
         // Create the list of contacts
         while (contactsCursor.moveToNext()) {
-            result.add(new ContactRow(contactsCursor.getLong(contactsCursor.getColumnIndex(COL_ID)),
+            result.add(new Contact(contactsCursor.getLong(contactsCursor.getColumnIndex(COL_ID)),
                             contactsCursor.getString(contactsCursor.getColumnIndex(COL_NAME)),
                             contactsCursor.getString(contactsCursor.getColumnIndex(COL_NUMBER))));
         }

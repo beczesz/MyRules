@@ -7,12 +7,14 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.exarlabs.android.myrules.model.contact.Contact;
+
 /**
  * Listens for the incoming sms messages
- *
+ * <p>
  * Created by atiyka on 2016.01.21..
  */
-public class IncomingSmsListener extends BroadcastReceiver{
+public class IncomingSmsListener extends BroadcastReceiver {
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
@@ -56,6 +58,7 @@ public class IncomingSmsListener extends BroadcastReceiver{
 
     /**
      * It will be executed when you get an SMS
+     *
      * @param context
      * @param intent
      */
@@ -65,12 +68,16 @@ public class IncomingSmsListener extends BroadcastReceiver{
             // TODO: to discuss: getMessagesFromIntent() -> requires API level 19
             // another example: http://androidexample.com/Incomming_SMS_Broadcast_Receiver_-_Android_Example/index.php?view=article_discription&aid=62
             for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
-                String from = smsMessage.getOriginatingAddress();
-                String msgBody = smsMessage.getMessageBody();
+                String number = smsMessage.getOriginatingAddress();
+                String messageBody = smsMessage.getMessageBody();
 
-                if(mOnSmsReceivedListener != null)
-                    mOnSmsReceivedListener.getSms(from, msgBody);
-                else Log.w(TAG, "error");
+                Contact contact = new Contact(-1, "", number);
+
+                if (mOnSmsReceivedListener != null) {
+                    mOnSmsReceivedListener.onSMSReceived(contact, messageBody);
+                } else {
+                    Log.w(TAG, "error");
+                }
             }
         }
     }

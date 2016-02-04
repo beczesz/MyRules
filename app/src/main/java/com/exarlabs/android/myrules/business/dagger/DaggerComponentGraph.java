@@ -2,14 +2,13 @@ package com.exarlabs.android.myrules.business.dagger;
 
 import com.exarlabs.android.myrules.MyRulesApplication;
 import com.exarlabs.android.myrules.business.RulesEngineService;
+import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.call.RejectCallActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.sms.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
-import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
-import com.exarlabs.android.myrules.business.rule.action.plugins.RejectCallActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
-import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.plugins.call.CallEventHandlerPlugin;
@@ -17,21 +16,22 @@ import com.exarlabs.android.myrules.business.rule.event.plugins.sms.SmsEventHand
 import com.exarlabs.android.myrules.ui.BaseActivity;
 import com.exarlabs.android.myrules.ui.MainActivity;
 import com.exarlabs.android.myrules.ui.SampleFragment;
+import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsSectorFragment;
-import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
-import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.debug.DefaultActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.math.MultiplyActionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionDetailsFragment;
-import com.exarlabs.android.myrules.ui.conditions.ConditionsArrayAdapter;
-import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsArrayAdapter;
 import com.exarlabs.android.myrules.ui.conditions.ConditionsOverviewFragment;
+import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
-import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
@@ -121,4 +121,5 @@ public interface DaggerComponentGraph {
     void inject(Action action);
 
     void inject(ActionPlugin actionPlugin);
+
 }

@@ -1,5 +1,7 @@
 package com.exarlabs.android.myrules.ui.conditions.plugins.contact;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import android.os.Bundle;
@@ -10,7 +12,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.model.contact.ContactRow;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.contact.ContactIsInGroupConditionPlugin;
+import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
@@ -23,7 +26,7 @@ import butterknife.OnClick;
  * Displays the settings for selecting a group of contacts.
  * Created by becze on 1/28/2016.
  */
-public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFragment{
+public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFragment {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -36,7 +39,7 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
-    
+
     /**
      * @return newInstance of ContactIsInGroupConditionPluginFragment
      */
@@ -49,10 +52,14 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
     // ------------------------------------------------------------------------
     @Inject
     public NavigationManager mNavigationManager;
-    
+
     @Bind(R.id.selected_contacts)
     public EditText mSelectedContacts;
 
+    private RuleCondition mCondition;
+    private ContactIsInGroupConditionPlugin mPlugin;
+
+    private List<Contact> mSelectedContactsList;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -77,28 +84,38 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
 
     @Override
     protected void init(RuleCondition condition) {
-
+        mCondition = condition;
+        /*
+         * Check if the condition has the right mPlugin type, and we are in edit mode
+         */
+        if (condition.getConditionPlugin() instanceof ContactIsInGroupConditionPlugin) {
+            mPlugin = (ContactIsInGroupConditionPlugin) condition.getConditionPlugin();
+            mSelectedContactsList = mPlugin.getContactRows();
+        }
     }
 
     @Override
     protected void refreshUI() {
+        StringBuilder contactsToString = new StringBuilder();
+        for (Contact contactRow : mSelectedContactsList) {
+            contactsToString.append(contactRow + "\n");
+        }
+
+        mSelectedContacts.setText(contactsToString.toString());
 
     }
 
     @Override
     protected void saveChanges() {
-
+        // save the changes
+        mPlugin.setContactRows(mSelectedContactsList);
     }
 
     @OnClick(R.id.select_contact_button)
     public void selectContacts() {
         mNavigationManager.startContactsSelectorFragment(contacts -> {
-            StringBuilder contactsToString = new StringBuilder();
-            for (ContactRow contactRow : contacts) {
-                contactsToString.append(contactRow + "\n");
-            }
-
-            mSelectedContacts.setText(contactsToString.toString());
+            mSelectedContactsList = contacts;
+            refreshUI();
         });
 
     }

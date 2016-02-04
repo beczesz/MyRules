@@ -23,7 +23,6 @@ import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionPluginManager;
-import com.exarlabs.android.myrules.business.rx.CallbackSubscriber;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
@@ -40,6 +39,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
  * Created by becze on 1/21/2016.
  */
 public class ActionDetailsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -85,6 +85,7 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
 
     /**
      * @param actionID
+     *
      * @return new instance of ActionDetailsFragment
      */
     public static ActionDetailsFragment newInstance(long actionID) {
@@ -104,13 +105,13 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    @Bind(R.id.editText_action_name)
+    @Bind (R.id.editText_action_name)
     public EditText mActionName;
 
-    @Bind(R.id.spinner_select_action)
+    @Bind (R.id.spinner_select_action)
     public MaterialSpinner mActionTypeSpinner;
 
-    @Bind(R.id.action_plugin_fragment_container)
+    @Bind (R.id.action_plugin_fragment_container)
     public FrameLayout mActionPluginFragmentContainer;
 
     @Inject
@@ -126,6 +127,8 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     private Long mActionId;
     private ActionPluginFragment mActionPluginFragment;
     private ConditionPluginAdapter mSpinnerAdapter;
+    private boolean isInitialized;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -148,7 +151,7 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
         // Get the action if we have a valid id
         if (mActionId != -1) {
             mRuleAction = mActionManager.loadAction(mActionId);
-            mRuleAction.build();
+            mRuleAction.rebuild();
         }
 
         // if we have no action, we will create a new one
@@ -171,58 +174,70 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initActionBar(true, getString(R.string.my_actions));
+        if (!isInitialized) {
+            isInitialized = true;
+            initActionBar(true, getString(R.string.my_actions));
 
-        mSpinnerAdapter = new ConditionPluginAdapter(getActivity(), R.layout.spinner_item);
-        mSpinnerAdapter.addAll(Action.Type.values());
-        mActionTypeSpinner.setAdapter(mSpinnerAdapter);
-        mActionTypeSpinner.setOnItemSelectedListener(this);
+            mSpinnerAdapter = new ConditionPluginAdapter(getActivity(), R.layout.spinner_item);
+            mSpinnerAdapter.addAll(Action.Type.values());
+            mActionTypeSpinner.setAdapter(mSpinnerAdapter);
+            mActionTypeSpinner.setOnItemSelectedListener(this);
 
-        // only add if adding a new action
-        if (!mRuleAction.isAttached()) {
-            mActionTypeSpinner.setHint(R.string.select_an_action);
-        }
+            // In edit mode: init the name field and the select the corresponding item in spinner
+            if (mRuleAction.isAttached()) {
 
+                int type = mRuleAction.getType();
 
-        // In edit mode: init the name field and the select the corresponding item in spinner
-        if (mRuleAction.isAttached()) {
+                // Set the condition title
+                //@formatter:off
+                String conditionName = !TextUtils.isEmpty(
+                                mRuleAction.getActionName()) ?
+                                mRuleAction.getActionName() :
+                                getResources().getString(mActionPluginManager.getFromActionTypeCode(type).getTitleResId());
+                mActionName.setText(conditionName);
+                //@formatter:on
 
-            int type = mRuleAction.getType();
-
-            // Set the condition title
-            //@formatter:off
-            String conditionName = !TextUtils.isEmpty(
-                            mRuleAction.getActionName()) ?
-                            mRuleAction.getActionName() :
-                            getResources().getString(mActionPluginManager.getFromActionTypeCode(type).getTitleResId());
-            mActionName.setText(conditionName);
-            //@formatter:on
-
-            int position = mSpinnerAdapter.getPosition(mActionPluginManager.getFromActionTypeCode(mRuleAction.getType()));
-            mActionTypeSpinner.setSelection(position);
-
-            inflateLayout(type);
+                int position = mSpinnerAdapter.getPosition(mActionPluginManager.getFromActionTypeCode(mRuleAction.getType()));
+                mActionTypeSpinner.setSelection(++position);
+            }
         }
     }
 
     /**
      * Clicked on Save button
      */
-    @OnClick(R.id.button_save)
+    @OnClick (R.id.button_save)
     public void saveNewAction() {
-        checkPermissions();
+        if (isValid()) {
+            checkPermissions();
+        }
+    }
+
+    /**
+     * Validate the fields.
+     * @return true if the fields are valid.
+     */
+    private boolean isValid() {
+
+        // Check the title
+        if (TextUtils.isEmpty(mActionName.getText().toString().trim())) {
+            mActionName.setError(getActivity().getString(R.string.error_mandatory_field));
+            return false;
+        }
+
+        // Check if the user has selected a field.
+        if (mActionId == -1 && mActionTypeSpinner.getSelectedItemPosition() == 0) {
+            mActionTypeSpinner.setError(R.string.error_mandatory_field);
+            return false;
+        }
+
+        return true;
     }
 
     private void doSave() {
-        if (mActionId == -1 && mActionTypeSpinner.getSelectedItemPosition() == 0) {
-            // TODO: notify the user that must select an action type
-            return;
-        }
-        String name = mActionName.getText().toString();
-        mRuleAction.setActionName(name);
+        mRuleAction.setActionName(mActionName.getText().toString().trim());
         mActionPluginFragment.saveChanges();
         mActionManager.saveAction(mRuleAction);
-
         goBack();
     }
 
@@ -239,17 +254,14 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
             // Must be done during an initialization phase like onCreate
             RxPermissions.getInstance(getActivity())
                             .request( permissions)
-                            .subscribe(new CallbackSubscriber<Boolean>() {
-                                           @Override
-                                           public void onResult(Boolean result, Throwable e) {
+                             .subscribe(result -> {
                                                if (result) {
                                                   doSave();
                                                } else {
                                                    Toast.makeText(getActivity(), R.string.message_error_permission_denied, Toast.LENGTH_SHORT).show();
                                                }
                                            }
-                                       });
-
+                                       );
             //@formatter:on
         } else {
             doSave();
@@ -259,7 +271,7 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     /**
      * Clicked on Cancel button
      */
-    @OnClick(R.id.button_cancel)
+    @OnClick (R.id.button_cancel)
     public void cancelNewAction() {
         goBack();
     }
@@ -305,6 +317,7 @@ public class ActionDetailsFragment extends BaseFragment implements AdapterView.O
     private void inflateLayout(int actionType) {
         mActionPluginFragment = mActionPluginManager.createNewPluginFragmentInstance(actionType);
         mRuleAction.setType(actionType);
+        mRuleAction.rebuild();
         mActionPluginFragment.init(mRuleAction);
 
         // add the fragment to the container.

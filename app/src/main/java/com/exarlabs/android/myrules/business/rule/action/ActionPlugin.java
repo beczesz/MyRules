@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import android.content.Context;
+
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
 import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
@@ -44,6 +46,9 @@ public abstract class ActionPlugin implements Runnable, RuleComponentPlugin {
 
     @Inject
     ActionPluginManager mActionPluginManager;
+
+    @Inject
+    Context mContext;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -131,6 +136,8 @@ public abstract class ActionPlugin implements Runnable, RuleComponentPlugin {
         return this.getClass().getSimpleName();
     }
 
+
+
     // ------------------------------------------------------------------------
     //  GETTERS / SETTERS
     // ------------------------------------------------------------------------
@@ -146,5 +153,13 @@ public abstract class ActionPlugin implements Runnable, RuleComponentPlugin {
 
     public int getType() {
         return mType;
+    }
+
+    public ActionPluginManager getActionPluginManager() {
+        return mActionPluginManager;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 }

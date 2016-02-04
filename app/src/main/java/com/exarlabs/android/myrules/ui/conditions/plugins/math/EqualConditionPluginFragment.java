@@ -92,15 +92,17 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void refreshUI() {
-        if(mPlugin != null)
+        if(mPlugin != null) {
             mNumberEqual.setText((int) mPlugin.getValue() + "");
+        }
     }
 
     @Override
     protected void saveChanges() {
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if(mCondition.getId() != null)
-            mCondition.reGenerateConditionPlugin();
+        if(mCondition.getId() != null) {
+            mCondition.rebuild();
+        }
 
         double value = Double.parseDouble(mNumberEqual.getText().toString());
         ((IsNumberEqualConditionPlugin) mCondition.getConditionPlugin()).setValue(value);

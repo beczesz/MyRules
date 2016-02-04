@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
+import com.exarlabs.android.myrules.model.contact.Contact;
 
 /**
  * The plugin converts the received SMS to an SmsEvent
@@ -64,22 +65,23 @@ public class SmsEventHandlerPlugin extends EventHandlerPlugin implements OnSmsRe
         return true;
     }
 
-    @Override
-    public void getSms(String sender, String message) {
-        SmsEvent event = createNewEvent();
-        event.setSender(sender);
-        event.setMessage(message);
-        dispatchEvent(event);
-
-        Log.w(TAG, "SMS from: " + sender);
-        Log.w(TAG, "SMS text: " + message);
-    }
 
     @Override
     public Set<String> getRequiredPermissions() {
         HashSet<String> permissions = new HashSet<>();
         permissions.add(Manifest.permission.RECEIVE_SMS);
         return permissions;
+    }
+
+    @Override
+    public void onSMSReceived(Contact contact, String message) {
+        SmsEvent event = createNewEvent();
+        event.setContact(contact);
+        event.setMessage(message);
+        dispatchEvent(event);
+
+        Log.w(TAG, "SMS from: " + contact.toString());
+        Log.w(TAG, "SMS text: " + message);
     }
 
     // ------------------------------------------------------------------------

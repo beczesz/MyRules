@@ -4,6 +4,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.exarlabs.android.myrules.model.contact.Contact;
+
 /**
  * Listens for the phone state
  *
@@ -55,8 +57,10 @@ public class CallStateListener extends PhoneStateListener {
         super.onCallStateChanged(state, incomingNumber);
         switch(state) {
             case TelephonyManager.CALL_STATE_RINGING:
-                Log.w("calling", incomingNumber);
-                onIncomingCallListener.getCall(incomingNumber);
+                Contact contact = new Contact(incomingNumber);
+                Log.w("calling", contact.toString());
+                onIncomingCallListener.onIncomingCall(contact);
+                break;
         }
     }
 

@@ -14,6 +14,7 @@ import android.util.Log;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
+import com.exarlabs.android.myrules.model.contact.Contact;
 
 /**
  * The plugin converts the incoming call event to a CallEvent
@@ -69,9 +70,9 @@ public class CallEventHandlerPlugin extends EventHandlerPlugin implements OnInco
     }
 
     @Override
-    public void getCall(String caller) {
+    public void onIncomingCall(Contact caller) {
         CallEvent event = createNewEvent();
-        event.setCaller(caller);
+        event.setContact(caller);
 
         dispatchEvent(event);
         Log.w(TAG, "Call from: " + caller);

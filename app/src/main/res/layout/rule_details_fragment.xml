@@ -28,10 +28,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_event"/>
 
-            <Spinner
+            <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/spinner_events"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                fab:ms_hint="@string/select_event"/>
 
             <TextView
                 style="@style/Header2"

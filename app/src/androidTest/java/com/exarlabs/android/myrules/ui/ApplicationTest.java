@@ -10,8 +10,8 @@ import android.test.ApplicationTestCase;
 import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.plugins.FibonacciActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.math.FibonacciActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.math.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
@@ -219,7 +219,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         RuleRecord ruleRecord = new RuleRecord();
 
         // set the event
-        ruleRecord.setRuleName("Rule" + Math.random()*1000);
+        ruleRecord.setRuleName("Rule" + Math.random() * 1000);
         ruleRecord.setEventCode(event.getType());
         ruleRecord.setRuleConditionTree(root);
         ruleRecord.addRuleActions(aFib, aMultiply);

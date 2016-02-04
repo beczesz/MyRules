@@ -1,4 +1,4 @@
-package com.exarlabs.android.myrules.business.rule.action.plugins;
+package com.exarlabs.android.myrules.business.rule.action.plugins.call;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

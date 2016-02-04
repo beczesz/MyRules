@@ -105,7 +105,7 @@ public class IntervalConditionPluginFragment extends ConditionPluginFragment {
     protected void saveChanges() {
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
         if(mCondition.getId() != null)
-            mCondition.reGenerateConditionPlugin();
+            mCondition.rebuild();
 
         IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) mCondition.getConditionPlugin();
         double min = Double.parseDouble(mIntervalStart.getText().toString());

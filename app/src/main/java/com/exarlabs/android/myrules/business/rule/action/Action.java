@@ -8,19 +8,20 @@ import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.Buildable;
 import com.exarlabs.android.myrules.business.rule.RuleComponent;
 import com.exarlabs.android.myrules.business.rule.Runnable;
-import com.exarlabs.android.myrules.business.rule.action.plugins.FibonacciActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.plugins.MultiplyActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.plugins.RejectCallActionPlugin;
-import com.exarlabs.android.myrules.business.rule.action.plugins.SendSmsActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.call.RejectCallActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.math.FibonacciActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.math.MultiplyActionPlugin;
+import com.exarlabs.android.myrules.business.rule.action.plugins.sms.SendSmsActionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionPluginFragment;
-import com.exarlabs.android.myrules.ui.actions.plugins.DefaultActionPluginFragment;
-import com.exarlabs.android.myrules.ui.actions.plugins.MultiplyActionPluginFragment;
 import com.exarlabs.android.myrules.ui.actions.plugins.contact.SendSMSToGroupActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.debug.DefaultActionPluginFragment;
+import com.exarlabs.android.myrules.ui.actions.plugins.debug.ToastIncomingEventAction;
+import com.exarlabs.android.myrules.ui.actions.plugins.math.MultiplyActionPluginFragment;
 
 /**
  * Base abstract class for all the rule actions. It applies a bridge pattern to decouple
@@ -45,6 +46,12 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
     public enum Type {
 
         // ------------------------------------------------------------------------
+        // DEBUG ACTIONS
+        // ------------------------------------------------------------------------
+        DEBUG_TOAST_INCOMING_EVENT(1, ToastIncomingEventAction.class, DefaultActionPluginFragment.class,
+                                   R.string.action_title_toast_incoming_event_action),
+
+        // ------------------------------------------------------------------------
         // ARITHMETRIC ACTIONS
         // ------------------------------------------------------------------------
 
@@ -62,7 +69,7 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
         // SMS ACTIONS
         // ------------------------------------------------------------------------
 
-        REJECT_CALL_ACTION(3002, RejectCallActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_reject_call_action);
+        REJECT_CALL_ACTION(4002, RejectCallActionPlugin.class, DefaultActionPluginFragment.class, R.string.action_title_reject_call_action);
 
 
         // ------------------------------------------------------------------------
@@ -139,6 +146,7 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
      * Run the action.
      *
      * @param event
+     *
      * @return
      */
     public boolean run(Event event) {
@@ -150,8 +158,11 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
      */
     public void build() {
         if (!isBuilt) {
-            getActionPlugin().initialize(getProperties());
-            isBuilt = true;
+            ActionPlugin actionPlugin = getActionPlugin();
+            if (isAttached()) {
+                actionPlugin.initialize(getProperties());
+                isBuilt = true;
+            }
         }
     }
 

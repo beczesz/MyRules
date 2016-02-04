@@ -1,13 +1,13 @@
 package com.exarlabs.android.myrules.business.rule.event.plugins.call;
 
-import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.business.rule.event.plugins.ContactEvent;
 
 /**
  * Implementation of an Call event
- *
+ * <p>
  * Created by atiyka on 1/22/2016.
  */
-public class CallEvent extends Event {
+public class CallEvent extends ContactEvent {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -27,7 +27,6 @@ public class CallEvent extends Event {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private String mCaller;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -40,19 +39,11 @@ public class CallEvent extends Event {
 
     @Override
     public String toString() {
-        return TAG + "(Caller: " + mCaller +")";
+        return TAG + "(Caller: " + getContact() + ")";
     }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
 
-
-    public void setCaller(String caller) {
-        this.mCaller = caller;
-    }
-
-    public String getCaller() {
-        return mCaller;
-    }
 }

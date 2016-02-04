@@ -1,22 +1,23 @@
 package com.exarlabs.android.myrules.ui.rules;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
@@ -36,21 +37,51 @@ import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
+import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import rx.Observable;
+import fr.ganfra.materialspinner.MaterialSpinner;
 
 /**
  * Displays a rule with  it's events, conditions and actions.
  * Created by becze on 1/22/2016.
  */
-public class RuleDetailsFragment extends BaseFragment {
+public class RuleDetailsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+
 
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
+
+    private class EventPluginAdapter extends ArrayAdapter<Event.Type> {
+
+        private final int mLayout;
+
+        public EventPluginAdapter(Context context, int layout) {
+            super(context, layout);
+            mLayout = layout;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            SpinnerItemViewHolder viewHolder;
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getActivity()).inflate(mLayout, null);
+                viewHolder = new SpinnerItemViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            }
+
+            viewHolder = (SpinnerItemViewHolder) convertView.getTag();
+
+            Event.Type item = getItem(position);
+            viewHolder.mItemText.setText(getResources().getText(item.getTitleResId()));
+
+            return convertView;
+        }
+    }
 
     // ------------------------------------------------------------------------
     // STATIC FIELDS
@@ -82,14 +113,14 @@ public class RuleDetailsFragment extends BaseFragment {
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    @Bind(R.id.progress_bar)
+    @Bind (R.id.progress_bar)
     public ProgressBar mProgressBar;
 
-    @Bind(R.id.rule_name)
+    @Bind (R.id.rule_name)
     public EditText mRuleName;
 
-    @Bind(R.id.spinner_events)
-    public Spinner mEventsSpinner;
+    @Bind (R.id.spinner_events)
+    public MaterialSpinner mEventsSpinner;
 
 
     @Inject
@@ -108,6 +139,10 @@ public class RuleDetailsFragment extends BaseFragment {
 
     private ActionCardsFragment mActionCardsFragment;
     private ConditionTreeFragment mConditionTreeFragment;
+    private boolean isInitialized = false;
+
+    private EventPluginAdapter mSpinnerAdapter;
+    private Event.Type mSelectedEvent;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -144,67 +179,60 @@ public class RuleDetailsFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Load the condition display fragment
-        if(mConditionTreeFragment == null) {
-            long id = mRuleRecord.getRuleConditionTreeId() == null ? -1 : mRuleRecord.getRuleConditionTreeId();
+        if (!isInitialized) {
+            isInitialized = true;
 
-            mConditionTreeFragment = ConditionTreeFragment.newInstance(id);
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
+            // Initialize the spinner
+            mSpinnerAdapter = new EventPluginAdapter(getActivity(), R.layout.spinner_item);
+            mSpinnerAdapter.addAll(Event.Type.values());
+            mEventsSpinner.setAdapter(mSpinnerAdapter);
+            mEventsSpinner.setOnItemSelectedListener(this);
+
+            // In edit mode: init the name field and the select the corresponding item in spinner
+            if (mRuleRecord.isAttached()) {
+
+                // Set the condition title
+                String ruleName = !TextUtils.isEmpty(mRuleRecord.getRuleName()) ? mRuleRecord.getRuleName() : "";
+                mRuleName.setText(ruleName);
+
+                int position = mSpinnerAdapter.getPosition(mEventPluginManager.getFromEventCode(mRuleRecord.getEventCode()));
+                mEventsSpinner.setSelection(++position);
+            }
+
+            // Load the condition display fragment
+            if (mConditionTreeFragment == null) {
+                long id = mRuleRecord.getRuleConditionTreeId() == null ? -1 : mRuleRecord.getRuleConditionTreeId();
+
+                mConditionTreeFragment = ConditionTreeFragment.newInstance(id);
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.condition_card_container, mConditionTreeFragment).commit();
+            }
+
+            // Load the action display fragment
+            if (mActionCardsFragment == null) {
+                mActionCardsFragment = ActionCardsFragment.newInstance();
+                if (mRuleRecord.getId() != null) {
+                    mActionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
+                }
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, mActionCardsFragment).commit();
+            }
+
+            mProgressBar.setVisibility(View.GONE);
         }
-
-        // Load the action display fragment
-        if(mActionCardsFragment == null) {
-            mActionCardsFragment = ActionCardsFragment.newInstance();
-            if(mRuleRecord.getId() != null)
-                mActionCardsFragment.setRuleActions(mRuleRecord.getRuleActions());
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.actions_card_container, mActionCardsFragment).commit();
-        }
-
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
-    }
-
-    private void updateUI() {
-        // Update the rule name.
-        mRuleName.setText(mRuleRecord.getRuleName());
-
-        // update the events list
-        setUpEvents();
-
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    private void setUpEvents() {
-        // Initialize the event spinner
-        List<EventHandlerPlugin> plugins = mEventPluginManager.getPlugins();
-
-        //@formatter:off
-        // Get the list of event plugins.
-        List<String> eventPluginNames = new ArrayList<>();
-        Observable.from(plugins)
-                        .map(plugin -> mEventPluginManager.getFromEventCode(plugin.getType()))
-                        .subscribe(type -> eventPluginNames.add(getContext().getResources().getString(type.getTitleResId())));
-        //@formatter:on
-
-        // setup the spinner
-        mEventsSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, eventPluginNames));
-
-        // Initialize the spinner.
-        Event.Type eventType = mEventPluginManager.getFromEventCode(mRuleRecord.getEventCode());
-        EventHandlerPlugin plugin = mEventPluginManager.getPluginInstance(eventType);
-
-        if (plugin != null) {
-            int selectedIndex = plugins.indexOf(plugin);
-            mEventsSpinner.setSelection(selectedIndex);
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position != -1) {
+            mSelectedEvent = mSpinnerAdapter.getItem(position);
         }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 
-    @OnClick(R.id.fab_add_condition)
+    @OnClick (R.id.fab_add_condition)
     public void showAddConditionFragment() {
         mNavigationManager.startConditionsSelectorFragment(conditions -> {
             for (RuleCondition condition : conditions) {
@@ -213,7 +241,7 @@ public class RuleDetailsFragment extends BaseFragment {
         });
     }
 
-    @OnClick(R.id.fab_add_action)
+    @OnClick (R.id.fab_add_action)
     public void showAdActionFragment() {
         mNavigationManager.startActionsSelectorFragment(actions -> {
             for (RuleAction action : actions) {
@@ -222,18 +250,16 @@ public class RuleDetailsFragment extends BaseFragment {
         });
     }
 
-    @OnClick(R.id.button_save)
+    @OnClick (R.id.button_save)
     public void saveRule() {
-
-        checkPermissions();
-
+        if (isValid()) {
+            checkPermissions();
+        }
     }
 
     private void doSave() {
-        if (validateRule()) {
-            updateRule();
-            goBack();
-        }
+        updateRule();
+        goBack();
     }
 
     /**
@@ -241,8 +267,8 @@ public class RuleDetailsFragment extends BaseFragment {
      */
     private void checkPermissions() {
         // Get the array of permissions.
-        int selectedItemPosition = mEventsSpinner.getSelectedItemPosition();
-        EventHandlerPlugin plugin = mEventPluginManager.getPlugins().get(selectedItemPosition);
+        EventHandlerPlugin plugin = mEventPluginManager.getPluginInstance(mSelectedEvent);
+
 
         Set<String> permissionsSet = plugin.getRequiredPermissions();
         String[] permissions = permissionsSet.toArray(new String[permissionsSet.size()]);
@@ -270,6 +296,28 @@ public class RuleDetailsFragment extends BaseFragment {
         }
     }
 
+
+    /**
+     * Validate the fields.
+     * @return true if the fields are valid.
+     */
+    private boolean isValid() {
+
+        // Check the title
+        if (TextUtils.isEmpty(mRuleName.getText().toString().trim())) {
+            mRuleName.setError(getActivity().getString(R.string.error_mandatory_field));
+            return false;
+        }
+
+        // Check if the user has selected a field.
+        if (mSelectedEvent == null) {
+            mEventsSpinner.setError(R.string.error_mandatory_field);
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Updates the rule record.
      */
@@ -278,25 +326,25 @@ public class RuleDetailsFragment extends BaseFragment {
         mRuleRecord.setRuleName(mRuleName.getText().toString().trim());
 
         // Update the event type
-        int selectedItemPosition = mEventsSpinner.getSelectedItemPosition();
-        EventHandlerPlugin plugin = mEventPluginManager.getPlugins().get(selectedItemPosition);
-        mRuleRecord.setEventCode(plugin.getType());
+        mRuleRecord.setEventCode(mSelectedEvent.getType());
 
         // Update the conditions
         ConditionTree.Builder builder = mConditionTreeFragment.generateCurrentConditionTree();
 
         RuleConditionTree ruleConditionTree;
-        if(mRuleRecord.getRuleConditionTreeId() != null)
+        if (mRuleRecord.getRuleConditionTreeId() != null) {
             ruleConditionTree = mConditionManager.rebuildConditionTree(mRuleRecord.getRuleConditionTree(), builder);
-        else
+        } else {
             ruleConditionTree = mConditionManager.buildConditionTree(builder);
+        }
 
         mRuleRecord.setRuleConditionTree(ruleConditionTree);
 
         // Update the actions
         List<RuleAction> actions = mActionCardsFragment.getCurrentActionsList();
-        if(mRuleRecord.getId() != null)
+        if (mRuleRecord.getId() != null) {
             mRuleRecord.getRuleActionLinks().clear();
+        }
 
         mRuleRecord.addRuleActions(actions);
 
@@ -304,20 +352,8 @@ public class RuleDetailsFragment extends BaseFragment {
         mRuleManager.saveRuleRecord(mRuleRecord);
     }
 
-    /**
-     * Validates the rule record
-     *
-     * @return
-     */
-    private boolean validateRule() {
-        if (mRuleName.getText().length() == 0) {
-            mRuleName.setError(getActivity().getString(R.string.message_rule_name_mandatory));
-            return false;
-        }
-        return true;
-    }
 
-    @OnClick(R.id.button_cancel)
+    @OnClick (R.id.button_cancel)
     public void cancelRule() {
         goBack();
     }

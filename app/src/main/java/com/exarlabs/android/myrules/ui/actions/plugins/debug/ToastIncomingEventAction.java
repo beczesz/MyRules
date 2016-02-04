@@ -1,13 +1,19 @@
-package com.exarlabs.android.myrules.business.rule.event.plugins.sms;
+package com.exarlabs.android.myrules.ui.actions.plugins.debug;
 
-import com.exarlabs.android.myrules.business.rule.event.plugins.ContactEvent;
+import java.util.HashSet;
+import java.util.Set;
+
+import android.util.Log;
+import android.widget.Toast;
+
+import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
+import com.exarlabs.android.myrules.business.rule.event.Event;
 
 /**
- * Implementation of an SMS event
- *
- * Created by atiyka on 1/21/2016.
+ * Just toasts and logs the incomming event.
+ * Created by becze on 2/4/2016.
  */
-public class SmsEvent extends ContactEvent {
+public class ToastIncomingEventAction extends ActionPlugin {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -17,8 +23,7 @@ public class SmsEvent extends ContactEvent {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final String TAG = SmsEvent.class.getSimpleName();
-
+    private static final String TAG = ToastIncomingEventAction.class.getSimpleName();
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -28,7 +33,6 @@ public class SmsEvent extends ContactEvent {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    private String mMessage;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -38,21 +42,20 @@ public class SmsEvent extends ContactEvent {
     // METHODS
     // ------------------------------------------------------------------------
 
+
     @Override
-    public String toString() {
-        return TAG + "(Sender: " + getContact().toString() + ", Message: " + mMessage +")";
+    public Set<String> getRequiredPermissions() {
+        return new HashSet<>();
     }
 
-
+    @Override
+    public boolean run(Event event) {
+        String toString = event.toString();
+        Toast.makeText(getContext(), toString, Toast.LENGTH_SHORT).show();
+        Log.w(TAG, toString);
+        return false;
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
-
-    public void setMessage(String message) {
-        this.mMessage = message;
-    }
-
-    public String getMessage() {
-        return mMessage;
-    }
 }

@@ -28,7 +28,7 @@ import android.widget.TextView;
 import com.exarlabs.android.myrules.business.MyRulesConstants;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.provider.PhoneContactManager;
-import com.exarlabs.android.myrules.model.contact.ContactRow;
+import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
@@ -59,7 +59,7 @@ public class ContactsSectorFragment extends BaseFragment {
          *
          * @param contacts
          */
-        void onContactsSelected(List<ContactRow> contacts);
+        void onContactsSelected(List<Contact> contacts);
     }
 
     public static class ContactsRowViewHolder {
@@ -80,7 +80,7 @@ public class ContactsSectorFragment extends BaseFragment {
         CheckBox mContactSelectedCB;
     }
 
-    public class ContactAdapter extends ArrayAdapter<ContactRow> {
+    public class ContactAdapter extends ArrayAdapter<Contact> {
 
         private final Context mContext;
 
@@ -100,7 +100,7 @@ public class ContactsSectorFragment extends BaseFragment {
             }
             viewHolder = (ContactsRowViewHolder) convertView.getTag();
 
-            ContactRow contactRow = getItem(position);
+            Contact contactRow = getItem(position);
             viewHolder.mContactId.setText(Long.toString(contactRow.getId()));
             viewHolder.mContactName.setText(contactRow.getName());
             viewHolder.mContactNumber.setText(contactRow.getNumber());
@@ -146,7 +146,7 @@ public class ContactsSectorFragment extends BaseFragment {
     @Bind(R.id.contacts_filter)
     public EditText mContactsFilterEditText;
 
-    private List<ContactRow> mSelectedContacts;
+    private List<Contact> mSelectedContacts;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -214,14 +214,14 @@ public class ContactsSectorFragment extends BaseFragment {
     }
 
     private void queryContacts() {
-        List<ContactRow> contacts = mPhoneContactManager.getContacts();
+        List<Contact> contacts = mPhoneContactManager.getContacts();
         mContactAdapter.clear();
         mContactAdapter.addAll(contacts);
         mContactAdapter.notifyDataSetChanged();
     }
 
 
-    private void notifyContactSelectorListener(List<ContactRow> contacts) {
+    private void notifyContactSelectorListener(List<Contact> contacts) {
         if (mContactsSelectorListener != null) {
             mContactsSelectorListener.onContactsSelected(contacts);
         }
@@ -230,7 +230,7 @@ public class ContactsSectorFragment extends BaseFragment {
     @OnItemClick(R.id.contact_list)
     void onItemClick(int position) {
 
-        ContactRow contactRow = mContactAdapter.getItem(position);
+        Contact contactRow = mContactAdapter.getItem(position);
         if (mSelectedContacts.contains(contactRow)) {
             mSelectedContacts.remove(contactRow);
         } else {
@@ -252,7 +252,7 @@ public class ContactsSectorFragment extends BaseFragment {
      * @param contactRow
      * @return
      */
-    private boolean isSelected(ContactRow contactRow) {
+    private boolean isSelected(Contact contactRow) {
         return mSelectedContacts.contains(contactRow);
     }
 

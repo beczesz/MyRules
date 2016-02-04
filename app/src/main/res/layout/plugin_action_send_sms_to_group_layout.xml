@@ -9,16 +9,46 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-       <Button
-           android:id="@+id/select_contact_button"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Select contacts"/>
-
-        <TextView
-            android:id="@+id/selected_contacts"
+        <RadioGroup
+            android:id="@+id/radio_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/radio_send_to_contact_from_event">
+
+            <RadioButton
+                android:id="@+id/radio_send_to_contact_from_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="@string/lbl_send_to_contact_from_event"/>
+
+            <RadioButton
+                android:id="@+id/radio_send_to_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_send_to_group"/>
+
+        </RadioGroup>
+
+
+        <LinearLayout
+            android:id="@+id/select_group_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/select_contact_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select contacts"/>
+
+            <TextView
+                android:id="@+id/selected_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <ProgressBar

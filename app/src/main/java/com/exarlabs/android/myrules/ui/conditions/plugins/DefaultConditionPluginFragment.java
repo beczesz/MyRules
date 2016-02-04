@@ -81,7 +81,7 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
     @Override
     protected void saveChanges() {
         if(mCondition.getId() != null) {
-            mCondition.reGenerateConditionPlugin();
+            mCondition.rebuild();
         }
 
     }

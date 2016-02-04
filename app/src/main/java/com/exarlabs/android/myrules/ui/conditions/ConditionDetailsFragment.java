@@ -121,6 +121,7 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     private Long mConditionId;
     private ConditionPluginFragment mConditionPluginFragment;
     private ConditionPluginAdapter mSpinnerAdapter;
+    private boolean isInitialized;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -144,7 +145,7 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
         // Get the condition if we have a valid id
         if (mConditionId != -1) {
             mRuleCondition = mConditionManager.loadCondition(mConditionId);
-            mRuleCondition.build();
+            mRuleCondition.rebuild();
         }
 
         if (mRuleCondition == null) {
@@ -170,36 +171,31 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
         initActionBar(true, getString(R.string.my_conditions));
 
 
-        mSpinnerAdapter = new ConditionPluginAdapter(getActivity(), R.layout.spinner_item);
-        mSpinnerAdapter.addAll(Condition.Type.values());
-        mConditionTypeSpinner.setAdapter(mSpinnerAdapter);
-        mConditionTypeSpinner.setOnItemSelectedListener(this);
+        if (!isInitialized) {
+            isInitialized = true;
+            mSpinnerAdapter = new ConditionPluginAdapter(getActivity(), R.layout.spinner_item);
+            mSpinnerAdapter.addAll(Condition.Type.values());
+            mConditionTypeSpinner.setAdapter(mSpinnerAdapter);
+            mConditionTypeSpinner.setOnItemSelectedListener(this);
 
 
-        // only add if adding a new condition
-        if (!mRuleCondition.isAttached()) {
-            mConditionTypeSpinner.setHint(R.string.select_a_condition);
-        }
+            // In edit mode: init the name field and the select the corresponding item in spinner
+            if (mRuleCondition.isAttached()) {
 
+                int conditionType = mRuleCondition.getType();
 
-        // In edit mode: init the name field and the select the corresponding item in spinner
-        if (mRuleCondition.isAttached()) {
+                // Set the condition title
+                //@formatter:off
+                String conditionName = !TextUtils.isEmpty(
+                                mRuleCondition.getConditionName()) ?
+                                mRuleCondition.getConditionName() :
+                                getResources().getString(mConditionPluginManager.getFromConditionTypeCode(conditionType).getTitleResId());
+                mConditionName.setText(conditionName);
+                //@formatter:on
 
-            int conditionType = mRuleCondition.getType();
-
-            // Set the condition title
-            //@formatter:off
-            String conditionName = !TextUtils.isEmpty(
-                            mRuleCondition.getConditionName()) ?
-                            mRuleCondition.getConditionName() :
-                            getResources().getString(mConditionPluginManager.getFromConditionTypeCode(conditionType).getTitleResId());
-            mConditionName.setText(conditionName);
-            //@formatter:on
-
-            int position = mSpinnerAdapter.getPosition(mConditionPluginManager.getFromConditionTypeCode(mRuleCondition.getType()));
-            mConditionTypeSpinner.setSelection(position);
-
-            inflateLayout(conditionType);
+                int position = mSpinnerAdapter.getPosition(mConditionPluginManager.getFromConditionTypeCode(mRuleCondition.getType()));
+                mConditionTypeSpinner.setSelection(++position);
+            }
         }
 
     }
@@ -209,7 +205,30 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
      */
     @OnClick(R.id.button_save)
     public void saveNewCondition() {
-        checkPermissions();
+        if (isValid()) {
+            checkPermissions();
+        }
+    }
+
+    /**
+     * Validate the fields.
+     * @return true if the fields are valid.
+     */
+    private boolean isValid() {
+
+        // Check the title
+        if (TextUtils.isEmpty(mConditionName.getText().toString().trim())) {
+            mConditionName.setError(getActivity().getString(R.string.error_mandatory_field));
+            return false;
+        }
+
+        // Check if the user has selected a field.
+        if (mConditionId == -1 && mConditionTypeSpinner.getSelectedItemPosition() == 0) {
+            mConditionTypeSpinner.setError(R.string.error_mandatory_field);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -240,15 +259,9 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     }
 
     private void doSave() {
-        if (mConditionId == -1 && mConditionTypeSpinner.getSelectedItemPosition() == 0) {
-            // TODO: notify the user that must select an condition type
-            return;
-        }
-        String name = mConditionName.getText().toString();
-        mRuleCondition.setConditionName(name);
+        mRuleCondition.setConditionName(mConditionName.getText().toString().trim());
         mConditionPluginFragment.saveChanges();
         mConditionManager.saveCondition(mRuleCondition);
-
         goBack();
     }
 
@@ -301,6 +314,7 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     private void inflateLayout(int conditionType) {
         mConditionPluginFragment = mConditionPluginManager.createNewPluginFragmentInstance(conditionType);
         mRuleCondition.setType(conditionType);
+        mRuleCondition.rebuild();
         mConditionPluginFragment.init(mRuleCondition);
 
         // add the fragment to the container.

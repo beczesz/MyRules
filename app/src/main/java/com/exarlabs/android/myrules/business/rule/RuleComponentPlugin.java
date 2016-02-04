@@ -3,6 +3,8 @@ package com.exarlabs.android.myrules.business.rule;
 import java.util.List;
 import java.util.Set;
 
+import android.support.annotation.NonNull;
+
 /**
  * A plugin contains business logic specific for the component.
  * This plugin can require permissions to be able to function and these permission must be explicitly
@@ -14,6 +16,7 @@ public interface RuleComponentPlugin {
     /**
      * @return the array of permission needed by this plugin.
      */
+    @NonNull
     Set<String> getRequiredPermissions();
 
     /**
