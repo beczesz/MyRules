@@ -6,14 +6,25 @@
                 android:orientation="horizontal"
                 android:padding="@dimen/padding_small">
 
+
+
+
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/list_element_height">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                style="@style/Header1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_name"/>
 
 
             <EditText
@@ -32,7 +43,7 @@
                 android:id="@+id/spinner_events"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                fab:ms_hint="@string/select_event"/>
+                />
 
             <TextView
                 style="@style/Header1"
@@ -50,8 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="@dimen/floating_action_button_negative_margin"
                 android:layout_marginBottom="@dimen/floating_action_button_negative_margin"
+                android:layout_marginTop="@dimen/floating_action_button_negative_margin"
                 fab:button_color="@color/colorAccent"
                 fab:image="@drawable/fab_plus_icon"
                 fab:show_animation="@anim/fab_roll_from_down"
@@ -74,14 +85,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="@dimen/floating_action_button_negative_margin"
                 android:layout_marginBottom="@dimen/floating_action_button_negative_bottom_margin"
+                android:layout_marginTop="@dimen/floating_action_button_negative_margin"
                 fab:button_color="@color/colorAccent"
                 fab:image="@drawable/fab_plus_icon"
                 fab:show_animation="@anim/fab_roll_from_down"
                 fab:type="DEFAULT"/>
 
-            <include layout="@layout/save_cancel_button_group"/>
 
         </LinearLayout>
     </ScrollView>
@@ -93,5 +103,14 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
+
+    <include
+        android:id="@+id/save_cancel_group"
+        layout="@layout/save_cancel_button_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
+
 
 </RelativeLayout>

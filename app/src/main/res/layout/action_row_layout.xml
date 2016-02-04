@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="@dimen/list_element_height"
               android:gravity="center"
               android:orientation="horizontal">
 
@@ -13,29 +13,14 @@
         android:layout_height="wrap_content"
         tools:text="First"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/action_name"
+        style="@style/Header3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        tools:text="Second"/>
 
-        <TextView
-            android:id="@+id/action_name"
-            style="@style/Header3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Second"/>
-
-        <!--
-        If sometime will be needed
-        <TextView-->
-            <!--android:id="@+id/"-->
-            <!--style="@style/Paragraph"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--tools:text="Third"/>-->
-
-    </LinearLayout>
 
     <CheckBox
         android:id="@+id/action_selected_cb"

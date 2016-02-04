@@ -204,7 +204,7 @@ public class ConditionsSectorFragment extends BaseFragment {
     }
 
     private void queryConditions() {
-        List<RuleCondition> conditions = mConditionManager.loadAllConditions();
+        List<RuleCondition> conditions = mConditionManager.loadAllNonConnectorConditions();
         mConditionAdapter.clear();
         mConditionAdapter.addAll(conditions);
         mConditionAdapter.notifyDataSetChanged();

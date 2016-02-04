@@ -79,6 +79,20 @@ public class Contact {
         return contactToString;
     }
 
+    /**
+     * @return a human readable name
+     */
+    public String toHumanReadableString() {
+
+        if (!TextUtils.isEmpty(mName)) {
+            return mName;
+        } else if (!TextUtils.isEmpty(mNumber)) {
+            return mNumber;
+        } else {
+            return Long.toString(mId);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof Contact) {
@@ -123,4 +137,5 @@ public class Contact {
     public void setName(String name) {
         this.mName = name;
     }
+
 }

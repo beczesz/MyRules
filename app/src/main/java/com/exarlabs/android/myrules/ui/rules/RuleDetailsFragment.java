@@ -43,7 +43,6 @@ import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -185,7 +184,7 @@ public class RuleDetailsFragment extends RuleComponentDetailsFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // the trash appears only in edit mode
-        if(mRuleRecord.isAttached()) {
+        if (mRuleRecord.isAttached()) {
             inflater.inflate(R.menu.delete_item, menu);
             menu.findItem(R.id.delete_item).setIcon(
                             new IconicsDrawable(getContext(), FontAwesome.Icon.faw_trash_o).colorRes(R.color.text_dark_bg_secondary));
@@ -239,7 +238,7 @@ public class RuleDetailsFragment extends RuleComponentDetailsFragment implements
                 mRuleName.setText(ruleName);
 
                 int position = mSpinnerAdapter.getPosition(mEventPluginManager.getFromEventCode(mRuleRecord.getEventCode()));
-                mEventsSpinner.setSelection(++position);
+                mEventsSpinner.setSelection(position);
             }
 
             // Load the condition display fragment
@@ -292,7 +291,6 @@ public class RuleDetailsFragment extends RuleComponentDetailsFragment implements
             }
         });
     }
-
 
 
     @Override

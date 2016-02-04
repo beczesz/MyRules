@@ -9,19 +9,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-       <Button
-           android:id="@+id/select_contact_button"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Select contacts"/>
+        <Button
+            android:id="@+id/select_contact_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select contacts"/>
 
-        <EditText
+        <com.exarlabs.android.myrules.ui.util.ui.ContactGroupFlowLayout
             android:id="@+id/selected_contacts"
-            android:editable="false"
-            android:enabled="false"
-            android:inputType="textMultiLine"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="start|top"/>
     </LinearLayout>
 
     <ProgressBar

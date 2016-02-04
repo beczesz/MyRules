@@ -3,6 +3,7 @@
     <!-- Default app dimensions -->
     <dimen name="toolbar_height">48dip</dimen>
     <dimen name="divider_height">1dip</dimen>
+    <dimen name="list_element_height">60dip</dimen>
 
     <!-- Default Text Size -->
     <dimen name="text_size_micro">12sp</dimen>

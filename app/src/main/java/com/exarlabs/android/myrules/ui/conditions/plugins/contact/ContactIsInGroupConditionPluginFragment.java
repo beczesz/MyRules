@@ -1,6 +1,6 @@
 package com.exarlabs.android.myrules.ui.conditions.plugins.contact;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -9,15 +9,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.contact.ContactIsInGroupConditionPlugin;
-import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.conditions.ConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
+import com.exarlabs.android.myrules.ui.util.ui.ContactGroupFlowLayout;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -53,13 +52,12 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
     @Inject
     public NavigationManager mNavigationManager;
 
-    @Bind(R.id.selected_contacts)
-    public EditText mSelectedContacts;
+    @Bind (R.id.selected_contacts)
+    public ContactGroupFlowLayout mContactGroupFlowLayout;
 
     private RuleCondition mCondition;
     private ContactIsInGroupConditionPlugin mPlugin;
 
-    private List<Contact> mSelectedContactsList;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -75,50 +73,51 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
         DaggerManager.component().inject(this);
     }
 
+    @Override
+    protected void init(RuleCondition condition) {
+        mCondition = condition;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.plugin_contact_is_in_group_layout, null);
     }
 
-
     @Override
-    protected void init(RuleCondition condition) {
-        mCondition = condition;
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         /*
          * Check if the condition has the right mPlugin type, and we are in edit mode
          */
-        if (condition.getConditionPlugin() instanceof ContactIsInGroupConditionPlugin) {
-            mPlugin = (ContactIsInGroupConditionPlugin) condition.getConditionPlugin();
-            mSelectedContactsList = mPlugin.getContactRows();
+        if (mCondition.getConditionPlugin() instanceof ContactIsInGroupConditionPlugin) {
+            mPlugin = (ContactIsInGroupConditionPlugin) mCondition.getConditionPlugin();
+            mContactGroupFlowLayout.addAll(mPlugin.getContactRows());
+            mContactGroupFlowLayout.refreshLayout();
         }
     }
 
+
     @Override
     protected void refreshUI() {
-        StringBuilder contactsToString = new StringBuilder();
-        for (Contact contactRow : mSelectedContactsList) {
-            contactsToString.append(contactRow + "\n");
-        }
-
-        mSelectedContacts.setText(contactsToString.toString());
-
     }
 
     @Override
     protected void saveChanges() {
         // save the changes
-        mPlugin.setContactRows(mSelectedContactsList);
+        mPlugin.setContactRows(mContactGroupFlowLayout.getContacts());
     }
 
-    @OnClick(R.id.select_contact_button)
+    @OnClick (R.id.select_contact_button)
     public void selectContacts() {
         mNavigationManager.startContactsSelectorFragment(contacts -> {
-            mSelectedContactsList = contacts;
-            refreshUI();
-        });
-
+            // Add the latest contacts
+            mContactGroupFlowLayout.clear();
+            mContactGroupFlowLayout.addAll( new ArrayList<>(contacts));
+            mContactGroupFlowLayout.refreshLayout();
+        }, new ArrayList<>(mContactGroupFlowLayout.getContacts()));
     }
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

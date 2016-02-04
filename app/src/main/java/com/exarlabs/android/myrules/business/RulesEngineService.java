@@ -46,6 +46,11 @@ public class RulesEngineService extends Service {
         }
     }
 
+    public static class Status {
+        public static final String ENGINE_RUNNING = "com.exarlabs.android.myrules.business.ENGINE_RUNNING";
+        public static final String ENGINE_STOPPED = "com.exarlabs.android.myrules.business.ENGINE_STOPPED";
+    }
+
     // ------------------------------------------------------------------------
     // STATIC FIELDS
     // ------------------------------------------------------------------------
@@ -105,6 +110,7 @@ public class RulesEngineService extends Service {
         showNotification();
         // mark the services that it is running
         isRunning = true;
+        sendBroadcast(new Intent(Status.ENGINE_RUNNING));
     }
 
     @Override
@@ -112,6 +118,7 @@ public class RulesEngineService extends Service {
         super.onDestroy();
         isRunning = false;
         hideNotification();
+        sendBroadcast(new Intent(Status.ENGINE_STOPPED));
     }
 
 

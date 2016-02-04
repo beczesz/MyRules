@@ -1,10 +1,14 @@
 package com.exarlabs.android.myrules.ui.navigation;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.actions.ActionDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionsOverviewFragment;
@@ -153,10 +157,14 @@ public class NavigationManager {
         open(fragment);
     }
 
-    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener) {
+    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener, List<Contact> selecetdContacts) {
         ContactsSectorFragment fragment = ContactsSectorFragment.newInstance();
         fragment.setContactsSelectorListener(listener);
+        fragment.setSelectedContacts(selecetdContacts);
         open(fragment);
+    }
+    public void startContactsSelectorFragment(ContactsSectorFragment.ContactsSelectorListener listener) {
+        startContactsSelectorFragment(listener, new ArrayList<>());
     }
 
 

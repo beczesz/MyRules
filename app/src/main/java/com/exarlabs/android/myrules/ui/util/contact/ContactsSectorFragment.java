@@ -144,7 +144,7 @@ public class ContactsSectorFragment extends BaseFragment {
     @Bind(R.id.contacts_filter)
     public EditText mContactsFilterEditText;
 
-    private List<Contact> mSelectedContacts;
+    private List<Contact> mSelectedContacts = new ArrayList<>();
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -166,7 +166,6 @@ public class ContactsSectorFragment extends BaseFragment {
 
         // create a new adapter and add it to the list view
         mContactAdapter = new ContactAdapter(getActivity());
-        mSelectedContacts = new ArrayList<>();
 
         checkPermission();
     }
@@ -223,7 +222,7 @@ public class ContactsSectorFragment extends BaseFragment {
 
     private void notifyContactSelectorListener(List<Contact> contacts) {
         if (mContactsSelectorListener != null) {
-            mContactsSelectorListener.onContactsSelected(contacts);
+            mContactsSelectorListener.onContactsSelected(new ArrayList<>(contacts));
         }
     }
 
@@ -332,5 +331,13 @@ public class ContactsSectorFragment extends BaseFragment {
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
         mNavigationManager.navigateBack(getActivity());
+    }
+
+    /**
+     * Sets the already selected contacts.
+     * @param selectedContacts
+     */
+    public void setSelectedContacts(List<Contact> selectedContacts) {
+        mSelectedContacts = selectedContacts;
     }
 }
