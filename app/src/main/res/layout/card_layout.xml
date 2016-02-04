@@ -7,11 +7,12 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-    <com.mikepenz.iconics.view.IconicsTextView
+    <TextView
         android:id="@+id/drag_handle"
         style="@style/Icons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:text="@string/lbl_reorder_items"/>
@@ -47,6 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:padding="@dimen/padding_default"
         android:text="@string/lbl_delete_item"/>
 
 </RelativeLayout>

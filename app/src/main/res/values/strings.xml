@@ -57,7 +57,7 @@
     <string name="lbl_stop_rules_engine_icon">{faw-stop}</string>
     <string name="lbl_edit_item">{faw-pencil}</string>
     <string name="lbl_delete_item">{faw-trash-o}</string>
-    <string name="lbl_reorder_items">{faw-sort}</string>
+    <string name="lbl_reorder_items">{faw-bars}</string>
 
 
     <!-- Event names -->

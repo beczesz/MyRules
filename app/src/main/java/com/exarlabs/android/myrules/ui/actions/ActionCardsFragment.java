@@ -199,7 +199,8 @@ public class ActionCardsFragment extends BaseFragment {
 
     private void updateOperator() {
         // set the background color
-        mOperatorTextView.setBackgroundColor(getResources().getColor(R.color.operator_and));
+        mOperatorTextView.setBackgroundResource(R.drawable.operator_and);
+
         mOperatorTextView.setText(R.string.action_sequence);
     }
 

@@ -23,7 +23,7 @@
                 android:hint="@string/lbl_add_rule_name"/>
 
             <TextView
-                style="@style/Header2"
+                style="@style/Header1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_event"/>
@@ -35,7 +35,7 @@
                 fab:ms_hint="@string/select_event"/>
 
             <TextView
-                style="@style/Header2"
+                style="@style/Header1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_conditions"/>
@@ -59,7 +59,7 @@
 
 
             <TextView
-                style="@style/Header2"
+                style="@style/Header1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_actions"/>
@@ -75,21 +75,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/floating_action_button_negative_margin"
-                android:layout_marginBottom="@dimen/floating_action_button_negative_margin"
+                android:layout_marginBottom="@dimen/floating_action_button_negative_bottom_margin"
                 fab:button_color="@color/colorAccent"
                 fab:image="@drawable/fab_plus_icon"
                 fab:show_animation="@anim/fab_roll_from_down"
                 fab:type="DEFAULT"/>
 
-            <include
-                layout="@layout/save_cancel_button_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"/>
+            <include layout="@layout/save_cancel_button_group"/>
 
         </LinearLayout>
     </ScrollView>
-
 
     <ProgressBar
         android:id="@+id/progress_bar"

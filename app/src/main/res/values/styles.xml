@@ -21,6 +21,7 @@
         <item name="android:textSize">@dimen/text_size_xlarge</item>
         <item name="android:textStyle">bold</item>
         <item name="android:padding">@dimen/padding_small</item>
+        <item name="android:layout_marginTop">@dimen/padding_default</item>
     </style>
 
     <style name="Header2" parent="TextView">
@@ -55,7 +56,7 @@
     <!-- Icons -->
     <style name="Icons" parent="TextView">
         <item name="android:textSize">@dimen/text_size_xlarge</item>
-        <item name="android:background">@color/transparent</item>
+        <!--<item name="android:background">@color/transparent</item>-->
     </style>
 
     <style name="EditIcons" parent="Icons">
@@ -70,19 +71,22 @@
     <style name="Button">
         <item name="android:textSize">@dimen/text_size_xlarge</item>
         <item name="android:textColor">@color/text_dark_bg_primary</item>
-        <item name="android:layout_margin">@dimen/padding_default</item>
-        <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <!-- ToDo: how to define the same width beautiful? -->
-    <style name="SaveButton" parent="Button">
+    <style name="SaveCancelButtons" parent="Button">
+        <item name="android:layout_marginTop">@dimen/padding_small</item>
+        <item name="android:layout_marginBottom">@dimen/padding_small</item>
+    </style>
+    <style name="SaveButton" parent="SaveCancelButtons">
         <item name="android:background">@drawable/save_button</item>
-        <item name="android:layout_width">130dip</item>
+        <item name="android:layout_marginRight">@dimen/padding_xlarge</item>
+        <item name="android:layout_marginLeft">@dimen/padding_small</item>
     </style>
 
-    <style name="CancelButton" parent="Button">
+    <style name="CancelButton" parent="SaveCancelButtons">
         <item name="android:background">@drawable/cancel_button</item>
-        <item name="android:layout_width">130dip</item>
+        <item name="android:layout_marginLeft">@dimen/padding_xlarge</item>
+        <item name="android:layout_marginRight">@dimen/padding_small</item>
     </style>
 
 </resources>

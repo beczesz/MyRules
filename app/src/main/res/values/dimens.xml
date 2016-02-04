@@ -27,6 +27,7 @@
 
     <!-- Containers-->
     <dimen name="container_min_height">90dip</dimen>
-    <dimen name="floating_action_button_negative_margin">-50dip</dimen>
+    <dimen name="floating_action_button_negative_margin">-55dip</dimen>
+    <dimen name="floating_action_button_negative_bottom_margin">-15dip</dimen>
 
 </resources>
