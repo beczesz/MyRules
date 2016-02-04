@@ -18,27 +18,25 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.Rule;
 import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.EventHandlerPlugin;
 import com.exarlabs.android.myrules.business.rule.event.EventPluginManager;
-import com.exarlabs.android.myrules.business.rx.CallbackSubscriber;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.model.dao.RuleConditionTree;
 import com.exarlabs.android.myrules.model.dao.RuleRecord;
-import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.RuleComponentDetailsFragment;
 import com.exarlabs.android.myrules.ui.actions.ActionCardsFragment;
 import com.exarlabs.android.myrules.ui.conditions.ConditionTreeFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -48,7 +46,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
  * Displays a rule with  it's events, conditions and actions.
  * Created by becze on 1/22/2016.
  */
-public class RuleDetailsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+public class RuleDetailsFragment extends RuleComponentDetailsFragment implements AdapterView.OnItemSelectedListener {
 
 
     // ------------------------------------------------------------------------
@@ -163,6 +161,7 @@ public class RuleDetailsFragment extends BaseFragment implements AdapterView.OnI
             mRuleRecord.build();
         } else {
             mRuleRecord = new RuleRecord();
+            mRuleRecord.setState(Rule.State.STATE_ACTIVE);
         }
     }
 
@@ -223,7 +222,7 @@ public class RuleDetailsFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position != -1) {
-            mSelectedEvent = mSpinnerAdapter.getItem(position);
+            mSelectedEvent = (Event.Type) mEventsSpinner.getItemAtPosition(position);
         }
     }
 
@@ -250,58 +249,29 @@ public class RuleDetailsFragment extends BaseFragment implements AdapterView.OnI
         });
     }
 
+
+
+    @Override
     @OnClick (R.id.button_save)
-    public void saveRule() {
-        if (isValid()) {
-            checkPermissions();
-        }
+    protected void saveComponent() {
+        super.saveComponent();
     }
 
-    private void doSave() {
-        updateRule();
-        goBack();
-    }
-
-    /**
-     * Checks if all the necessary permission is granted for this rule
-     */
-    private void checkPermissions() {
+    @Override
+    protected Set<String> getRequiredPermissions() {
         // Get the array of permissions.
         EventHandlerPlugin plugin = mEventPluginManager.getPluginInstance(mSelectedEvent);
-
-
-        Set<String> permissionsSet = plugin.getRequiredPermissions();
-        String[] permissions = permissionsSet.toArray(new String[permissionsSet.size()]);
-
-        if (permissions.length > 0) {
-
-            //@formatter:off
-            // Must be done during an initialization phase like onCreate
-            RxPermissions.getInstance(getActivity())
-                            .request( permissions)
-                            .subscribe(new CallbackSubscriber<Boolean>() {
-                                           @Override
-                                           public void onResult(Boolean result, Throwable e) {
-                                               if (result) {
-                                                  doSave();
-                                               } else {
-                                                   Toast.makeText(getActivity(), R.string.message_error_permission_denied, Toast.LENGTH_SHORT).show();
-                                               }
-                                           }
-                                       });
-
-            //@formatter:on
-        } else {
-            doSave();
-        }
+        return plugin != null ? plugin.getRequiredPermissions() : null;
     }
 
 
     /**
      * Validate the fields.
+     *
      * @return true if the fields are valid.
      */
-    private boolean isValid() {
+    @Override
+    protected boolean validateComponent() {
 
         // Check the title
         if (TextUtils.isEmpty(mRuleName.getText().toString().trim())) {
@@ -318,10 +288,8 @@ public class RuleDetailsFragment extends BaseFragment implements AdapterView.OnI
         return true;
     }
 
-    /**
-     * Updates the rule record.
-     */
-    private void updateRule() {
+    @Override
+    protected void onComponentReadyToSave() {
         // update the rule names
         mRuleRecord.setRuleName(mRuleName.getText().toString().trim());
 
@@ -350,11 +318,13 @@ public class RuleDetailsFragment extends BaseFragment implements AdapterView.OnI
 
         // Save the rule record
         mRuleManager.saveRuleRecord(mRuleRecord);
+
+        goBack();
     }
 
 
     @OnClick (R.id.button_cancel)
-    public void cancelRule() {
+    public void onCancel() {
         goBack();
     }
 

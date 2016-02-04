@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -55,16 +57,20 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
     @Inject
     public NavigationManager mNavigationManager;
 
-    @Bind(R.id.selected_contacts)
+    @Bind (R.id.selected_contacts)
     public TextView mSelectedContacts;
 
-    @Bind(R.id.radio_group)
+    @Bind (R.id.radio_group)
     public RadioGroup mRadioGroup;
 
-    @Bind(R.id.select_group_layout)
-
-
+    @Bind (R.id.select_group_layout)
     public LinearLayout mSelectGroupLayout;
+
+    @Bind (R.id.sms_template_edit_text)
+    public EditText mSMSTemplateEditText;
+
+    @Bind (R.id.select_contact_button)
+    public Button mSelecButton;
 
     private List<Contact> mSelectedContactsList;
     private boolean mIdSendToContactFromEvent;
@@ -95,6 +101,12 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        refreshUI();
+    }
+
+    @Override
     protected void init(RuleAction action) {
         mAction = action;
 
@@ -117,16 +129,16 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
 
         mSelectedContacts.setText(contactsToString.toString());
         mRadioGroup.check(mIdSendToContactFromEvent ? R.id.radio_send_to_contact_from_event : R.id.radio_group);
-
     }
 
     @Override
     protected void saveChanges() {
         mPlugin.setContacts(mSelectedContactsList);
+        mPlugin.setMessage(mSMSTemplateEditText.getText().toString().trim());
         mPlugin.setSendToContactFromEvent(mIdSendToContactFromEvent);
     }
 
-    @OnClick(R.id.select_contact_button)
+    @OnClick (R.id.select_contact_button)
     public void selectContacts() {
         mNavigationManager.startContactsSelectorFragment(contacts -> {
             mSelectedContactsList = contacts;
@@ -135,10 +147,11 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
 
     }
 
-    @OnClick({ R.id.radio_send_to_contact_from_event, R.id.radio_send_to_group })
+    @OnClick ({ R.id.radio_send_to_contact_from_event, R.id.radio_send_to_group })
     public void selectionChanged() {
         mSelectGroupLayout.setEnabled(false);
         mIdSendToContactFromEvent = false;
+        mSelecButton.setEnabled(false);
 
         switch (mRadioGroup.getCheckedRadioButtonId()) {
             case R.id.radio_send_to_contact_from_event:
@@ -147,6 +160,7 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
 
             case R.id.radio_send_to_group:
                 mSelectGroupLayout.setEnabled(true);
+                mSelecButton.setEnabled(true);
                 break;
         }
     }

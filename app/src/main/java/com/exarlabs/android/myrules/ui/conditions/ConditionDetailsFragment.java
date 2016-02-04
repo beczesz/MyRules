@@ -17,18 +17,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
-import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.R;
+import com.exarlabs.android.myrules.ui.RuleComponentDetailsFragment;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -38,7 +37,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
  * Displays the details of a condition
  * Created by becze on 1/21/2016.
  */
-public class ConditionDetailsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+public class ConditionDetailsFragment extends RuleComponentDetailsFragment implements AdapterView.OnItemSelectedListener {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -99,13 +98,13 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    @Bind(R.id.condition_name)
+    @Bind (R.id.condition_name)
     public EditText mConditionName;
 
-    @Bind(R.id.spinner_select_condition)
-    public MaterialSpinner mConditionTypeSpinner;
+    @Bind (R.id.spinner_select_condition)
+    public MaterialSpinner mTypeSpinner;
 
-    @Bind(R.id.condition_plugin_fragment_container)
+    @Bind (R.id.condition_plugin_fragment_container)
     public FrameLayout mConditionPluginFragmentContainer;
 
     @Inject
@@ -122,6 +121,7 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     private ConditionPluginFragment mConditionPluginFragment;
     private ConditionPluginAdapter mSpinnerAdapter;
     private boolean isInitialized;
+    private Condition.Type mLastSelecedType;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -175,8 +175,8 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
             isInitialized = true;
             mSpinnerAdapter = new ConditionPluginAdapter(getActivity(), R.layout.spinner_item);
             mSpinnerAdapter.addAll(Condition.Type.values());
-            mConditionTypeSpinner.setAdapter(mSpinnerAdapter);
-            mConditionTypeSpinner.setOnItemSelectedListener(this);
+            mTypeSpinner.setAdapter(mSpinnerAdapter);
+            mTypeSpinner.setOnItemSelectedListener(this);
 
 
             // In edit mode: init the name field and the select the corresponding item in spinner
@@ -194,7 +194,9 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
                 //@formatter:on
 
                 int position = mSpinnerAdapter.getPosition(mConditionPluginManager.getFromConditionTypeCode(mRuleCondition.getType()));
-                mConditionTypeSpinner.setSelection(++position);
+                mTypeSpinner.setSelection(position);
+            } else {
+                mTypeSpinner.setHint(R.string.select_a_condition);
             }
         }
 
@@ -203,18 +205,19 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     /**
      * Clicked on Save button
      */
-    @OnClick(R.id.button_save)
-    public void saveNewCondition() {
-        if (isValid()) {
-            checkPermissions();
-        }
+    @Override
+    @OnClick (R.id.button_save)
+    protected void saveComponent() {
+        super.saveComponent();
     }
 
     /**
      * Validate the fields.
+     *
      * @return true if the fields are valid.
      */
-    private boolean isValid() {
+    @Override
+    protected boolean validateComponent() {
 
         // Check the title
         if (TextUtils.isEmpty(mConditionName.getText().toString().trim())) {
@@ -223,42 +226,22 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
         }
 
         // Check if the user has selected a field.
-        if (mConditionId == -1 && mConditionTypeSpinner.getSelectedItemPosition() == 0) {
-            mConditionTypeSpinner.setError(R.string.error_mandatory_field);
+        if (mConditionId == -1 && mTypeSpinner.getSelectedItemPosition() == 0) {
+            mTypeSpinner.setError(R.string.error_mandatory_field);
             return false;
         }
 
         return true;
     }
 
-    /**
-     * Checks if all the necessary permission is granted for this rule
-     */
-    private void checkPermissions() {
-        // Get the array of permissions.
-        Set<String> permissionsSet = mRuleCondition.getConditionPlugin().getRequiredPermissions();
-        String[] permissions = permissionsSet.toArray(new String[permissionsSet.size()]);
-
-        if (permissions.length > 0) {
-            //@formatter:off
-            // Must be done during an initialization phase like onCreate
-            RxPermissions.getInstance(getActivity())
-                            .request( permissions)
-                            .subscribe(result -> {
-                                               if (result) {
-                                                  doSave();
-                                               } else {
-                                                   Toast.makeText(getActivity(), R.string.message_error_permission_denied, Toast.LENGTH_SHORT).show();
-                                               }
-                                           }
-                                       );
-            //@formatter:on
-        } else {
-            doSave();
-        }
+    @Override
+    protected Set<String> getRequiredPermissions() {
+        return mRuleCondition.getConditionPlugin().getRequiredPermissions();
     }
 
-    private void doSave() {
+
+    @Override
+    protected void onComponentReadyToSave() {
         mRuleCondition.setConditionName(mConditionName.getText().toString().trim());
         mConditionPluginFragment.saveChanges();
         mConditionManager.saveCondition(mRuleCondition);
@@ -268,8 +251,10 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
     /**
      * Clicked on Cancel button
      */
-    @OnClick(R.id.button_cancel)
+    @OnClick (R.id.button_cancel)
     public void cancelNewCondition() {
+        // we reset everything what we have set on the object
+        mConditionManager.refresh(mRuleCondition);
         goBack();
     }
 
@@ -294,11 +279,11 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int conditionType = Condition.Type.DEBUG_ALWAYS_TRUE.getType();
         if (position != -1) {
-            conditionType = mSpinnerAdapter.getItem(position).getType();
+            mLastSelecedType = ((Condition.Type) mTypeSpinner.getSelectedItem());
+            mTypeSpinner.setHint(null);
+            inflateLayout();
         }
-        inflateLayout(conditionType);
     }
 
     @Override
@@ -311,15 +296,17 @@ public class ConditionDetailsFragment extends BaseFragment implements AdapterVie
      *
      * @param conditionType
      */
-    private void inflateLayout(int conditionType) {
-        mConditionPluginFragment = mConditionPluginManager.createNewPluginFragmentInstance(conditionType);
-        mRuleCondition.setType(conditionType);
+    private void inflateLayout() {
+        int type = mLastSelecedType == null ? Condition.Type.DEBUG_ALWAYS_TRUE.getType() : mLastSelecedType.getType();
+
+        mConditionPluginFragment = mConditionPluginManager.createNewPluginFragmentInstance(type);
+        mRuleCondition.setType(type);
         mRuleCondition.rebuild();
         mConditionPluginFragment.init(mRuleCondition);
 
         // add the fragment to the container.
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.condition_plugin_fragment_container,
-                        mConditionPluginFragment).commit();
+                                                                             mConditionPluginFragment).commit();
     }
 
     // ------------------------------------------------------------------------

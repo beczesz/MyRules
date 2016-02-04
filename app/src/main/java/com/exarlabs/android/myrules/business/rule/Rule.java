@@ -37,7 +37,7 @@ public abstract class Rule implements GreenDaoEntity, Evaluable, Buildable, Runn
      * Possible states of rules
      * Created by becze on 1/11/2016.
      */
-    public static class RuleState {
+    public static class State {
 
         // ------------------------------------------------------------------------
         // STATIC FIELDS
@@ -67,7 +67,6 @@ public abstract class Rule implements GreenDaoEntity, Evaluable, Buildable, Runn
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-
 
     // ------------------------------------------------------------------------
     // METHODS
@@ -120,16 +119,20 @@ public abstract class Rule implements GreenDaoEntity, Evaluable, Buildable, Runn
 
     @Override
     public boolean run(Event event) {
-        /*
-         * Run sequentially all the actions.
-         */
-        List<RuleAction> ruleActions = getRuleActions();
-        if (ruleActions != null) {
-            for (RuleAction ruleAction : ruleActions) {
-                ruleAction.run(event);
-            }
+        try {
+            /*
+             * Run sequentially all the actions.
+             */
+            List<RuleAction> ruleActions = getRuleActions();
+            if (ruleActions != null) {
+                for (RuleAction ruleAction : ruleActions) {
+                    ruleAction.run(event);
+                }
 
-            return true;
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return false;

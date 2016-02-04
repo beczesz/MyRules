@@ -151,7 +151,7 @@ public class RulesEngineService extends Service {
                             // Log the events and prepare a bundle with the list of rules which are responding to
                             // the given event
                             logEventDispatched(event);
-                            return new Pair<>(event, mRuleManager.getRules(event.getType(), Rule.RuleState.STATE_ACTIVE));
+                            return new Pair<>(event, mRuleManager.getRules(event.getType(), Rule.State.STATE_ACTIVE));
                         })
                         .flatMap(pair -> Observable.from(pair.second).map(record -> new Pair<>(pair.first, (RuleRecord) record)))
                         .filter(eventRulePair -> {

@@ -49,6 +49,14 @@
 
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/sms_template_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_deafult_sms_message"
+            android:inputType="textMultiLine"
+            android:text="@string/default_sms_message"/>
+
     </LinearLayout>
 
     <ProgressBar

@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import android.Manifest;
 import android.content.Context;
 import android.media.AudioManager;
 import android.telephony.TelephonyManager;
@@ -20,7 +19,7 @@ import com.exarlabs.android.myrules.business.rule.event.Event;
 
 /**
  * Action plugin which rejects a call
- *
+ * <p>
  * Created by atiyka on 1/20/2016.
  */
 public class RejectCallActionPlugin extends ActionPlugin {
@@ -50,7 +49,7 @@ public class RejectCallActionPlugin extends ActionPlugin {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public RejectCallActionPlugin(){
+    public RejectCallActionPlugin() {
         DaggerManager.component().inject(this);
     }
 
@@ -67,7 +66,7 @@ public class RejectCallActionPlugin extends ActionPlugin {
     /**
      * rejects a call by finding the ITelephony methods with reflection
      */
-    private void rejectCall(){
+    private void rejectCall() {
         AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         int ringerMode = audioManager.getRingerMode();
         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
@@ -100,9 +99,9 @@ public class RejectCallActionPlugin extends ActionPlugin {
 
     @Override
     public Set<String> getRequiredPermissions() {
-        HashSet<String> permissions = new HashSet<>();
-        permissions.add(Manifest.permission.MODIFY_PHONE_STATE);
-        return permissions;
+        // Note this requires the Manifest.permission.MODIFY_PHONE_STATE permission
+        // but since this is a system permission which can't be requested we don't have to declare it.
+        return new HashSet<>();
     }
 
     // ------------------------------------------------------------------------

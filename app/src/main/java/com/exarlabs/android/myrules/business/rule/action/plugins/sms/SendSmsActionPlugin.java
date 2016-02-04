@@ -48,6 +48,8 @@ public class SendSmsActionPlugin extends ActionPlugin {
     private static final String KEY_GROUP_SELECTION = "GROUP_SELECTION";
     private static final String KEY_MESSAGE = "MESSAGE";
     private static final String KEY_SEND_TO_CONTACT_FROM_EVENT = "SEND_TO_CONTACT_FROM_EVENT";
+    public static final String SMS_SENT = "SMS_SENT";
+    public static final String SMS_DELIVERED = "SMS_DELIVERED";
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -95,7 +97,9 @@ public class SendSmsActionPlugin extends ActionPlugin {
         super.initialize(properties);
         try {
             RuleActionProperty groupJSON = getProperty(KEY_GROUP_SELECTION);
-            mContacts = mGson.fromJson(groupJSON.getValue(), mDatasetListType);
+            if (groupJSON != null) {
+                mContacts = mGson.fromJson(groupJSON.getValue(), mDatasetListType);
+            }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
@@ -132,16 +136,19 @@ public class SendSmsActionPlugin extends ActionPlugin {
      * @param message
      */
     public void sendSMS(Contact contact, String message) {
-        String SENT = "SMS_SENT";
-        String DELIVERED = "SMS_DELIVERED";
 
+        // Make sure that the message is not null
+        if (message == null) {
+            message = "";
+        }
 
         Log.w(TAG, "Phone number: " + contact.getNumber());
         Log.w(TAG, "Msg: " + message);
 
-        PendingIntent sentPI = PendingIntent.getBroadcast(mContext, 0, new Intent(SENT), 0);
 
-        PendingIntent deliveryPI = PendingIntent.getBroadcast(mContext, 0, new Intent(DELIVERED), 0);
+        PendingIntent sentPI = PendingIntent.getBroadcast(mContext, 0, new Intent(SMS_SENT), 0);
+
+        PendingIntent deliveryPI = PendingIntent.getBroadcast(mContext, 0, new Intent(SMS_DELIVERED), 0);
 
         // when the SMS has been sent
         mContext.registerReceiver(new BroadcastReceiver() {
@@ -165,7 +172,7 @@ public class SendSmsActionPlugin extends ActionPlugin {
                         break;
                 }
             }
-        }, new IntentFilter(SENT));
+        }, new IntentFilter(SMS_SENT));
 
         // when the SMS has been delivered
         mContext.registerReceiver(new BroadcastReceiver() {
@@ -180,7 +187,7 @@ public class SendSmsActionPlugin extends ActionPlugin {
                         break;
                 }
             }
-        }, new IntentFilter(DELIVERED));
+        }, new IntentFilter(SMS_DELIVERED));
 
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(contact.getNumber(), null, message, sentPI, deliveryPI);

@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.devel.DevelManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 import com.exarlabs.android.myrules.ui.BuildConfig;
@@ -126,8 +126,8 @@ public class ConditionsOverviewFragment extends BaseFragment implements OnCondit
      */
     private void updateUI() {
         mAdapter.clear();
-        List<RuleCondition> conditions = mConditionManager.loadAllConditions();
-        mAdapter.addAll(conditions);
+        List<RuleCondition> ruleConditions = mConditionManager.loadAllNonConnectorConditions();
+        mAdapter.addAll(ruleConditions);
         mAdapter.notifyDataSetChanged();
     }
 

@@ -74,10 +74,10 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
     // ------------------------------------------------------------------------
     // FIELDS
     // ------------------------------------------------------------------------
-    @Bind(R.id.build_info)
+    @Bind (R.id.build_info)
     TextView mDevelInfo;
 
-    @Bind(R.id.list_view_event_plugins)
+    @Bind (R.id.list_view_event_plugins)
     ListView mEventPlugins;
 
     @Inject
@@ -187,7 +187,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
          * Create the conditions
          */
         // ToDo: to be handled an event without conditions and without building the condition tree
-        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
+        RuleCondition cTrue = mConditionManager.getDefaultCondition();
         mConditionManager.saveCondition(cTrue);
 
         // create dependencies between conditions
@@ -231,7 +231,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
          * Create the conditions
          */
         // ToDo: to be handled an event without conditions and without building the condition tree
-        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
+        RuleCondition cTrue = mConditionManager.getDefaultCondition();
         mConditionManager.saveCondition(cTrue);
 
         // create dependencies between conditions
@@ -291,8 +291,8 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         /*
          * Create the conditions
          */
-        RuleCondition cTrue = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
-        RuleCondition cTrue1 = generateNewCondition(Condition.Type.DEBUG_ALWAYS_TRUE.getType());
+        RuleCondition cTrue = mConditionManager.getDefaultCondition();
+        RuleCondition cTrue1 = mConditionManager.getDefaultCondition();
 
         RuleCondition cInterval = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL.getType());
         ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMin(5);
@@ -334,7 +334,7 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         // set the event
         ruleRecord.setRuleName("Sample Rule");
         ruleRecord.setEventCode(event.getType());
-        ruleRecord.setState(Rule.RuleState.STATE_ACTIVE);
+        ruleRecord.setState(Rule.State.STATE_ACTIVE);
         ruleRecord.setRuleConditionTree(root);
         ruleRecord.addRuleActions(aMultiply, aFib, aMultiply10);
         mRuleManager.saveRuleRecord(ruleRecord);

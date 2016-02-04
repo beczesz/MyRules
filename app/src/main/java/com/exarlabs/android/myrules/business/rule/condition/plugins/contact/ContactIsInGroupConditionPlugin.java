@@ -9,6 +9,7 @@ import java.util.Set;
 import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
+import com.exarlabs.android.myrules.business.rule.event.plugins.ContactEvent;
 import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 import com.google.gson.Gson;
@@ -58,8 +59,7 @@ public class ContactIsInGroupConditionPlugin extends ConditionPlugin {
         builder.serializeNulls();
         mGson = builder.create();
 
-        mDatasetListType = new TypeToken<List<Contact>>() {
-        }.getType();
+        mDatasetListType = new TypeToken<List<Contact>>() {}.getType();
 
         mContactRows = new ArrayList<>();
     }
@@ -85,7 +85,10 @@ public class ContactIsInGroupConditionPlugin extends ConditionPlugin {
 
     @Override
     public boolean evaluate(Event event) {
-        return true;
+        if (event instanceof ContactEvent) {
+            return mContactRows.contains(((ContactEvent) event).getContact());
+        }
+        return false;
     }
 
     @Override

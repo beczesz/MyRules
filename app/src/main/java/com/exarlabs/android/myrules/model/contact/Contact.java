@@ -76,7 +76,7 @@ public class Contact {
         String contactToString = mId != -1 ? Long.toString(mId) : "";
         contactToString += !TextUtils.isEmpty(mName) ? mName : "";
         contactToString += !TextUtils.isEmpty(mNumber) ? " (" + mNumber + ") " : "";
-        return contactToString + "\n";
+        return contactToString;
     }
 
     @Override

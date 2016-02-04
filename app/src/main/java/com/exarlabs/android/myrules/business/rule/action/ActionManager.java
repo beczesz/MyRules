@@ -148,10 +148,8 @@ public class ActionManager {
      */
     public void saveActionLinks(RuleRecord ruleRecord, List<RuleActionLink> ruleActionLinks) {
         // Deletes first the old action links
-        mRuleActionLinkDao.queryBuilder()
-                        .where(RuleActionLinkDao.Properties.RuleRecordId.eq(ruleRecord.getId()))
-                        .buildDelete()
-                        .executeDeleteWithoutDetachingEntities();
+        mRuleActionLinkDao.queryBuilder().where(
+                        RuleActionLinkDao.Properties.RuleRecordId.eq(ruleRecord.getId())).buildDelete().executeDeleteWithoutDetachingEntities();
 
         // And saves the new action links
         for (RuleActionLink ruleAction : ruleActionLinks) {
@@ -194,6 +192,17 @@ public class ActionManager {
         }
 
         return requiredPermissions;
+    }
+
+    /**
+     * Refresh and rebuild the rule action
+     * @param ruleAction
+     */
+    public void refresh(RuleAction ruleAction) {
+        if (ruleAction.isAttached()) {
+            mRuleActionDao.refresh(ruleAction);
+            ruleAction.rebuild();
+        }
     }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

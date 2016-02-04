@@ -72,6 +72,11 @@ public class ConditionManager {
         return mRuleConditionDao.loadAll();
     }
 
+    public List<RuleCondition> loadAllNonConnectorConditions() {
+        return mRuleConditionDao.queryBuilder().where(
+                        RuleConditionDao.Properties.Type.notEq(Condition.Type.CONNECTOR_CONDITION_PLUGIN.getType())).list();
+    }
+
     public long insert(RuleCondition entity) {
         return mRuleConditionDao.insert(entity);
     }
@@ -189,12 +194,12 @@ public class ConditionManager {
     /**
      * Builds the condition tree
      *
-     * @param newCodnitionTree
+     * @param newConditionTree
      *
      * @return
      */
-    public RuleConditionTree buildConditionTree(ConditionTree.Builder newCodnitionTree) {
-        RuleConditionTree newRoot = newCodnitionTree.build();
+    public RuleConditionTree buildConditionTree(ConditionTree.Builder newConditionTree) {
+        RuleConditionTree newRoot = newConditionTree.build();
         insertOrReplaceConditionTree(newRoot);
         return newRoot;
     }
@@ -207,9 +212,9 @@ public class ConditionManager {
      */
     public RuleCondition getDefaultCondition() {
         RuleCondition c = new RuleCondition();
-        Condition.Type conditionType = Condition.Type.DEBUG_ALWAYS_TRUE;
+        Condition.Type conditionType = Condition.Type.CONNECTOR_CONDITION_PLUGIN;
         c.setType(conditionType.getType());
-        c.setConditionName(Condition.Type.DEBUG_ALWAYS_TRUE.toString());
+        c.setConditionName(conditionType.toString());
         saveCondition(c);
         return c;
     }
@@ -238,5 +243,12 @@ public class ConditionManager {
         }
 
         return requiredPermissions;
+    }
+
+    public void refresh(RuleCondition ruleCondition) {
+        if (ruleCondition.isAttached()) {
+            mRuleConditionDao.refresh(ruleCondition);
+            ruleCondition.rebuild();
+        }
     }
 }

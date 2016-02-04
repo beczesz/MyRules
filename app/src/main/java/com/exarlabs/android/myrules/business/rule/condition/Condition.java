@@ -46,6 +46,8 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
         // ------------------------------------------------------------------------
         // DEBUG CONDITIONS
         // ------------------------------------------------------------------------
+        CONNECTOR_CONDITION_PLUGIN(1, AlwaysTrueConditionPlugin.class, DefaultConditionPluginFragment.class,
+                          R.string.condition_title_always_true_condition),
 
         DEBUG_ALWAYS_TRUE(1000, AlwaysTrueConditionPlugin.class, DefaultConditionPluginFragment.class,
                           R.string.condition_title_always_true_condition),
