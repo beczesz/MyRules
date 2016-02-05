@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -371,8 +369,6 @@ public class RuleDetailsFragment extends RuleComponentDetailsFragment implements
     }
 
     private void goBack() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         mNavigationManager.navigateBack(getActivity());
     }
 }

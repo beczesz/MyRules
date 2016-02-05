@@ -1,10 +1,12 @@
 package com.exarlabs.android.myrules.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.norbsoft.typefacehelper.TypefaceHelper;
 
@@ -52,12 +54,20 @@ public class BaseFragment extends Fragment {
         TypefaceHelper.typeface(view);
         //initActionBar(true, getString(R.string.app_name));
     }
+
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // On each fragment on resume we try to hide the heaborad
+        hideKeyboard();
+    }
+
+
     public void onDestroy() {
         super.onDestroy();
         Log.w("BSZ", "onDestroy: " + this);
     }
-
 
 
     /**
@@ -66,7 +76,7 @@ public class BaseFragment extends Fragment {
      * @param title
      */
     public void initActionBarWithHomeButton(String title) {
-        if (getActivity() != null && getActivity() instanceof BaseActivity ) {
+        if (getActivity() != null && getActivity() instanceof BaseActivity) {
             ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
             supportActionBar.setHomeButtonEnabled(true);
             supportActionBar.setTitle(title);
@@ -74,7 +84,7 @@ public class BaseFragment extends Fragment {
     }
 
     public void initActionBarWithBackButton(String title) {
-        if (getActivity() != null && getActivity() instanceof BaseActivity ) {
+        if (getActivity() != null && getActivity() instanceof BaseActivity) {
             ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
             supportActionBar.setHomeButtonEnabled(true);
 
@@ -84,11 +94,12 @@ public class BaseFragment extends Fragment {
 
     /**
      * Enables the home indicator
+     *
      * @param isEnabled
      */
     public void setHomeAsUpEnabled(boolean isEnabled) {
 
-        if (getActivity() != null && getActivity() instanceof BaseActivity ) {
+        if (getActivity() != null && getActivity() instanceof BaseActivity) {
             ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
             supportActionBar.setHomeButtonEnabled(isEnabled);
 
@@ -101,7 +112,7 @@ public class BaseFragment extends Fragment {
      * @param isShown
      */
     protected void showActionbar(boolean isShown) {
-        if (getActivity() != null && getActivity() instanceof BaseActivity ) {
+        if (getActivity() != null && getActivity() instanceof BaseActivity) {
             ActionBar supportActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
             if (isShown) {
                 supportActionBar.show();
@@ -112,6 +123,16 @@ public class BaseFragment extends Fragment {
     }
 
 
+    /**
+     * Hides the keyboard
+     */
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View currentFocus = getActivity().getCurrentFocus();
+        if (currentFocus != null) {
+            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
+    }
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------

@@ -22,10 +22,11 @@ public class DataModelModule {
     // DAO
     // ------------------------------------------------------------------------
 
+    @Inject
     @Provides
     @Singleton
-    protected DaoManager provideDaoManager() {
-        return new DaoManager();
+    protected DaoManager provideDaoManager(Context context) {
+        return new DaoManager(context);
     }
 
     @Inject
