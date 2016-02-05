@@ -15,6 +15,7 @@ import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumbe
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberPrimeConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.time.IsTimeInIntervalConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.time.DayIsInListConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.model.GreenDaoEntity;
 import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
@@ -25,6 +26,7 @@ import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGro
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.time.IntervalTimeConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.time.DayIsInListConditionPluginFragment;
 
 /**
  * It is a rule condition abstraction which with a bridge pattern it decouples the
@@ -78,7 +80,10 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
         // TIME CONDITIONS
         // ------------------------------------------------------------------------
         TIME_IS_IN_INTERVAL(4000, IsTimeInIntervalConditionPlugin.class, IntervalTimeConditionPluginFragment.class,
-                        R.string.condition_title_is_time_in_interval_condition);
+                        R.string.condition_title_is_time_in_interval_condition),
+
+        DAY_IS_IN_LIST(4001, DayIsInListConditionPlugin.class, DayIsInListConditionPluginFragment.class,
+                        R.string.condition_title_day_is_in_list_condition);
 
 
         private final int mType;

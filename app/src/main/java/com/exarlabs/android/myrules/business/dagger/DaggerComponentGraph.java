@@ -32,12 +32,15 @@ import com.exarlabs.android.myrules.ui.conditions.ConditionsSectorFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.DefaultConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.contact.ContactIsInGroupConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.conditions.plugins.math.EqualConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.math.IntervalConditionPluginFragment;
+import com.exarlabs.android.myrules.ui.conditions.plugins.time.DayIsInListConditionPluginFragment;
 import com.exarlabs.android.myrules.ui.debug.DebugOverviewFragment;
 import com.exarlabs.android.myrules.ui.drawer.DrawerManager;
 import com.exarlabs.android.myrules.ui.history.HistoryListFragment;
 import com.exarlabs.android.myrules.ui.rules.RuleDetailsFragment;
 import com.exarlabs.android.myrules.ui.rules.RulesArrayAdapter;
 import com.exarlabs.android.myrules.ui.rules.RulesOverviewFragment;
+import com.exarlabs.android.myrules.ui.util.WeekDaysCompostator;
 import com.exarlabs.android.myrules.ui.util.contact.ContactsSectorFragment;
 
 /**
@@ -124,4 +127,8 @@ public interface DaggerComponentGraph {
     void inject(ForwardSMSToGroupActionPluginFragment forwardSMSToGroupActionPluginFragment);
 
     void inject(ActionPlugin actionPlugin);
+
+    void inject(DayIsInListConditionPluginFragment dayIsInListConditionPluginFragment);
+
+    void inject(WeekDaysCompostator weekDaysCompostator);
 }

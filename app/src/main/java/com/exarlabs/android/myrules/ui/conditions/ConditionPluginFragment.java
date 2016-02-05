@@ -1,8 +1,5 @@
 package com.exarlabs.android.myrules.ui.conditions;
 
-import android.os.Bundle;
-import android.view.View;
-
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 
@@ -51,17 +48,17 @@ public abstract class ConditionPluginFragment extends BaseFragment {
      */
     protected abstract void refreshUI();
 
+
     /**
      * Saves the changes into the condition
      */
     protected abstract void saveChanges();
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onResume() {
+        super.onResume();
         refreshUI();
     }
-
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS

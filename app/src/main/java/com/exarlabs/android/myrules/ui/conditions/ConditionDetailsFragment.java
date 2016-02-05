@@ -22,11 +22,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
-import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.condition.Condition;
 import com.exarlabs.android.myrules.business.rule.condition.ConditionManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPluginManager;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.RuleComponentDetailsFragment;
@@ -34,7 +33,6 @@ import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.exarlabs.android.myrules.ui.util.ui.spinner.SpinnerItemViewHolder;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -165,7 +163,7 @@ public class ConditionDetailsFragment extends RuleComponentDetailsFragment imple
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // the trash only appears in edit mode
-        if(mRuleCondition.isAttached()) {
+        if (mRuleCondition.isAttached()) {
             inflater.inflate(R.menu.delete_item, menu);
             menu.findItem(R.id.delete_item).setIcon(
                             new IconicsDrawable(getContext(), FontAwesome.Icon.faw_trash_o).colorRes(R.color.text_dark_bg_secondary).actionBarSize());
@@ -325,9 +323,12 @@ public class ConditionDetailsFragment extends RuleComponentDetailsFragment imple
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position != -1) {
-            mLastSelecedType = ((Condition.Type) mTypeSpinner.getSelectedItem());
-            mTypeSpinner.setHint(null);
-            inflateLayout();
+            Condition.Type currentType = (Condition.Type) mTypeSpinner.getSelectedItem();
+            if (currentType != mLastSelecedType) {
+                mLastSelecedType = currentType;
+                mTypeSpinner.setHint(null);
+                inflateLayout();
+            }
         }
     }
 

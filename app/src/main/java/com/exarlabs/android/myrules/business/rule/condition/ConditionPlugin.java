@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import android.content.Context;
+
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.rule.Evaluable;
 import com.exarlabs.android.myrules.business.rule.RuleComponentPlugin;
@@ -13,7 +15,7 @@ import com.exarlabs.android.myrules.model.dao.RuleConditionProperty;
 
 /**
  * A ConditionPlugin is an implementation of the behaviour of a RuleCondition.
- * Is is initialized with a list of Propoerties, and this plugin, can modify, delete add new propoerties.
+ * Is is initialized with a list of Properties, and this plugin, can modify, delete add new properties.
  * Based on these properties is can evaluate itself at any time.
  * <p>
  * Created by becze on 12/18/2015.
@@ -42,6 +44,9 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
 
     @Inject
     public ConditionPluginManager mConditionPluginManager;
+
+    @Inject
+    public Context mContext;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -76,7 +81,7 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
 
     /**
      * @param key
-     * @return returns true if we have the given propery with the given key
+     * @return returns true if we have the given property with the given key
      */
     public boolean hasProperty(String key) {
         if (mProperties != null) {
@@ -141,7 +146,7 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
     /**
      * Generates the list of properties what this plugin needs to be persisted.
      *
-     * @return the list of all the propoerties needed.
+     * @return the list of all the properties needed.
      */
     public List<RuleConditionProperty> getProperties() {
         return mProperties;
@@ -149,5 +154,9 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
 
     public int getType() {
         return mType;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 }
