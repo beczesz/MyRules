@@ -77,6 +77,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("cert/debug.keystore")
+        }
+    }
+
+
     defaultConfig {
         applicationId "com.exarlabs.android.myrules.myrules"
         minSdkVersion 15
