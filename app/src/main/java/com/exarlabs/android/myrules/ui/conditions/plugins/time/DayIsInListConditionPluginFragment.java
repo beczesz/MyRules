@@ -38,23 +38,24 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
     // TYPES
     // ------------------------------------------------------------------------
 
-    static class ViewHolder
-    {
+    static class ViewHolder {
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
-        @Bind(R.id.grid_view_item)
+        @Bind (R.id.grid_view_item)
         public TextView mItemText;
     }
 
     private class WeekDaysAdapter extends ArrayAdapter<String> {
 
         private final int mLayout;
+        private final Context mContext;
 
         public WeekDaysAdapter(Context context, int layout) {
             super(context, layout);
             mLayout = layout;
+            mContext = context;
         }
 
         @Override
@@ -62,7 +63,7 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
             ViewHolder viewHolder;
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(mLayout, null);
+                convertView = LayoutInflater.from(mContext).inflate(mLayout, null);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }
@@ -71,6 +72,12 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
 
             String itemText = getItem(position);
             viewHolder.mItemText.setText(itemText);
+
+
+            boolean isItemSelected = mSelectedDays.contains(itemText);
+            viewHolder.mItemText.setBackgroundColor(
+                            isItemSelected ? getResources().getColor(R.color.colorAccent) : getResources().getColor(R.color.transparent));
+            viewHolder.mItemText.setEnabled(isItemSelected);
 
             return convertView;
         }
@@ -97,15 +104,15 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
     @Inject
     public NavigationManager mNavigationManager;
 
-    @Bind(R.id.list_of_days)
-    public GridView mListOfDays;
+    @Bind (R.id.list_of_days)
+    public GridView mDaysGrid;
 
     private RuleCondition mCondition;
     private DayIsInListConditionPlugin mPlugin;
 
     private List<String> mSelectedDays;
+    private WeekDaysAdapter mAdapter;
 
-    private WeekDaysCompostator mWeekDaysCompostator;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -130,27 +137,20 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         List<String> dayNames = Arrays.asList(getContext().getResources().getStringArray(R.array.list_of_weekdays));
 
-        WeekDaysAdapter adapter = new WeekDaysAdapter(getContext(), R.layout.grid_view_item);
-        adapter.addAll(dayNames);
-        adapter.notifyDataSetChanged();
+        mAdapter = new WeekDaysAdapter(getContext(), R.layout.grid_view_item);
+        mAdapter.addAll(dayNames);
 
-        mListOfDays.setAdapter(adapter);
-        mListOfDays.setOnItemClickListener(this);
-        refreshUI();
+        mDaysGrid.setAdapter(mAdapter);
+        mDaysGrid.setOnItemClickListener(this);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(!view.getTag().equals(0)){
-            view.setTag(0);
-            view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }else{
-            view.setTag(1);
-            view.setBackgroundColor(getResources().getColor(R.color.transparent));
-        }
+        boolean selected = !view.isEnabled();
+        view.setEnabled(selected);
+        view.setBackgroundColor(selected ? getResources().getColor(R.color.colorAccent) : getResources().getColor(R.color.transparent));
     }
 
     @Override
@@ -161,10 +161,10 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
          */
         if (condition.getConditionPlugin() instanceof DayIsInListConditionPlugin) {
             mPlugin = (DayIsInListConditionPlugin) condition.getConditionPlugin();
-            if(condition.isAttached()) {
+            if (condition.isAttached()) {
                 int selectedDays = mPlugin.getSelectedDays();
-                mWeekDaysCompostator = new WeekDaysCompostator();
-                List<String> selectedDaysList = mWeekDaysCompostator.getListFromCompacted(selectedDays);
+                WeekDaysCompostator weekDaysCompostator = new WeekDaysCompostator();
+                List<String> selectedDaysList = weekDaysCompostator.getListFromCompacted(selectedDays);
                 mSelectedDays = selectedDaysList;
             }
         }
@@ -172,32 +172,24 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
 
     @Override
     protected void refreshUI() {
-        // ToDo: it's called twice or more. Why?
-
-        if(mListOfDays != null) {
-            int childCount = mListOfDays.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                TextView child = (TextView) mListOfDays.getChildAt(i);
-                if (mSelectedDays.contains(child.getText().toString())) {
-                    child.setTag(0);
-                    child.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                }
-            }
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
     protected void saveChanges() {
-        int childCount = mListOfDays.getChildCount();
+        int childCount = mDaysGrid.getChildCount();
         List<String> selectedDays = new ArrayList<>();
+
         for (int i = 0; i < childCount; i++) {
-            TextView child = (TextView) mListOfDays.getChildAt(i);
-            if(child.getTag().equals(0)){
+            TextView child = (TextView) mDaysGrid.getChildAt(i);
+            if (child.isEnabled()) {
                 selectedDays.add(child.getText().toString());
             }
         }
-
-        int compacted = mWeekDaysCompostator.compactList(selectedDays);
+        WeekDaysCompostator weekDaysCompostator = new WeekDaysCompostator();
+        int compacted = weekDaysCompostator.compactList(selectedDays);
 
         // save the changes
         mPlugin.setSelectedDays(compacted);
