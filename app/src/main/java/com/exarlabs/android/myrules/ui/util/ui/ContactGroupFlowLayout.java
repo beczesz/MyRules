@@ -6,7 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.exarlabs.android.myrules.model.contact.Contact;
@@ -32,13 +32,15 @@ public class ContactGroupFlowLayout extends FlowLayout {
         public TextView mItemText;
 
         private Contact mContact;
-        public final View contactView;
+        public final LinearLayout contactView;
 
         public ContactViewHolder(Contact contact) {
 
             // Inflate a view
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            contactView = inflater.inflate(R.layout.contact_view, null);
+            contactView = (LinearLayout) inflater.inflate(R.layout.contact_view, null);
+            contactView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+
             ButterKnife.bind(this, contactView);
 
             mContact = contact;

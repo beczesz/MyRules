@@ -1,26 +1,22 @@
 package com.exarlabs.android.myrules.ui.util.contact;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -31,7 +27,7 @@ import com.exarlabs.android.myrules.business.MyRulesConstants;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.business.provider.PhoneContactManager;
 import com.exarlabs.android.myrules.model.contact.Contact;
-import com.exarlabs.android.myrules.ui.BaseFragment;
+import com.exarlabs.android.myrules.ui.PermissionCheckerFragment;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.navigation.NavigationManager;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -46,7 +42,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * originator fragment.
  *
  */
-public class ContactsSectorFragment extends BaseFragment {
+public class ContactsSectorFragment extends PermissionCheckerFragment {
+
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
@@ -112,8 +109,6 @@ public class ContactsSectorFragment extends BaseFragment {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
-    private static final int PERMISSIONS_REQUEST_CONTACTS = 100;
-
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -167,7 +162,25 @@ public class ContactsSectorFragment extends BaseFragment {
         // create a new adapter and add it to the list view
         mContactAdapter = new ContactAdapter(getActivity());
 
-        checkPermission();
+        // check the permissions before we do anything else
+        checkPermissions();
+    }
+
+    @Override
+    protected Set<String> getRequiredPermissions() {
+        HashSet<String> hashSet = new HashSet<>();
+        hashSet.add(Manifest.permission.READ_CONTACTS);
+        return hashSet;
+    }
+
+    @Override
+    protected void onPermissionGranted() {
+        queryContacts();
+    }
+
+    @Override
+    protected void onPermissionDeclined() {
+
     }
 
     @Override
@@ -217,6 +230,7 @@ public class ContactsSectorFragment extends BaseFragment {
         mContactAdapter.clear();
         mContactAdapter.addAll(contacts);
         mContactAdapter.notifyDataSetChanged();
+        mContactAdapter.getFilter().filter("");
     }
 
 
@@ -255,6 +269,15 @@ public class ContactsSectorFragment extends BaseFragment {
         return mSelectedContacts.contains(contactRow);
     }
 
+    /**
+     * Hides the keyboard, and navigates back
+     */
+    private void goBack() {
+        // hide the keyboard
+        mNavigationManager.navigateBack(getActivity());
+    }
+
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
@@ -265,72 +288,6 @@ public class ContactsSectorFragment extends BaseFragment {
 
     public void setContactsSelectorListener(ContactsSelectorListener contactsSelectorListener) {
         mContactsSelectorListener = contactsSelectorListener;
-    }
-
-    // ------------------------------------------------------------------------
-    // TEMP
-    // ------------------------------------------------------------------------
-
-    /**
-     * Checks if the user granted access to use fine location data.
-     * If not then we have to force the user to enable it for us,
-     */
-    protected void checkPermission() {
-        if (!isPermissionGiven(Manifest.permission.READ_CONTACTS)) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_CONTACTS)) {
-
-                // Use the Builder class for convenient dialog construction
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Please give access to the contacts");
-                builder.setPositiveButton(android.R.string.ok, (dialog, id) -> {
-                    requestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
-                });
-                builder.setCancelable(false);
-                // Create the AlertDialog and sho it.
-                builder.create().show();
-
-            } else {
-                requestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
-            }
-        } else {
-            queryContacts();
-        }
-    }
-
-
-    public boolean isPermissionGiven(String permission) {
-        return ContextCompat.checkSelfPermission(getActivity(), permission) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
-     * Request the location permission
-     */
-    private void requestPermission(String permission, int code) {
-        // The callback method gets the result of the request.
-        ActivityCompat.requestPermissions(getActivity(), new String[] { permission }, code);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_CONTACTS: {
-                queryContacts();
-            }
-
-        }
-    }
-
-    /**
-     * Hides the keyboard, and navigates back
-     */
-    private void goBack() {
-        // hide the keyboard
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-
-        mNavigationManager.navigateBack(getActivity());
     }
 
     /**

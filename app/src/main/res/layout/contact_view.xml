@@ -3,29 +3,34 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/padding_tiny"
-              android:background="@drawable/card"
-              android:gravity="center_vertical"
-              android:orientation="horizontal"
 
     >
 
-
-    <TextView
-        android:id="@+id/contact_name"
-        style="@style/Header3"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Contact name"/>
+        android:layout_margin="@dimen/padding_tiny"
+        android:background="@drawable/card"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/remove_icon"
-        style="@style/Header2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="{faw-close}"
-        tools:text="X"
-        />
 
+        <TextView
+            android:id="@+id/contact_name"
+            style="@style/Header3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Contact name"/>
+
+        <TextView
+            android:id="@+id/remove_icon"
+            style="@style/Header2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{faw-close}"
+            tools:text="X"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>

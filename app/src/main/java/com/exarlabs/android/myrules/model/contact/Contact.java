@@ -1,5 +1,6 @@
 package com.exarlabs.android.myrules.model.contact;
 
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 /**
@@ -97,11 +98,16 @@ public class Contact {
     public boolean equals(Object o) {
         if (o instanceof Contact) {
             Contact contact = (Contact) o;
-            if (contact.getId() != -1) {
+
+            // Compare first the id of the contact if we have two valid ids
+            if (contact.getId() != -1 && getId() != -1) {
                 return contact.getId() == getId();
-            } else if (!TextUtils.isEmpty(contact.getNumber())) {
-                return contact.getNumber().equals(getNumber());
-            } else if (!TextUtils.isEmpty(contact.getName())) {
+            } else if (!TextUtils.isEmpty(contact.getNumber()) && !TextUtils.isEmpty(getNumber())) {
+                // compare the numbers
+                String number = contact.getNumber();
+                String currentNumber = getNumber();
+                return PhoneNumberUtils.compare(number, currentNumber);
+            } else if (!TextUtils.isEmpty(contact.getName()) && !TextUtils.isEmpty(getName())) {
                 return contact.getNumber().equals(getName());
             }
         }

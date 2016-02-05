@@ -7,6 +7,8 @@ import java.util.List;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
+import com.exarlabs.android.myrules.business.database.DaoManager;
+import com.exarlabs.android.myrules.business.rule.RuleManager;
 import com.exarlabs.android.myrules.business.rule.action.Action;
 import com.exarlabs.android.myrules.business.rule.action.ActionManager;
 import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
@@ -19,9 +21,8 @@ import com.exarlabs.android.myrules.business.rule.condition.ConditionTree;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.AlwaysTrueConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
-import com.exarlabs.android.myrules.business.database.DaoManager;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEvent;
-import com.exarlabs.android.myrules.business.rule.RuleManager;
+import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.model.dao.RuleActionDao;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
@@ -80,6 +81,58 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     // ------------------------------------------------------------------------
     // TESTS
     // ------------------------------------------------------------------------
+
+    /**
+     * Test for Contact class
+     */
+    public void testContacts() {
+
+        // test the human readable function
+        int id = 15689;
+        String name = "Arthur";
+        String number = "+40740507135";
+
+        Contact contact = new Contact(id);
+        assertTrue(contact.toHumanReadableString().equals(Long.toString(id)));
+        contact.setNumber(number);
+        assertTrue(contact.toHumanReadableString().equals(number));
+        contact.setName(name);
+        assertTrue(contact.toHumanReadableString().equals(name));
+
+        // test equality
+
+        Contact contact1 = new Contact("0740 507 135");
+
+        assertTrue(contact.equals(contact));
+        assertTrue(contact.equals(contact1));
+        assertTrue(contact1.equals(contact));
+
+        Contact contact2 = new Contact("0740 507 136");
+        contact2.setName(name);
+
+        assertTrue(contact2.equals(contact2));
+        assertFalse(contact2.equals(contact1));
+        assertFalse(contact2.equals(contact));
+        assertFalse(contact.equals(contact2));
+        assertFalse(contact1.equals(contact2));
+
+        // modify a bit the contact2
+        contact2.setNumber(null);
+        assertTrue(contact2.equals(contact2));
+        assertTrue(contact2.equals(contact));
+        assertFalse(contact2.equals(contact1));
+        assertTrue(contact.equals(contact2));
+        assertFalse(contact1.equals(contact2));
+
+        contact.setName(null);
+        assertTrue(contact2.equals(contact2));
+        assertFalse(contact2.equals(contact));
+        assertFalse(contact2.equals(contact1));
+        assertFalse(contact.equals(contact2));
+        assertFalse(contact1.equals(contact2));
+
+    }
+
 
     /**
      * Tests if the condition are recursively correctly evaluated
@@ -262,7 +315,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     // ------------------------------------------------------------------------
 
     private void createDaos() {
-        mDaoManager = new DaoManager();
+        mDaoManager = new DaoManager(getContext());
         refreshDaos();
         deleteDao();
     }
@@ -285,7 +338,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     private RuleCondition generateNewCondition(int type) {
         RuleCondition c = new RuleCondition();
-        c.setConditionName("Condition" + Math.random()*1000);
+        c.setConditionName("Condition" + Math.random() * 1000);
         c.setType(type);
         return c;
     }
@@ -293,7 +346,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     private RuleAction generateNewAction(int type) {
         RuleAction ruleAction = new RuleAction();
         ruleAction.setType(type);
-        ruleAction.setActionName("Action" + Math.random()*1000);
+        ruleAction.setActionName("Action" + Math.random() * 1000);
         return ruleAction;
     }
 }

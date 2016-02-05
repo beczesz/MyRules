@@ -1,10 +1,7 @@
 package com.exarlabs.android.myrules.business.database;
 
-import javax.inject.Inject;
-
 import android.content.Context;
 
-import com.exarlabs.android.myrules.business.dagger.DaggerManager;
 import com.exarlabs.android.myrules.model.dao.DaoMaster;
 import com.exarlabs.android.myrules.model.dao.DaoSession;
 import com.exarlabs.android.myrules.model.dao.RuleActionDao;
@@ -38,7 +35,6 @@ public class DaoManager {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    @Inject
     public Context mContext;
 
     private final DaoMaster mDaoMaster;
@@ -48,8 +44,8 @@ public class DaoManager {
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
-    public DaoManager() {
-        DaggerManager.component().inject(this);
+    public DaoManager(Context context) {
+        mContext = context;
 
         // Initialize the green dao master
         DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(mContext, DATABASE_NAME, null);
