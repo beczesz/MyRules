@@ -20,6 +20,16 @@
         <item>Incoming SMS</item>
     </string-array>
 
+    <string-array name="list_of_weekdays">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+
     <string name="rule_name">Rule name</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
@@ -88,6 +98,7 @@
     <string name="condition_title_is_number_equal_condition">Is Number Equal With Condition</string>
     <string name="condition_title_contact_is_in_group_condition">Contact is in Group Condition</string>
     <string name="condition_title_is_time_in_interval_condition">Is Time in Interval Condition</string>
+    <string name="condition_title_day_is_in_list_condition">Day is in List Condition</string>
 
     <!-- Action names -->
     <string name="action_title_toast_incoming_event_action">Toast the Incoming Event</string>
