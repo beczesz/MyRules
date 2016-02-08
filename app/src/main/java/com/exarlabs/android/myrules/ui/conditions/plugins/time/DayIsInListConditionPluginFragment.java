@@ -74,7 +74,7 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
             viewHolder.mItemText.setText(itemText);
 
 
-            boolean isItemSelected = mSelectedDays.contains(itemText);
+            boolean isItemSelected = mSelectedDays != null && mSelectedDays.contains(itemText);
             viewHolder.mItemText.setBackgroundColor(
                             isItemSelected ? getResources().getColor(R.color.colorAccent) : getResources().getColor(R.color.transparent));
             viewHolder.mItemText.setEnabled(isItemSelected);

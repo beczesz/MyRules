@@ -163,6 +163,8 @@ public class RulesEngineService extends Service {
                         .flatMap(pair -> Observable.from(pair.second).map(record -> new Pair<>(pair.first, (RuleRecord) record)))
                         .filter(eventRulePair -> {
                             // Evaluate each rules and
+                            eventRulePair.second.build();
+
                             boolean result = eventRulePair.second.evaluate(eventRulePair.first);
                             logEventEvaluated(eventRulePair.first, eventRulePair.second, result);
                             return  result;

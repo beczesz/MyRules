@@ -54,6 +54,7 @@ public class Contact {
     }
 
     public Contact(String number) {
+        mId = -1;
         mNumber = number;
     }
 
