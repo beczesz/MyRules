@@ -126,9 +126,11 @@ public class IntervalTimeConditionPluginFragment extends ConditionPluginFragment
     }
 
     @Override
-    protected void saveChanges() {
+    protected boolean saveChanges() {
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mCondition.getId() != null) mCondition.rebuild();
+        if (mCondition.getId() != null) {
+            mCondition.reGenerateConditionPlugin();
+        }
 
         IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) mCondition.getConditionPlugin();
         double min = TimeUtil.stringToMinutes(mIntervalTimeStart.getText().toString());
@@ -137,6 +139,7 @@ public class IntervalTimeConditionPluginFragment extends ConditionPluginFragment
         plugin.setMin(min);
         plugin.setMax(max);
         plugin.setOutside(isOut);
+        return true;
     }
 
 //

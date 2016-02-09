@@ -103,9 +103,15 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
     }
 
     @Override
-    protected void saveChanges() {
+    protected boolean saveChanges() {
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if(mCondition.getId() != null) {
+            mPlugin = (ContactIsInGroupConditionPlugin) mCondition.reGenerateConditionPlugin();
+        }
+
         // save the changes
         mPlugin.setContactRows(mContactGroupFlowLayout.getContacts());
+        return true;
     }
 
     @OnClick (R.id.select_contact_button)

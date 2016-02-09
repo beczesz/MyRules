@@ -169,12 +169,20 @@ public abstract class Condition implements GreenDaoEntity, RuleComponent, Evalua
     }
 
     /**
-     * Rebuilds the action
+     * Rebuilds the condition
      */
     public void rebuild() {
         isBuilt = false;
         mConditionPlugin = null;
         build();
+    }
+
+    /**
+     * Regenerates the action plugin
+     */
+    public ConditionPlugin reGenerateConditionPlugin() {
+        mConditionPlugin = null;
+        return getConditionPlugin();
     }
 
     /**

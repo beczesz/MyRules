@@ -178,7 +178,12 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
     }
 
     @Override
-    protected void saveChanges() {
+    protected boolean saveChanges() {
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if (mCondition.getId() != null) {
+            mPlugin = (DayIsInListConditionPlugin) mCondition.reGenerateConditionPlugin();
+        }
+
         int childCount = mDaysGrid.getChildCount();
         List<String> selectedDays = new ArrayList<>();
 
@@ -193,6 +198,7 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
 
         // save the changes
         mPlugin.setSelectedDays(compacted);
+        return true;
     }
 
     // ------------------------------------------------------------------------

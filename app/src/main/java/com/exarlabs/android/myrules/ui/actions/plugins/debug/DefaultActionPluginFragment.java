@@ -83,10 +83,11 @@ public class DefaultActionPluginFragment extends ActionPluginFragment {
      * Saves the changed data when the Save button was pressed
      */
     @Override
-    protected void saveChanges() {
+    protected boolean saveChanges() {
         if(mAction.getId() != null) {
             mAction.reGenerateActionPlugin();
         }
+        return true;
     }
 
 // ------------------------------------------------------------------------

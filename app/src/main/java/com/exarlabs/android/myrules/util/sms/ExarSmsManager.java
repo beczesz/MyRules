@@ -11,7 +11,7 @@ import com.exarlabs.android.myrules.model.contact.Contact;
 /**
  * Created by atiyka on 2016.02.08..
  */
-public class MyRulesSmsManager {
+public class ExarSmsManager {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -35,7 +35,7 @@ public class MyRulesSmsManager {
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-    public MyRulesSmsManager(Context context){
+    public ExarSmsManager(Context context){
         mContext = context;
     }
 

@@ -286,9 +286,14 @@ public class ConditionDetailsFragment extends RuleComponentDetailsFragment imple
     @Override
     protected void onComponentReadyToSave() {
         mRuleCondition.setConditionName(mConditionName.getText().toString().trim());
-        mConditionPluginFragment.saveChanges();
-        mConditionManager.saveCondition(mRuleCondition);
-        goBack();
+
+        // ToDo: delete the previous properties, if there was
+
+        // if the plugin fragment succeeded to save the values, then save the condition
+        if(mConditionPluginFragment.saveChanges()) {
+            mConditionManager.saveCondition(mRuleCondition);
+            goBack();
+        }
     }
 
     /**
@@ -340,7 +345,6 @@ public class ConditionDetailsFragment extends RuleComponentDetailsFragment imple
     /**
      * Initializes the ConditionPluginFragment with the selected type, and inflates the corresponding layout
      *
-     * @param conditionType
      */
     private void inflateLayout() {
         int type = mLastSelecedType == null ? Condition.Type.DEBUG_ALWAYS_TRUE.getType() : mLastSelecedType.getType();

@@ -121,8 +121,14 @@ public class ForwardSMSToGroupActionPluginFragment extends ActionPluginFragment 
     }
 
     @Override
-    protected void saveChanges() {
+    protected boolean saveChanges() {
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if (mAction.getId() != null) {
+            mPlugin = (ForwardSmsActionPlugin) mAction.reGenerateActionPlugin();
+        }
         mPlugin.setContacts(mSelectedContactsList);
+
+        return true;
     }
 
     @OnClick (R.id.select_contact_button)

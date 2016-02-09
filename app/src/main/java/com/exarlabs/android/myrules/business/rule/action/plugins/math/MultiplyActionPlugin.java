@@ -10,6 +10,7 @@ import com.exarlabs.android.myrules.business.rule.RuleComponentProperty;
 import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.plugins.math.NumberEvent;
+import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
 
 /**
  * Example action plugin which calculates the multiplication of a number
@@ -50,7 +51,8 @@ public class MultiplyActionPlugin extends ActionPlugin {
     public void initialize(List<? extends RuleComponentProperty> properties) {
         super.initialize(properties);
 
-        mValue = Double.parseDouble(getProperty(KEY_VALUE).getValue());
+        RuleActionProperty value = getProperty(KEY_VALUE);
+        mValue = value != null ? Double.parseDouble(value.getValue()) : 0;
     }
 
 

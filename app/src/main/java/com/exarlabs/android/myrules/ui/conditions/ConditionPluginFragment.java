@@ -52,7 +52,7 @@ public abstract class ConditionPluginFragment extends BaseFragment {
     /**
      * Saves the changes into the condition
      */
-    protected abstract void saveChanges();
+    protected abstract boolean saveChanges();
 
     @Override
     public void onResume() {

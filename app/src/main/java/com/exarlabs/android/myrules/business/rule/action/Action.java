@@ -181,9 +181,9 @@ public abstract class Action implements GreenDaoEntity, RuleComponent, Buildable
     /**
      * Regenerates the action plugin
      */
-    public void reGenerateActionPlugin() {
+    public ActionPlugin reGenerateActionPlugin() {
         mActionPlugin = null;
-        getActionPlugin();
+        return getActionPlugin();
     }
 
     @Override

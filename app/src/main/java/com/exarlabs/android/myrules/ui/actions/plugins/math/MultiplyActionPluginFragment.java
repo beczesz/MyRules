@@ -54,7 +54,7 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
     private View mRootView;
 
     private RuleAction mAction;
-    private MultiplyActionPlugin mMultiplyActionPlugin;
+    private MultiplyActionPlugin mPlugin;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -86,15 +86,15 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
          * Check if the action has the right plugin type, and we are in edit mode
          */
         if (action.getId() != null && action.getActionPlugin() instanceof MultiplyActionPlugin) {
-            mMultiplyActionPlugin = (MultiplyActionPlugin) action.getActionPlugin();
+            mPlugin = (MultiplyActionPlugin) action.getActionPlugin();
         }
 
     }
 
     @Override
     protected void refreshUI() {
-        if (mMultiplyActionPlugin != null) {
-            mNumber.setText((int) mMultiplyActionPlugin.getValue() + "");
+        if (mPlugin != null) {
+            mNumber.setText((int) mPlugin.getValue() + "");
         }
     }
 
@@ -102,15 +102,16 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
      * Saves the changed data when the Save button was pressed
      */
     @Override
-    protected void saveChanges() {
+    protected boolean saveChanges() {
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
         if (mAction.getId() != null) {
-            mAction.reGenerateActionPlugin();
+            mPlugin = (MultiplyActionPlugin) mAction.reGenerateActionPlugin();
         }
 
         double value = Double.parseDouble(mNumber.getText().toString());
-        ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
+        mPlugin.setValue(value);
 
+        return true;
     }
 
 // ------------------------------------------------------------------------

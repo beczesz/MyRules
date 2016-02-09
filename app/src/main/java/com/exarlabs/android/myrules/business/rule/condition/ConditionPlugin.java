@@ -96,7 +96,7 @@ public abstract class ConditionPlugin implements Evaluable, RuleComponentPlugin 
     }
 
     /**
-     * Retruns the propery with the given key
+     * Returns the property with the given key
      *
      * @param key
      * @return

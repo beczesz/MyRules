@@ -18,7 +18,7 @@ import com.exarlabs.android.myrules.business.rule.event.Event;
 import com.exarlabs.android.myrules.business.rule.event.plugins.ContactEvent;
 import com.exarlabs.android.myrules.model.contact.Contact;
 import com.exarlabs.android.myrules.model.dao.RuleActionProperty;
-import com.exarlabs.android.myrules.util.sms.MyRulesSmsManager;
+import com.exarlabs.android.myrules.util.sms.ExarSmsManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -97,13 +97,11 @@ public class SendSmsActionPlugin extends ActionPlugin {
             e.printStackTrace();
         }
 
-        if (getProperty(KEY_MESSAGE) != null) {
-            mMessage = getProperty(KEY_MESSAGE).getValue();
-        }
+        RuleActionProperty message = getProperty(KEY_MESSAGE);
+        mMessage = message != null ? message.getValue() : "";
 
-        if (getProperty(KEY_SEND_TO_CONTACT_FROM_EVENT) != null) {
-            mSendToContactFromEvent = Boolean.parseBoolean(getProperty(KEY_SEND_TO_CONTACT_FROM_EVENT).getValue());
-        }
+        RuleActionProperty contact = getProperty(KEY_SEND_TO_CONTACT_FROM_EVENT);
+        mSendToContactFromEvent = contact != null && Boolean.parseBoolean(contact.getValue());
     }
 
     @Override
@@ -138,7 +136,7 @@ public class SendSmsActionPlugin extends ActionPlugin {
         Log.w(TAG, "Phone number: " + contact.getNumber());
         Log.w(TAG, "Msg: " + message);
 
-        MyRulesSmsManager manager = new MyRulesSmsManager(getContext());
+        ExarSmsManager manager = new ExarSmsManager(getContext());
 
         manager.sendSms(contact, message);
     }

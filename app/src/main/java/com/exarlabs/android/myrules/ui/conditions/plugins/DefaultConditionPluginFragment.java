@@ -79,11 +79,13 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
     }
 
     @Override
-    protected void saveChanges() {
-        if(mCondition.getId() != null) {
-            mCondition.rebuild();
+    protected boolean saveChanges() {
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if (mCondition.getId() != null) {
+            mCondition.reGenerateConditionPlugin();
         }
 
+        return true;
     }
 
 // ------------------------------------------------------------------------

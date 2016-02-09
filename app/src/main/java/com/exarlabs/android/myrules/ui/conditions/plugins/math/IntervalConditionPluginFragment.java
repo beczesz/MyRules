@@ -47,13 +47,13 @@ public class IntervalConditionPluginFragment extends ConditionPluginFragment {
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    @Bind(R.id.interval_start)
+    @Bind (R.id.interval_start)
     public EditText mIntervalStart;
 
-    @Bind(R.id.interval_end)
+    @Bind (R.id.interval_end)
     public EditText mIntervalEnd;
 
-    @Bind(R.id.is_outside)
+    @Bind (R.id.is_outside)
     public CheckBox mIsOutside;
 
     private RuleCondition mCondition;
@@ -95,28 +95,55 @@ public class IntervalConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void refreshUI() {
-        if (mPlugin != null) {
-            mIntervalStart.setText((int) mPlugin.getMin() + "");
-            mIntervalEnd.setText((int) mPlugin.getMax() + "");
+        if (mPlugin != null && mPlugin.getMin() != mPlugin.getMax()) {
+            mIntervalStart.setText(mPlugin.getMin() + "");
+            mIntervalEnd.setText(mPlugin.getMax() + "");
             mIsOutside.setChecked(mPlugin.isOutside());
         }
     }
 
     @Override
-    protected void saveChanges() {
+    protected boolean saveChanges() {
         // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mCondition.getId() != null) mCondition.rebuild();
+        if (mCondition.getId() != null) {
+            mPlugin = (IsNumberInIntervalConditionPlugin) mCondition.reGenerateConditionPlugin();
+        }
 
-        IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) mCondition.getConditionPlugin();
+        if (!validateInput()) {
+            return false;
+        }
         double min = Double.parseDouble(mIntervalStart.getText().toString());
         double max = Double.parseDouble(mIntervalEnd.getText().toString());
         boolean isOut = mIsOutside.isChecked();
-        plugin.setMin(min);
-        plugin.setMax(max);
-        plugin.setOutside(isOut);
+
+        mPlugin.setMin(min);
+        mPlugin.setMax(max);
+        mPlugin.setOutside(isOut);
+        return true;
     }
 
-// ------------------------------------------------------------------------
-// GETTERS / SETTTERS
-// ------------------------------------------------------------------------
+    /**
+     * Checks if the input values are corrects
+     *
+     * @return true if everything is ok.
+     */
+    private boolean validateInput() {
+        double min = Double.parseDouble(mIntervalStart.getText().toString());
+        double max = Double.parseDouble(mIntervalEnd.getText().toString());
+
+        if (min == max) {
+            mIntervalEnd.setError(getString(R.string.msg_err_not_an_interval));
+            return false;
+        }
+        if(min > max){
+            mIntervalEnd.setError(getString(R.string.msg_err_bad_interval));
+            return false;
+        }
+
+        return true;
+    }
+
+    // ------------------------------------------------------------------------
+    // GETTERS / SETTTERS
+    // ------------------------------------------------------------------------
 }
