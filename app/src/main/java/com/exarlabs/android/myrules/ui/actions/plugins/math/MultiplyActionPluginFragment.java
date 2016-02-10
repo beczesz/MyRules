@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.rule.action.plugins.math.MultiplyActionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.R;
@@ -48,13 +49,10 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
     // FIELDS
     // ------------------------------------------------------------------------
 
-    @Bind(R.id.number_multiply)
+    @Bind (R.id.number_multiply)
     public EditText mNumber;
 
     private View mRootView;
-
-    private RuleAction mAction;
-    private MultiplyActionPlugin mMultiplyActionPlugin;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -81,20 +79,15 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
 
     @Override
     protected void init(RuleAction action) {
-        mAction = action;
-        /*
-         * Check if the action has the right plugin type, and we are in edit mode
-         */
-        if (action.getId() != null && action.getActionPlugin() instanceof MultiplyActionPlugin) {
-            mMultiplyActionPlugin = (MultiplyActionPlugin) action.getActionPlugin();
-        }
-
+        super.init(action);
     }
 
     @Override
     protected void refreshUI() {
-        if (mMultiplyActionPlugin != null) {
-            mNumber.setText((int) mMultiplyActionPlugin.getValue() + "");
+        ActionPlugin plugin = getPlugin();
+        if (plugin != null && plugin instanceof MultiplyActionPlugin) {
+            MultiplyActionPlugin multiplyPlugin = (MultiplyActionPlugin) plugin;
+            mNumber.setText((int) multiplyPlugin.getValue() + "");
         }
     }
 
@@ -102,18 +95,16 @@ public class MultiplyActionPluginFragment extends ActionPluginFragment {
      * Saves the changed data when the Save button was pressed
      */
     @Override
-    protected void saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mAction.getId() != null) {
-            mAction.reGenerateActionPlugin();
-        }
+    protected boolean saveChanges() {
+        super.saveChanges();
 
         double value = Double.parseDouble(mNumber.getText().toString());
-        ((MultiplyActionPlugin) mAction.getActionPlugin()).setValue(value);
+        ((MultiplyActionPlugin) getPlugin()).setValue(value);
 
+        return true;
     }
 
-// ------------------------------------------------------------------------
-// GETTERS / SETTTERS
-// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // GETTERS / SETTTERS
+    // ------------------------------------------------------------------------
 }

@@ -295,8 +295,8 @@ public class DebugOverviewFragment extends BaseFragment implements OnTriggerEven
         RuleCondition cTrue1 = mConditionManager.getDefaultCondition();
 
         RuleCondition cInterval = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_IN_INTERVAL.getType());
-        ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMin(5);
-        ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMax(500);
+        ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMin(5.0);
+        ((IsNumberInIntervalConditionPlugin) cInterval.getConditionPlugin()).setMax(500.0);
 
         RuleCondition cPrime = generateNewCondition(Condition.Type.ARITHMETRIC_IS_NUMBER_PRIME.getType());
 

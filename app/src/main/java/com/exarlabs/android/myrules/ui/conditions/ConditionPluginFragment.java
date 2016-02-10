@@ -1,5 +1,6 @@
 package com.exarlabs.android.myrules.ui.conditions;
 
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 
@@ -29,6 +30,9 @@ public abstract class ConditionPluginFragment extends BaseFragment {
     // FIELDS
     // ------------------------------------------------------------------------
 
+    private RuleCondition mCondition;
+    private ConditionPlugin mPlugin;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -41,7 +45,11 @@ public abstract class ConditionPluginFragment extends BaseFragment {
      * Initilizes the fragment with a condition.
      * @param condition
      */
-    protected abstract void init(RuleCondition condition);
+    protected void init(RuleCondition condition){
+        mCondition = condition;
+        mPlugin = condition.getConditionPlugin();
+
+    }
 
     /**
      * Refreshes the UI with the plugin data. This is called after onViewCreated
@@ -52,7 +60,14 @@ public abstract class ConditionPluginFragment extends BaseFragment {
     /**
      * Saves the changes into the condition
      */
-    protected abstract void saveChanges();
+    protected boolean saveChanges(){
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if (mCondition.getId() != null) {
+            mPlugin = mCondition.reGenerateConditionPlugin();
+        }
+
+        return true;
+    }
 
     @Override
     public void onResume() {
@@ -63,4 +78,13 @@ public abstract class ConditionPluginFragment extends BaseFragment {
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+
+    public ConditionPlugin getPlugin() {
+        return mPlugin;
+    }
+
+    public RuleCondition getCondition() {
+        return mCondition;
+    }
 }

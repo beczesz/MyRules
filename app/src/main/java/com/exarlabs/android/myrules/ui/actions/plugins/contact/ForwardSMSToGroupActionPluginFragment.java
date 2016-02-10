@@ -66,10 +66,6 @@ public class ForwardSMSToGroupActionPluginFragment extends ActionPluginFragment 
 
     private List<Contact> mSelectedContactsList;
 
-    private RuleAction mAction;
-    private ForwardSmsActionPlugin mPlugin;
-
-
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -99,14 +95,10 @@ public class ForwardSMSToGroupActionPluginFragment extends ActionPluginFragment 
 
     @Override
     protected void init(RuleAction action) {
-        mAction = action;
-
-          /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (action.getActionPlugin() instanceof ForwardSmsActionPlugin) {
-            mPlugin = (ForwardSmsActionPlugin) action.getActionPlugin();
-            mSelectedContactsList = mPlugin.getContacts();
+        super.init(action);
+        if (getPlugin() instanceof ForwardSmsActionPlugin) {
+            ForwardSmsActionPlugin plugin = (ForwardSmsActionPlugin) getPlugin();
+            mSelectedContactsList = plugin.getContacts();
         }
     }
 
@@ -121,8 +113,11 @@ public class ForwardSMSToGroupActionPluginFragment extends ActionPluginFragment 
     }
 
     @Override
-    protected void saveChanges() {
-        mPlugin.setContacts(mSelectedContactsList);
+    protected boolean saveChanges() {
+        super.saveChanges();
+
+        ((ForwardSmsActionPlugin) getPlugin()).setContacts(mSelectedContactsList);
+        return true;
     }
 
     @OnClick (R.id.select_contact_button)

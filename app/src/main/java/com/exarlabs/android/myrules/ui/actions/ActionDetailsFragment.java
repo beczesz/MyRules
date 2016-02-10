@@ -362,7 +362,6 @@ public class ActionDetailsFragment extends RuleComponentDetailsFragment implemen
     /**
      * Initializes the ActionPluginFragment with the selected type, and inflates the corresponding layout
      *
-     * @param actionType
      */
     private void inflateLayout() {
         int actionType = mLastSelecedType == null ? Action.Type.ARITHMETRIC_ACTION_FIBONACCI.getType() : mLastSelecedType.getType();

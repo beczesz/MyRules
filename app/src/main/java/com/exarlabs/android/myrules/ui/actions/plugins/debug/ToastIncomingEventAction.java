@@ -10,7 +10,7 @@ import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.business.rule.event.Event;
 
 /**
- * Just toasts and logs the incomming event.
+ * Just toasts and logs the incoming event.
  * Created by becze on 2/4/2016.
  */
 public class ToastIncomingEventAction extends ActionPlugin {

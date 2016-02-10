@@ -75,7 +75,10 @@
     <string name="set_max_time">Set to time</string>
     <string name="time_interval_info">Time interval</string>
 
-    <string name="msg_err_bad_time_interval">Min time have to be less or equal then max time!</string>
+    <string name="msg_err_bad_time_interval">Min time has to be less or equal than max time!</string>
+
+    <string name="msg_err_bad_interval">Min has to be less than max!</string>
+    <string name="msg_err_not_an_interval">This is not an interval!</string>
 
     <!-- Font awesome icons-->
     <string name="lbl_start_rules_engine_icon">{faw-play}</string>

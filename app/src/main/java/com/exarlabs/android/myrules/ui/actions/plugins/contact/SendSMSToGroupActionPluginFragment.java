@@ -74,6 +74,7 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
 
     private List<Contact> mSelectedContactsList;
     private boolean mIdSendToContactFromEvent;
+    private String mSmsTemplate;
 
     private RuleAction mAction;
     private SendSmsActionPlugin mPlugin;
@@ -108,15 +109,13 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
 
     @Override
     protected void init(RuleAction action) {
-        mAction = action;
+        super.init(action);
 
-          /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (action.getActionPlugin() instanceof SendSmsActionPlugin) {
-            mPlugin = (SendSmsActionPlugin) action.getActionPlugin();
-            mSelectedContactsList = mPlugin.getContacts();
-            mIdSendToContactFromEvent = mPlugin.isSendToContactFromEvent();
+        if (getPlugin() instanceof SendSmsActionPlugin) {
+            SendSmsActionPlugin plugin = (SendSmsActionPlugin) getPlugin();
+            mSelectedContactsList = plugin.getContacts();
+            mIdSendToContactFromEvent = plugin.isSendToContactFromEvent();
+            mSmsTemplate = plugin.getMessage();
         }
     }
 
@@ -128,14 +127,26 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
         }
 
         mSelectedContacts.setText(contactsToString.toString());
-        mRadioGroup.check(mIdSendToContactFromEvent ? R.id.radio_send_to_contact_from_event : R.id.radio_group);
+        // select the radio
+        mRadioGroup.check(mIdSendToContactFromEvent ? R.id.radio_send_to_contact_from_event : R.id.radio_send_to_group);
+
+        // set (en/dis)abled the select contacts button
+        mSelecButton.setEnabled(!mIdSendToContactFromEvent);
+
+        // set the saved text in edit mode
+        if (getAction().getId() != null)
+            mSMSTemplateEditText.setText(mSmsTemplate);
     }
 
     @Override
-    protected void saveChanges() {
-        mPlugin.setContacts(mSelectedContactsList);
-        mPlugin.setMessage(mSMSTemplateEditText.getText().toString().trim());
-        mPlugin.setSendToContactFromEvent(mIdSendToContactFromEvent);
+    protected boolean saveChanges() {
+        super.saveChanges();
+
+        SendSmsActionPlugin plugin = (SendSmsActionPlugin) getPlugin();
+        plugin.setContacts(mSelectedContactsList);
+        plugin.setMessage(mSMSTemplateEditText.getText().toString().trim());
+        plugin.setSendToContactFromEvent(mIdSendToContactFromEvent);
+        return true;
     }
 
     @OnClick (R.id.select_contact_button)
@@ -156,6 +167,8 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
         switch (mRadioGroup.getCheckedRadioButtonId()) {
             case R.id.radio_send_to_contact_from_event:
                 mIdSendToContactFromEvent = true;
+                mSelectedContactsList.clear();
+                mSelectedContacts.setText("");
                 break;
 
             case R.id.radio_send_to_group:

@@ -3,6 +3,7 @@ package com.exarlabs.android.myrules.ui.actions;
 import android.os.Bundle;
 import android.view.View;
 
+import com.exarlabs.android.myrules.business.rule.action.ActionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleAction;
 import com.exarlabs.android.myrules.ui.BaseFragment;
 
@@ -32,6 +33,8 @@ public abstract class ActionPluginFragment extends BaseFragment {
     // FIELDS
     // ------------------------------------------------------------------------
 
+    private RuleAction mAction;
+    private ActionPlugin mPlugin;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -44,7 +47,11 @@ public abstract class ActionPluginFragment extends BaseFragment {
      * Initilizes the fragment with an action.
      * @param action
      */
-    protected abstract void init(RuleAction action);
+    protected void init(RuleAction action){
+        mAction = action;
+
+        mPlugin = action.getActionPlugin();
+    }
 
     /**
      * Refreshes the UI with the plugin data. This is called after onViewCreated
@@ -54,7 +61,14 @@ public abstract class ActionPluginFragment extends BaseFragment {
     /**
      * Saves the changes into the action
      */
-    protected abstract void saveChanges();
+    protected boolean saveChanges(){
+        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
+        if (mAction.getId() != null) {
+            mPlugin = mAction.reGenerateActionPlugin();
+        }
+
+        return true;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -63,8 +77,16 @@ public abstract class ActionPluginFragment extends BaseFragment {
 
     }
 
-
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+
+    public RuleAction getAction() {
+        return mAction;
+    }
+
+    public ActionPlugin getPlugin() {
+        return mPlugin;
+    }
 }

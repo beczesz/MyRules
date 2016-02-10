@@ -44,7 +44,6 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    private RuleCondition mCondition;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -70,7 +69,8 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void init(RuleCondition condition) {
-        mCondition = condition;
+        // it's necessary to call first the super method!
+        super.init(condition);
     }
 
     @Override
@@ -79,11 +79,11 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
     }
 
     @Override
-    protected void saveChanges() {
-        if(mCondition.getId() != null) {
-            mCondition.rebuild();
-        }
+    protected boolean saveChanges() {
+        // it's necessary to call first the super method!
+        super.saveChanges();
 
+        return true;
     }
 
 // ------------------------------------------------------------------------

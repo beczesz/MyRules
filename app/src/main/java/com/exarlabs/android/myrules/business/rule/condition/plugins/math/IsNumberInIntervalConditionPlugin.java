@@ -60,9 +60,10 @@ public class IsNumberInIntervalConditionPlugin extends ConditionPlugin {
 
         RuleConditionProperty minProperty = getProperty(KEY_INTERVAL_MIN);
         mMin = minProperty != null ? Double.parseDouble(minProperty.getValue()) : 0;
-        RuleConditionProperty property = getProperty(KEY_INTERVAL_MAX);
-        mMax = minProperty != null ? Double.parseDouble(property.getValue()) : 0;
-        mIsOutside = Boolean.parseBoolean(getProperty(KEY_INTERVAL_IS_OUT).getValue());
+        RuleConditionProperty maxProperty = getProperty(KEY_INTERVAL_MAX);
+        mMax = maxProperty != null ? Double.parseDouble(maxProperty.getValue()) : 0;
+        RuleComponentProperty isOut = getProperty(KEY_INTERVAL_IS_OUT);
+        mIsOutside = isOut != null && Boolean.parseBoolean(isOut.getValue());
     }
 
     @Override

@@ -77,7 +77,9 @@ public class ContactIsInGroupConditionPlugin extends ConditionPlugin {
 
         try {
             RuleConditionProperty groupJSON = getProperty(KEY_GROUP_SELECTION);
-            mContactRows = mGson.fromJson(groupJSON.getValue(), mDatasetListType);
+            if (groupJSON != null) {
+                mContactRows = mGson.fromJson(groupJSON.getValue(), mDatasetListType);
+            }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }

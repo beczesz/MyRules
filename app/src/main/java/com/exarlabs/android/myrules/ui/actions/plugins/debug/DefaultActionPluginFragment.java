@@ -44,8 +44,6 @@ public class DefaultActionPluginFragment extends ActionPluginFragment {
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    private RuleAction mAction;
-
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -71,7 +69,7 @@ public class DefaultActionPluginFragment extends ActionPluginFragment {
 
     @Override
     protected void init(RuleAction action) {
-        mAction = action;
+        super.init(action);
     }
 
     @Override
@@ -83,10 +81,10 @@ public class DefaultActionPluginFragment extends ActionPluginFragment {
      * Saves the changed data when the Save button was pressed
      */
     @Override
-    protected void saveChanges() {
-        if(mAction.getId() != null) {
-            mAction.reGenerateActionPlugin();
-        }
+    protected boolean saveChanges() {
+        super.saveChanges();
+
+        return true;
     }
 
 // ------------------------------------------------------------------------

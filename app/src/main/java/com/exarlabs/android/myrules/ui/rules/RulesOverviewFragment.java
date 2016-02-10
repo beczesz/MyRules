@@ -100,6 +100,7 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
 
     private RulesArrayAdapter mAdapter;
     private List<RuleRecord> mRuleRecords;
+    private BroadcastReceiver mRulesEngineStatusBarChangesReceiver;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -117,14 +118,13 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
         filter.addAction(RulesEngineService.Status.ENGINE_RUNNING);
         filter.addAction(RulesEngineService.Status.ENGINE_STOPPED);
 
-        getActivity().registerReceiver(new BroadcastReceiver() {
+        mRulesEngineStatusBarChangesReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
                 updateRuleEngineStatusBar(RulesEngineService.isRunning());
             }
-        }, filter);
-
-
+        };
+        getActivity().registerReceiver(mRulesEngineStatusBarChangesReceiver, filter);
     }
 
     @Nullable
@@ -162,6 +162,12 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
         updateUI();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(mRulesEngineStatusBarChangesReceiver);
+    }
+
     /**
      * Update the list of rules
      */
@@ -184,8 +190,6 @@ public class RulesOverviewFragment extends BaseFragment implements OnRuleEditLis
         } else {
             getActivity().stopService(new Intent(getActivity(), RulesEngineService.class));
         }
-
-        updateRuleEngineStatusBar(!RulesEngineService.isRunning());
     }
 
     private void updateRuleEngineStatusBar(boolean isRunning) {

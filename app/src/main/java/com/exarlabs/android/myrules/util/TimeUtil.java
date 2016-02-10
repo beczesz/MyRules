@@ -9,7 +9,6 @@ import java.util.Calendar;
  * Created by jarek on 2/3/16.
  */
 public class TimeUtil {
-    public static final Calendar CALENDAR = Calendar.getInstance();
     /**
      * Pattern for displaying the time.
      */
@@ -33,7 +32,8 @@ public class TimeUtil {
      */
 
     public static int currentTimeToMinutes() {
-        return CALENDAR.get(Calendar.HOUR_OF_DAY) * 60 + CALENDAR.get(Calendar.MINUTE);
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
     }
 
     public static int hourMinuteToMinutes(int hour, int minute) {
@@ -47,9 +47,10 @@ public class TimeUtil {
      * @return formatted string of the time
      */
     public static String hourMinuteToString(int hour, int minute) {
-        CALENDAR.set(Calendar.HOUR_OF_DAY, hour);
-        CALENDAR.set(Calendar.MINUTE, minute);
-        return TIME_FORMATTER.format(CALENDAR.getTime());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        return TIME_FORMATTER.format(calendar.getTime());
     }
 
     /**
@@ -64,15 +65,16 @@ public class TimeUtil {
      * @param timeString
      * @return minutes as int
      */
-    //TODO to handle exeption
+    //TODO to handle exception
     public static int stringToMinutes(String timeString) {
+        Calendar calendar = Calendar.getInstance();
         try {
-            CALENDAR.setTime(TIME_FORMATTER.parse(timeString));
+            calendar.setTime(TIME_FORMATTER.parse(timeString));
         } catch (ParseException e) {
             e.printStackTrace();
             return -1;
         }
-        return CALENDAR.get(Calendar.HOUR_OF_DAY) * 60 + CALENDAR.get(Calendar.MINUTE);
+        return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
     }
 
     // ------------------------------------------------------------------------
