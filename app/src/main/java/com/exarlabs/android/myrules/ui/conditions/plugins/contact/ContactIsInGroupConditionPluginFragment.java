@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.contact.ContactIsInGroupConditionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
@@ -55,9 +56,6 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
     @Bind (R.id.selected_contacts)
     public ContactGroupFlowLayout mContactGroupFlowLayout;
 
-    private RuleCondition mCondition;
-    private ContactIsInGroupConditionPlugin mPlugin;
-
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -75,7 +73,7 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
 
     @Override
     protected void init(RuleCondition condition) {
-        mCondition = condition;
+        super.init(condition);
     }
 
     @Nullable
@@ -87,30 +85,27 @@ public class ContactIsInGroupConditionPluginFragment extends ConditionPluginFrag
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (mCondition.getConditionPlugin() instanceof ContactIsInGroupConditionPlugin) {
-            mPlugin = (ContactIsInGroupConditionPlugin) mCondition.getConditionPlugin();
-            mContactGroupFlowLayout.addAll(mPlugin.getContactRows());
-            mContactGroupFlowLayout.refreshLayout();
-        }
     }
 
 
     @Override
     protected void refreshUI() {
+        ConditionPlugin plugin = getPlugin();
+        if (plugin != null && plugin instanceof ContactIsInGroupConditionPlugin) {
+            ContactIsInGroupConditionPlugin contactPlugin = (ContactIsInGroupConditionPlugin) plugin;
+
+            mContactGroupFlowLayout.addAll(contactPlugin.getContactRows());
+            mContactGroupFlowLayout.refreshLayout();
+        }
     }
 
     @Override
     protected boolean saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if(mCondition.getId() != null) {
-            mPlugin = (ContactIsInGroupConditionPlugin) mCondition.reGenerateConditionPlugin();
-        }
+        super.saveChanges();
 
         // save the changes
-        mPlugin.setContactRows(mContactGroupFlowLayout.getContacts());
+        ContactIsInGroupConditionPlugin plugin = (ContactIsInGroupConditionPlugin) getPlugin();
+        plugin.setContactRows(mContactGroupFlowLayout.getContacts());
         return true;
     }
 

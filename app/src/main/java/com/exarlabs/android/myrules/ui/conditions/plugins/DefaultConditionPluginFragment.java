@@ -44,7 +44,6 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
     // ------------------------------------------------------------------------
     private View mRootView;
 
-    private RuleCondition mCondition;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -70,7 +69,8 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void init(RuleCondition condition) {
-        mCondition = condition;
+        // it's necessary to call first the super method!
+        super.init(condition);
     }
 
     @Override
@@ -80,10 +80,8 @@ public class DefaultConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected boolean saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mCondition.getId() != null) {
-            mCondition.reGenerateConditionPlugin();
-        }
+        // it's necessary to call first the super method!
+        super.saveChanges();
 
         return true;
     }

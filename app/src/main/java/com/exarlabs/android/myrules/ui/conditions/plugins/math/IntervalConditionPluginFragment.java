@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
@@ -56,8 +57,6 @@ public class IntervalConditionPluginFragment extends ConditionPluginFragment {
     @Bind (R.id.is_outside)
     public CheckBox mIsOutside;
 
-    private RuleCondition mCondition;
-    private IsNumberInIntervalConditionPlugin mPlugin;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -83,42 +82,38 @@ public class IntervalConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void init(RuleCondition condition) {
-
-        mCondition = condition;
-        /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (condition.getId() != null && condition.getConditionPlugin() instanceof IsNumberInIntervalConditionPlugin) {
-            mPlugin = (IsNumberInIntervalConditionPlugin) condition.getConditionPlugin();
-        }
+        super.init(condition);
     }
 
     @Override
     protected void refreshUI() {
-        if (mPlugin != null && mPlugin.getMin() != mPlugin.getMax()) {
-            mIntervalStart.setText(mPlugin.getMin() + "");
-            mIntervalEnd.setText(mPlugin.getMax() + "");
-            mIsOutside.setChecked(mPlugin.isOutside());
+        ConditionPlugin plugin = getPlugin();
+        if (plugin != null && plugin instanceof IsNumberInIntervalConditionPlugin) {
+            IsNumberInIntervalConditionPlugin intervalPlugin = (IsNumberInIntervalConditionPlugin) plugin;
+
+            if (intervalPlugin.getMin() != intervalPlugin.getMax()) {
+                mIntervalStart.setText(intervalPlugin.getMin() + "");
+                mIntervalEnd.setText(intervalPlugin.getMax() + "");
+                mIsOutside.setChecked(intervalPlugin.isOutside());
+            }
         }
     }
 
     @Override
     protected boolean saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mCondition.getId() != null) {
-            mPlugin = (IsNumberInIntervalConditionPlugin) mCondition.reGenerateConditionPlugin();
-        }
+        super.saveChanges();
 
         if (!validateInput()) {
             return false;
         }
+        IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) getPlugin();
         double min = Double.parseDouble(mIntervalStart.getText().toString());
         double max = Double.parseDouble(mIntervalEnd.getText().toString());
         boolean isOut = mIsOutside.isChecked();
 
-        mPlugin.setMin(min);
-        mPlugin.setMax(max);
-        mPlugin.setOutside(isOut);
+        plugin.setMin(min);
+        plugin.setMax(max);
+        plugin.setOutside(isOut);
         return true;
     }
 

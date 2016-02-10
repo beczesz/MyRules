@@ -107,9 +107,6 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
     @Bind (R.id.list_of_days)
     public GridView mDaysGrid;
 
-    private RuleCondition mCondition;
-    private DayIsInListConditionPlugin mPlugin;
-
     private List<String> mSelectedDays;
     private WeekDaysAdapter mAdapter;
 
@@ -155,18 +152,14 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
 
     @Override
     protected void init(RuleCondition condition) {
-        mCondition = condition;
-        /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (condition.getConditionPlugin() instanceof DayIsInListConditionPlugin) {
-            mPlugin = (DayIsInListConditionPlugin) condition.getConditionPlugin();
-            if (condition.isAttached()) {
-                int selectedDays = mPlugin.getSelectedDays();
-                WeekDaysCompostator weekDaysCompostator = new WeekDaysCompostator();
-                List<String> selectedDaysList = weekDaysCompostator.getListFromCompacted(selectedDays);
-                mSelectedDays = selectedDaysList;
-            }
+        super.init(condition);
+
+        if (condition.getConditionPlugin() instanceof DayIsInListConditionPlugin && condition.isAttached()) {
+            DayIsInListConditionPlugin plugin = (DayIsInListConditionPlugin) getPlugin();
+            int selectedDays = plugin.getSelectedDays();
+            WeekDaysCompostator weekDaysCompostator = new WeekDaysCompostator();
+            List<String> selectedDaysList = weekDaysCompostator.getListFromCompacted(selectedDays);
+            mSelectedDays = selectedDaysList;
         }
     }
 
@@ -179,10 +172,8 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
 
     @Override
     protected boolean saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mCondition.getId() != null) {
-            mPlugin = (DayIsInListConditionPlugin) mCondition.reGenerateConditionPlugin();
-        }
+        // it's necessary to call first the super method!
+        super.saveChanges();
 
         int childCount = mDaysGrid.getChildCount();
         List<String> selectedDays = new ArrayList<>();
@@ -197,7 +188,8 @@ public class DayIsInListConditionPluginFragment extends ConditionPluginFragment 
         int compacted = weekDaysCompostator.compactList(selectedDays);
 
         // save the changes
-        mPlugin.setSelectedDays(compacted);
+        DayIsInListConditionPlugin plugin = (DayIsInListConditionPlugin) getPlugin();
+        plugin.setSelectedDays(compacted);
         return true;
     }
 

@@ -109,16 +109,13 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
 
     @Override
     protected void init(RuleAction action) {
-        mAction = action;
+        super.init(action);
 
-          /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (action.getActionPlugin() instanceof SendSmsActionPlugin) {
-            mPlugin = (SendSmsActionPlugin) action.getActionPlugin();
-            mSelectedContactsList = mPlugin.getContacts();
-            mIdSendToContactFromEvent = mPlugin.isSendToContactFromEvent();
-            mSmsTemplate = mPlugin.getMessage();
+        if (getPlugin() instanceof SendSmsActionPlugin) {
+            SendSmsActionPlugin plugin = (SendSmsActionPlugin) getPlugin();
+            mSelectedContactsList = plugin.getContacts();
+            mIdSendToContactFromEvent = plugin.isSendToContactFromEvent();
+            mSmsTemplate = plugin.getMessage();
         }
     }
 
@@ -137,20 +134,18 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
         mSelecButton.setEnabled(!mIdSendToContactFromEvent);
 
         // set the saved text in edit mode
-        if (mAction.getId() != null)
+        if (getAction().getId() != null)
             mSMSTemplateEditText.setText(mSmsTemplate);
     }
 
     @Override
     protected boolean saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mAction.getId() != null) {
-            mPlugin = (SendSmsActionPlugin) mAction.reGenerateActionPlugin();
-        }
+        super.saveChanges();
 
-        mPlugin.setContacts(mSelectedContactsList);
-        mPlugin.setMessage(mSMSTemplateEditText.getText().toString().trim());
-        mPlugin.setSendToContactFromEvent(mIdSendToContactFromEvent);
+        SendSmsActionPlugin plugin = (SendSmsActionPlugin) getPlugin();
+        plugin.setContacts(mSelectedContactsList);
+        plugin.setMessage(mSMSTemplateEditText.getText().toString().trim());
+        plugin.setSendToContactFromEvent(mIdSendToContactFromEvent);
         return true;
     }
 
@@ -172,6 +167,8 @@ public class SendSMSToGroupActionPluginFragment extends ActionPluginFragment {
         switch (mRadioGroup.getCheckedRadioButtonId()) {
             case R.id.radio_send_to_contact_from_event:
                 mIdSendToContactFromEvent = true;
+                mSelectedContactsList.clear();
+                mSelectedContacts.setText("");
                 break;
 
             case R.id.radio_send_to_group:

@@ -7,8 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.business.dagger.DaggerManager;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberEqualConditionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
 import com.exarlabs.android.myrules.ui.SampleFragment;
@@ -51,8 +52,6 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
     @Bind(R.id.number_equal)
     public EditText mNumberEqual;
 
-    private RuleCondition mCondition;
-    private IsNumberEqualConditionPlugin mPlugin;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -80,32 +79,26 @@ public class EqualConditionPluginFragment extends ConditionPluginFragment {
 
     @Override
     protected void init(RuleCondition condition) {
-
-        mCondition = condition;
-        /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (condition.getId() != null && condition.getConditionPlugin() instanceof IsNumberEqualConditionPlugin) {
-            mPlugin = (IsNumberEqualConditionPlugin) condition.getConditionPlugin();
-        }
+        super.init(condition);
     }
 
     @Override
     protected void refreshUI() {
-        if(mPlugin != null) {
-            mNumberEqual.setText((int) mPlugin.getValue() + "");
+        ConditionPlugin plugin = getPlugin();
+        if (plugin != null && plugin instanceof IsNumberEqualConditionPlugin) {
+            IsNumberEqualConditionPlugin equalConditionPlugin = (IsNumberEqualConditionPlugin) plugin;
+
+            mNumberEqual.setText((int) equalConditionPlugin.getValue() + "");
         }
     }
 
     @Override
     protected boolean saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if(mCondition.getId() != null) {
-            mPlugin = (IsNumberEqualConditionPlugin) mCondition.reGenerateConditionPlugin();
-        }
+        super.saveChanges();
+        IsNumberEqualConditionPlugin plugin = (IsNumberEqualConditionPlugin) getPlugin();
 
         double value = Double.parseDouble(mNumberEqual.getText().toString());
-        mPlugin.setValue(value);
+        plugin.setValue(value);
         return true;
     }
 

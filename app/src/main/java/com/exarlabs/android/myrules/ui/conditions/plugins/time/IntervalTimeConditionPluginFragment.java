@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.exarlabs.android.myrules.business.rule.condition.plugins.math.IsNumberInIntervalConditionPlugin;
+import com.exarlabs.android.myrules.business.rule.condition.ConditionPlugin;
 import com.exarlabs.android.myrules.business.rule.condition.plugins.time.IsTimeInIntervalConditionPlugin;
 import com.exarlabs.android.myrules.model.dao.RuleCondition;
 import com.exarlabs.android.myrules.ui.R;
@@ -63,8 +63,6 @@ public class IntervalTimeConditionPluginFragment extends ConditionPluginFragment
     @Bind(R.id.is_outside_time)
     public CheckBox mIsOutside;
 
-    private RuleCondition mCondition;
-    private IsTimeInIntervalConditionPlugin mPlugin;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -106,33 +104,26 @@ public class IntervalTimeConditionPluginFragment extends ConditionPluginFragment
 
     @Override
     protected void init(RuleCondition condition) {
-
-        mCondition = condition;
-        /*
-         * Check if the condition has the right mPlugin type, and we are in edit mode
-         */
-        if (condition.getId() != null && condition.getConditionPlugin() instanceof IsTimeInIntervalConditionPlugin) {
-            mPlugin = (IsTimeInIntervalConditionPlugin) condition.getConditionPlugin();
-        }
+        super.init(condition);
     }
 
     @Override
     protected void refreshUI() {
-        if (mPlugin != null) {
-            mIntervalTimeStart.setText(TimeUtil.minutesToString((int) mPlugin.getMin()));
-            mIntervalTimeEnd.setText(TimeUtil.minutesToString((int) mPlugin.getMax()));
-            mIsOutside.setChecked(mPlugin.isOutside());
+        ConditionPlugin plugin = getPlugin();
+        if (plugin != null && plugin instanceof IsTimeInIntervalConditionPlugin) {
+            IsTimeInIntervalConditionPlugin timeConditionPlugin = (IsTimeInIntervalConditionPlugin) plugin;
+            mIntervalTimeStart.setText(TimeUtil.minutesToString((int) timeConditionPlugin.getMin()));
+            mIntervalTimeEnd.setText(TimeUtil.minutesToString((int) timeConditionPlugin.getMax()));
+            mIsOutside.setChecked(timeConditionPlugin.isOutside());
         }
     }
 
     @Override
     protected boolean saveChanges() {
-        // in edit mode, if the plugin is built with another type, it should be regenerate the plugin, to be able to set the values
-        if (mCondition.getId() != null) {
-            mCondition.reGenerateConditionPlugin();
-        }
+        // it's necessary to call first the super method!
+        super.saveChanges();
 
-        IsNumberInIntervalConditionPlugin plugin = (IsNumberInIntervalConditionPlugin) mCondition.getConditionPlugin();
+        IsTimeInIntervalConditionPlugin plugin = (IsTimeInIntervalConditionPlugin) getPlugin();
         double min = TimeUtil.stringToMinutes(mIntervalTimeStart.getText().toString());
         double max = TimeUtil.stringToMinutes(mIntervalTimeEnd.getText().toString());
         boolean isOut = mIsOutside.isChecked();
