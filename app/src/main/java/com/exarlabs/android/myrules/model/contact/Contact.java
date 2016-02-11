@@ -76,8 +76,8 @@ public class Contact {
     @Override
     public String toString() {
         String contactToString = mId != -1 ? Long.toString(mId) : "";
-        contactToString += !TextUtils.isEmpty(mName) ? mName : "";
-        contactToString += !TextUtils.isEmpty(mNumber) ? " (" + mNumber + ") " : "";
+        contactToString += " " + (!TextUtils.isEmpty(mName) ? mName : "");
+        contactToString += " " + (!TextUtils.isEmpty(mNumber) ? " (" + mNumber + ") " : "");
         return contactToString;
     }
 
